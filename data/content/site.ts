@@ -1,12 +1,13 @@
 export const NAV_LINKS = [
-  { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
-  { href: "/projects", label: "Projects" },
-  { href: "/planning", label: "Planning & Controls" },
-  { href: "/quality-safety", label: "Quality & Safety" },
-  { href: "/leadership", label: "Leadership" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", label: "Home", navLabel: "Home" },
+  { href: "/about", label: "About", navLabel: "About" },
+  { href: "/services", label: "Services", navLabel: "Services" },
+  { href: "/projects", label: "Projects", navLabel: "Projects" },
+  { href: "/planning", label: "Planning & Controls", navLabel: "Planning" },
+  { href: "/quality-safety", label: "Quality & Safety", navLabel: "Quality" },
+  { href: "/leadership", label: "Leadership", navLabel: "Leadership" },
+  { href: "/gallery", label: "Gallery", navLabel: "Gallery" },
+  { href: "/contact", label: "Contact", navLabel: "Contact" },
 ] as const;
 
 export const FOOTER_STAT_STRIP =
@@ -67,6 +68,8 @@ export const CLIENTS = [
   "Bikaner House",
   "Assetz Industrial Park Pvt Ltd",
   "Brit Logistics Pvt Ltd",
+  "Vortex Motors",
+  "BWSSB",
 ];
 
 export const PMC_PARTNERS = ["CBRE", "FABS", "Turner & Townsend"];

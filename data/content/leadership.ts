@@ -1,28 +1,49 @@
-export const DIRECTORS = [
+export const TEAM = [
   {
     name: "Mr. Vinod L Panchal",
+    initials: "MV",
     role: "Director",
-    bio: "37 years in civil engineering with delivery leadership across major industrial projects.",
-    imageKey: "leadershipPortrait1",
+    bio: "37 years in civil engineering with delivery leadership across major industrial and institutional builds.",
   },
   {
     name: "Mr. Rajat V Panchal",
+    initials: "MR",
     role: "Director & Managing Director",
-    bio: "M.S. in Electronics Engineering, New York University. Drives technology-led delivery.",
-    imageKey: "leadershipPortrait2",
+    bio: "M.S. in Electronics Engineering from New York University. Drives technology-enabled delivery across the portfolio.",
+  },
+  {
+    name: "Mr. Neelakantappa",
+    initials: "MN",
+    role: "AGM",
+    bio: "Overall leadership and business management. Ensures strategy, delivery and client satisfaction stay aligned.",
+  },
+  {
+    name: "Mr. Sanjay Singh",
+    initials: "MS",
+    role: "Project Manager",
+    bio: "Leads project execution teams and ensures quality, safety and timely delivery on active warehousing sites.",
+  },
+  {
+    name: "Mr. Robin Chauhan",
+    initials: "MR",
+    role: "Senior Project Manager",
+    bio: "Manages site operations and resources with a focus on efficient and safe project delivery.",
+  },
+  {
+    name: "Mr. Rahul Pandey",
+    initials: "MR",
+    role: "DPM",
+    bio: "Oversees project planning, coordination and stakeholder management across live sites.",
+  },
+  {
+    name: "Mr. Kaushik Babu",
+    initials: "MK",
+    role: "Planning Engineer",
+    bio: "Handles project planning, scheduling and progress tracking using modern planning tools.",
   },
 ] as const;
 
-export const MANAGEMENT_TEAM = [
-  { name: "Mr. Neelakantappa", role: "AGM", bio: "Overall leadership and business management; ensures strategy and delivery." },
-  { name: "Mr. Sanjay Singh", role: "Project Manager", bio: "Leads project execution teams; ensures quality, safety and timely delivery." },
-  { name: "Mr. Robin Chauhan", role: "Senior Project Manager", bio: "Manages site operations and resources with focus on efficient and safe projects." },
-  { name: "Mr. Rahul Pandey", role: "DPM", bio: "Oversees project planning, coordination and stakeholder management." },
-];
-
-// One further management team member (initials "MK") appears in the source
-// deck with no full name or role — held back pending client confirmation.
-export const PENDING_TEAM_MEMBER = { initials: "MK" };
+export const DIRECTORS = TEAM.slice(0, 2);
 
 export const PROJECT_ORG_CHART = [
   "Project Head",

@@ -8,10 +8,77 @@ export type ImageSlot = {
 // photography without touching any layout code. Unsplash / Pexels only —
 // both permit commercial use without attribution.
 export const IMAGES: Record<string, ImageSlot> = {
+  galleryCraneSunset: {
+    src: "https://images.unsplash.com/photo-1689264337786-11efb44e298c?q=80&w=1600&auto=format&fit=crop",
+    alt: "Construction crane silhouetted against a setting sun",
+    caption: "Tower crane at dusk",
+  },
+  galleryPrecastLift: {
+    src: "https://images.unsplash.com/photo-1751054554594-85de2fe63e6b?q=80&w=1600&auto=format&fit=crop",
+    alt: "Crane lifting a precast concrete tilt-up wall panel while a site engineer supervises",
+    caption: "Precast panel erection",
+  },
+  galleryCityCranes: {
+    src: "https://images.unsplash.com/photo-1742185193142-896ae1a8c15d?q=80&w=1600&auto=format&fit=crop",
+    alt: "Multiple tower cranes on a large multi-building construction site",
+    caption: "Multi-tower construction site",
+  },
+  showcaseWarehouseAerial: {
+    src: "https://images.unsplash.com/photo-1715026323282-073e1a65576a?q=80&w=1600&auto=format&fit=crop",
+    alt: "Aerial view of a large warehouse building",
+  },
+  showcaseWarehouseAerial2: {
+    src: "https://images.unsplash.com/photo-1715026323282-073e1a65576a?q=80&w=1600&auto=format&fit=crop",
+    alt: "Aerial view of a large warehouse building",
+  },
+  showcaseBuildingFacade: {
+    src: "https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=1600&auto=format&fit=crop",
+    alt: "Upward view of a completed modern building facade",
+  },
+  showcaseScaffold: {
+    src: "https://images.unsplash.com/photo-1591955506264-3f5a6834570a?q=80&w=1600&auto=format&fit=crop",
+    alt: "Steel frame and scaffold construction of a multi-storey building",
+  },
+  showcaseScaffold2: {
+    src: "https://images.unsplash.com/photo-1591955506264-3f5a6834570a?q=80&w=1600&auto=format&fit=crop",
+    alt: "Steel frame and scaffold construction of a multi-storey building",
+  },
+  showcaseRebar: {
+    src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop",
+    alt: "Overhead view of reinforcement work on an active construction site",
+  },
+  showcaseRacking: {
+    src: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1600&auto=format&fit=crop",
+    alt: "Warehouse interior with high-bay racking",
+  },
+  showcaseForklift: {
+    src: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=1600&auto=format&fit=crop",
+    alt: "Warehouse interior with forklift and stacked pallets",
+  },
+  showcaseContainerYard: {
+    src: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=1600&auto=format&fit=crop",
+    alt: "Aerial view of an organised logistics and distribution yard",
+  },
+  showcaseCrane: {
+    src: "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?q=80&w=1600&auto=format&fit=crop",
+    alt: "Heavy plant and crane at an industrial construction site",
+  },
+  showcaseUtility: {
+    src: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1600&auto=format&fit=crop",
+    alt: "Site electrician installing a utility connection with PPE",
+  },
+  showcaseSiteTeam: {
+    src: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1600&auto=format&fit=crop",
+    alt: "Site team on a reinforced concrete slab during structural works",
+  },
   heroAerial: {
     src: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&w=2400&auto=format&fit=crop",
     alt: "Aerial view of a large logistics and distribution yard with organised stacked storage",
     caption: "NELA 1 · Nelamangala, Bengaluru",
+  },
+  homeHeroPhoto: {
+    src: "https://images.unsplash.com/photo-1715026323282-073e1a65576a?q=80&w=2800&auto=format&fit=crop",
+    alt: "Aerial view of a large warehouse building with a landscaped surrounding site",
   },
   aboutInterior: {
     src: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=2000&auto=format&fit=crop",

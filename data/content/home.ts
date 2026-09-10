@@ -40,6 +40,57 @@ export const CAPABILITIES = [
   },
 ];
 
+export const SERVICES_SHOWCASE = [
+  {
+    icon: "Warehouse",
+    title: "Warehousing",
+    body: "Large-format Grade-A warehousing — smart spaces, stronger supply chains.",
+    href: "/services#warehousing",
+  },
+  {
+    icon: "Building2",
+    title: "Industrial",
+    body: "Built for performance, engineered for progress. Civil + PEB factories.",
+    href: "/services#industrial",
+  },
+  {
+    icon: "Compass",
+    title: "Infrastructure",
+    body: "Building the foundation for tomorrow — industrial parks and estates.",
+    href: "/services#infrastructure",
+  },
+  {
+    icon: "Layers",
+    title: "Precast Wall Casting & Erection",
+    body: "In-house precast systems accelerating quality, safety and schedule.",
+    href: "/services#precast",
+  },
+  {
+    icon: "Droplet",
+    title: "Irrigation & Sewerage",
+    body: "Pipe-laying, RCC chambers and headworks for public utility programs.",
+    href: "/services#rmc",
+  },
+  {
+    icon: "Waves",
+    title: "Water Infrastructure (BWSSB)",
+    body: "Hard-rock blasting, pipe corridors and controlled RCC sequencing.",
+    href: "/services#rmc",
+  },
+  {
+    icon: "Route",
+    title: "Roads & Site Development",
+    body: "Concrete roads, stormwater drains, compound walls and land development.",
+    href: "/services#infrastructure",
+  },
+  {
+    icon: "Wrench",
+    title: "Design-Build Turnkey",
+    body: "End-to-end delivery — civil, PEB, utilities and site development.",
+    href: "/services",
+  },
+] as const;
+
 export const DELIVERY_STAGES = [
   { title: "Planning", body: "Program strategy, feasibility and delivery roadmap" },
   { title: "Survey", body: "Topographic and geotechnical investigation" },

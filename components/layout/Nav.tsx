@@ -4,25 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { X, Menu } from "lucide-react";
+import { X, Menu, ArrowRight } from "lucide-react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { NAV_LINKS } from "@/data/content/site";
 import { useLenis } from "@/components/providers/SmoothScroll";
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
   const lenis = useLenis();
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -52,47 +44,53 @@ export default function Nav() {
   );
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? "border-b border-navy-500 bg-ink/95 backdrop-blur" : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex h-20 w-full max-w-[1280px] items-center justify-between px-6 md:px-12">
-        <Link href="/" className="flex items-center gap-3" aria-label="Vinara Infra LLP home">
-          <Image src="/Vinara Infra LLP logo.png" alt="Vinara Infra LLP" width={40} height={40} className="h-10 w-auto" priority />
-          <span className="hidden text-body-l font-display font-bold tracking-tight text-white sm:block">
-            VINARA
-          </span>
+    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:px-6">
+      <div className="flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-white/10 bg-ink/80 px-4 py-2.5 shadow-lg shadow-black/20 backdrop-blur-xl sm:px-6">
+        <Link href="/" className="flex shrink-0 items-center" aria-label="Vinara Infra LLP home">
+          <Image
+            src="/vinara-logo-transparent.png"
+            alt="Vinara Infra LLP"
+            width={36}
+            height={36}
+            className="h-9 w-auto"
+            priority
+          />
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-caption font-medium transition-colors hover:text-white ${
-                pathname === link.href ? "text-white" : "text-grey-300"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-0.5 xl:flex xl:gap-1">
+          {NAV_LINKS.map((link) => {
+            const isActive: boolean = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors xl:px-3.5 ${
+                  isActive
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                    : "text-grey-300 hover:text-white"
+                }`}
+              >
+                {link.navLabel}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link
             href="/contact"
-            className="hidden rounded-full bg-white px-5 py-2.5 text-caption font-semibold text-ink transition-colors hover:bg-sky-200 sm:block"
+            className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-caption font-semibold text-white shadow-sm transition-opacity hover:opacity-90 sm:flex"
           >
-            Start a project
+            Get Quote
+            <ArrowRight size={14} />
           </Link>
           <button
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="grid h-11 w-11 place-items-center rounded-full border border-navy-500 text-white lg:hidden"
+            className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white xl:hidden"
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
+            {open ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
@@ -116,9 +114,10 @@ export default function Nav() {
           <Link
             data-mobile-link
             href="/contact"
-            className="mt-6 inline-block w-fit rounded-full bg-white px-6 py-3 text-body font-semibold text-ink"
+            className="mt-6 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-body font-semibold text-white"
           >
-            Start a project
+            Get Quote
+            <ArrowRight size={16} />
           </Link>
         </nav>
       </div>

@@ -1,0 +1,100 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  /* ---- brand colour tokens ---- */
+  --color-ink: #050f24;
+  --color-navy-900: #0a1a3a;
+  --color-navy-700: #0b2a5b;
+  --color-navy-500: #12386f;
+  --color-orange-500: #f2841f;
+  --color-orange-300: #ffa94d;
+  --color-yellow-400: #fdba1a;
+  --color-sky-400: #3e86d0;
+  --color-sky-200: #7fb6e8;
+  --color-green-500: #1e7a4b;
+  --color-paper: #f2f5f9;
+  --color-grey-500: #5a6b84;
+  --color-grey-300: #9daac0;
+
+  /* ---- fonts ---- */
+  --font-display: var(--font-archivo), "Arial Narrow", sans-serif;
+  --font-body: var(--font-plex), "Helvetica Neue", sans-serif;
+
+  /* ---- type scale ---- */
+  --text-display-xl: clamp(3.25rem, 7vw, 6.5rem);
+  --text-display-xl--line-height: 0.92;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-xl--font-weight: 800;
+
+  --text-display-l: clamp(2.5rem, 5vw, 4.25rem);
+  --text-display-l--line-height: 0.96;
+  --text-display-l--letter-spacing: -0.025em;
+  --text-display-l--font-weight: 800;
+
+  --text-display-m: clamp(1.875rem, 3vw, 2.75rem);
+  --text-display-m--line-height: 1.05;
+  --text-display-m--letter-spacing: -0.02em;
+  --text-display-m--font-weight: 700;
+
+  --text-data-xl: clamp(2.75rem, 6vw, 5rem);
+  --text-data-xl--line-height: 1;
+  --text-data-xl--font-weight: 800;
+
+  --text-body-l: 1.125rem;
+  --text-body-l--line-height: 1.65;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.7;
+
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.5;
+
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+  --text-label--font-weight: 600;
+  --text-label--letter-spacing: 0.08em;
+
+  --container-page: 1280px;
+}
+
+html,
+body {
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* setting-out grid rule, used on dark sections */
+.grid-rule {
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.04) 0,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px,
+    transparent calc((100% - 11px) / 12 + 1px)
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

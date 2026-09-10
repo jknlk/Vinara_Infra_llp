@@ -1,0 +1,63 @@
+export const CAPABILITY_STRIP = [
+  { title: "Warehousing", line: "Smart spaces. Stronger supply chains." },
+  { title: "Industrial", line: "Built for performance. Engineered for progress." },
+  { title: "Infrastructure", line: "Building the foundation. Empowering tomorrow." },
+  { title: "QHSE Driven", line: "Quality at every step. Safety in every action." },
+  { title: "Experienced Team", line: "Skilled professionals with deep industry knowledge." },
+];
+
+export const ABOUT_PREVIEW_POINTS = [
+  "Technology-led delivery",
+  "QHSE commitment",
+  "People and culture",
+  "Design-build capability",
+];
+
+export const CAPABILITIES = [
+  {
+    title: "Warehousing & Logistics Parks",
+    items: ["Large format warehouses", "Distribution centers", "E-commerce fulfilment centers"],
+  },
+  {
+    title: "Industrial Construction",
+    items: ["Manufacturing facilities", "Factory buildings", "Utility buildings"],
+  },
+  {
+    title: "Precast Construction",
+    items: ["Precast wall panels", "Precast structural components", "Fast-track construction"],
+  },
+  {
+    title: "Infrastructure Development",
+    items: ["Roads & external development", "Storm water drainage", "Utility networks"],
+  },
+  {
+    title: "RMC Plant & Concrete Supply",
+    items: ["M10 to M50 grade concrete", "Design mix & pumpable concrete", "In-house quality lab"],
+  },
+  {
+    title: "Design-Build Turnkey",
+    items: ["Single-point accountability", "Integrated engineering", "Handover-ready delivery"],
+  },
+];
+
+export const DELIVERY_STAGES = [
+  { title: "Planning", body: "Program strategy, feasibility and delivery roadmap" },
+  { title: "Survey", body: "Topographic and geotechnical investigation" },
+  { title: "Excavation", body: "Site preparation, earthworks and shoring" },
+  { title: "Foundation", body: "Piling, pile caps and raft foundations" },
+  { title: "Columns", body: "RCC columns and vertical load systems" },
+  { title: "PEB", body: "Pre-engineered steel building erection" },
+  { title: "Roof", body: "High-span roofing systems and cladding" },
+  { title: "Precast", body: "Wall panels, tees and beams installed with precision" },
+  { title: "Finishing", body: "MEP, flooring, doors and interior fit-out" },
+  { title: "Handover", body: "Commissioning, snagging and O&M transition" },
+];
+
+export const HOME_STATS = [
+  { value: 213.06, decimals: 2, suffix: "", label: "Acres under development" },
+  { value: 4230930.54, decimals: 2, suffix: "", label: "Sq.ft total built-up" },
+  { value: 23, decimals: 0, suffix: "", label: "Buildings across three parks" },
+  { value: 0.54, decimals: 2, suffix: "", label: "Achieved FSI" },
+  { value: 47.34, decimals: 2, suffix: "%", label: "Ground coverage" },
+  { value: 996553, decimals: 0, suffix: "", label: "Safe manhours to March 2026" },
+];

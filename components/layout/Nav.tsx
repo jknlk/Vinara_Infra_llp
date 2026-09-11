@@ -45,7 +45,7 @@ export default function Nav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:px-6">
-      <div className="flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-black/5 bg-white/90 px-4 py-2.5 shadow-lg shadow-black/10 backdrop-blur-xl sm:px-6">
+      <div className="relative z-50 flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-black/5 bg-white/90 px-4 py-2.5 shadow-lg shadow-black/10 backdrop-blur-xl sm:px-6">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Vinara Infra LLP home">
           <Image
             src="/vinara-logo-transparent.png"
@@ -97,16 +97,16 @@ export default function Nav() {
 
       <div
         ref={overlayRef}
-        className="fixed inset-0 z-40 hidden flex-col justify-center bg-ink px-6"
+        className="fixed inset-0 z-40 hidden flex-col overflow-y-auto bg-ink px-6 pb-10 pt-28"
         style={{ visibility: "hidden" }}
       >
-        <nav className="flex flex-col gap-2">
+        <nav className="m-auto flex w-full flex-col gap-1.5 py-4">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               data-mobile-link
               href={link.href}
-              className="text-display-m font-display text-white"
+              className="text-3xl font-display leading-tight text-white sm:text-4xl"
             >
               {link.label}
             </Link>

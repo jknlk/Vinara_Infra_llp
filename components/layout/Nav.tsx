@@ -45,7 +45,7 @@ export default function Nav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:px-6">
-      <div className="flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-white/10 bg-ink/80 px-4 py-2.5 shadow-lg shadow-black/20 backdrop-blur-xl sm:px-6">
+      <div className="flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-black/5 bg-white/90 px-4 py-2.5 shadow-lg shadow-black/10 backdrop-blur-xl sm:px-6">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Vinara Infra LLP home">
           <Image
             src="/vinara-logo-transparent.png"
@@ -67,7 +67,7 @@ export default function Nav() {
                 className={`whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors xl:px-3.5 ${
                   isActive
                     ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
-                    : "text-grey-300 hover:text-white"
+                    : "text-grey-500 hover:text-ink"
                 }`}
               >
                 {link.navLabel}
@@ -88,7 +88,7 @@ export default function Nav() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white xl:hidden"
+            className="grid h-10 w-10 place-items-center rounded-full border border-black/10 text-ink xl:hidden"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>

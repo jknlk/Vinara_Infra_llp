@@ -3,15 +3,16 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import { Calendar, Building2, Warehouse, LandPlot, IndianRupee, Boxes, type LucideIcon } from "lucide-react";
 
-const STATS = [
-  { value: 37, plus: false, unit: " yrs", locale: "en-IN", label: "Civil Engineering Legacy" },
-  { value: 50, plus: true, unit: "", locale: "en-IN", label: "APCC Projects Delivered" },
-  { value: 2224000, plus: true, unit: " sq.ft", locale: "en-US", label: "Warehousing Under Delivery" },
-  { value: 160, plus: false, unit: " acres", locale: "en-IN", label: "AGP Park Footprint" },
-  { value: 150, plus: true, unit: " Cr", locale: "en-IN", label: "AGP Program Value (₹)" },
-  { value: 8, plus: false, unit: "", locale: "en-IN", label: "Active Warehousing Blocks" },
-] as const;
+const STATS: { value: number; plus: boolean; unit: string; locale: string; label: string; icon: LucideIcon }[] = [
+  { value: 37, plus: false, unit: " yrs", locale: "en-IN", label: "Civil Engineering Legacy", icon: Calendar },
+  { value: 50, plus: true, unit: "", locale: "en-IN", label: "APCC Projects Delivered", icon: Building2 },
+  { value: 2224000, plus: true, unit: " sq.ft", locale: "en-US", label: "Warehousing Under Delivery", icon: Warehouse },
+  { value: 160, plus: false, unit: " acres", locale: "en-IN", label: "AGP Park Footprint", icon: LandPlot },
+  { value: 150, plus: true, unit: " Cr", locale: "en-IN", label: "AGP Program Value (₹)", icon: IndianRupee },
+  { value: 8, plus: false, unit: "", locale: "en-IN", label: "Active Warehousing Blocks", icon: Boxes },
+];
 
 function formatNum(value: number, locale: string) {
   return new Intl.NumberFormat(locale).format(Math.round(value));
@@ -19,6 +20,7 @@ function formatNum(value: number, locale: string) {
 
 function StatCard({ stat }: { stat: (typeof STATS)[number] }) {
   const ref = useRef<HTMLSpanElement>(null);
+  const Icon = stat.icon;
 
   useGSAP(() => {
     if (!ref.current) return;
@@ -36,13 +38,19 @@ function StatCard({ stat }: { stat: (typeof STATS)[number] }) {
   }, { scope: ref });
 
   return (
-    <div className="rounded-2xl border border-[#E3EAF4] bg-white p-8">
-      <span ref={ref} className="tabular block text-display-m font-display font-bold text-blue-600">
+    <div className="group relative overflow-hidden rounded-2xl border border-[#E3EAF4] bg-white p-8 transition-colors hover:border-blue-400">
+      <span className="absolute -right-4 -top-4 text-8xl font-display font-bold text-[#F3F6FB] transition-colors group-hover:text-blue-50" aria-hidden>
+        {formatNum(stat.value, stat.locale).replace(/[^0-9]/g, "").slice(0, 3)}
+      </span>
+      <span className="relative grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+        <Icon size={22} strokeWidth={1.75} />
+      </span>
+      <span ref={ref} className="tabular relative mt-6 block text-display-m font-display font-bold text-ink">
         {formatNum(0, stat.locale)}
         {stat.plus ? "+" : ""}
         {stat.unit}
       </span>
-      <p className="mt-3 text-caption uppercase tracking-[0.08em] text-grey-500">{stat.label}</p>
+      <p className="relative mt-2 text-caption font-medium uppercase tracking-[0.08em] text-grey-500">{stat.label}</p>
     </div>
   );
 }

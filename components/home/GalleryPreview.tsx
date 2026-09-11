@@ -1,18 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Building2 } from "lucide-react";
 import { IMAGES } from "@/data/images";
 
-const ROW_ONE = ["showcaseWarehouseAerial", "showcaseContainerYard", "galleryPrecastLift", "showcaseWarehouseAerial2"];
-const ROW_TWO_LEFT = ["showcaseRacking", "galleryPrecastLift", "showcaseForklift", "showcaseScaffold"];
-const ROW_TWO_RIGHT = "galleryCityCranes";
+const STRIP = [
+  "portraitWarehouseRacking",
+  "portraitTowerCrane",
+  "portraitShippingContainers",
+  "portraitForklift",
+  "portraitScaffoldWorker",
+  "portraitAerialContainerYard",
+  "portraitScaffoldWorkers",
+  "portraitHardHatWorker",
+] as const;
 
-function Tile({ imageKey, className = "" }: { imageKey: string; className?: string }) {
+const LOOP = [...STRIP, ...STRIP];
+
+function MarqueeItem({ imageKey }: { imageKey: string }) {
   const img = IMAGES[imageKey];
   if (!img?.src) return null;
   return (
-    <div className={`relative overflow-hidden rounded-2xl border border-white/10 ${className}`}>
-      <Image src={img.src} alt={img.alt} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+    <div className="group/item relative aspect-[9/16] w-36 flex-shrink-0 overflow-hidden rounded-2xl sm:w-44 lg:w-52">
+      <Image
+        src={img.src}
+        alt={img.alt}
+        fill
+        sizes="(max-width: 768px) 30vw, 15vw"
+        className="object-cover transition-transform duration-500 group-hover/item:scale-105"
+      />
     </div>
   );
 }
@@ -46,19 +61,24 @@ export default function GalleryPreview() {
           </div>
         </div>
 
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {ROW_ONE.map((key) => (
-            <Tile key={key} imageKey={key} className="aspect-square" />
-          ))}
-        </div>
+        <div className="relative mt-16 w-full pb-4">
+          <div className="group relative w-full overflow-hidden rounded-[2rem] border border-white/10 bg-navy-900 py-6">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-navy-900 to-transparent sm:w-24" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-navy-900 to-transparent sm:w-24" />
 
-        <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3">
-          <div className="grid grid-cols-2 gap-4 lg:col-span-2">
-            {ROW_TWO_LEFT.map((key, i) => (
-              <Tile key={key + i} imageKey={key} className="aspect-[4/3]" />
-            ))}
+            <div className="animate-marquee flex w-max items-stretch gap-4 px-4 group-hover:[animation-play-state:paused]">
+              {LOOP.map((key, i) => (
+                <MarqueeItem key={`${key}-${i}`} imageKey={key} />
+              ))}
+            </div>
           </div>
-          <Tile imageKey={ROW_TWO_RIGHT} className="col-span-2 aspect-[16/9] lg:col-span-1 lg:aspect-auto" />
+
+          <div className="absolute -top-4 right-8 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-ink shadow-[0_6px_20px_rgba(0,0,0,0.25)] sm:right-16">
+            <Building2 size={14} className="text-blue-600" /> 23 buildings
+          </div>
+          <div className="absolute bottom-8 left-8 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.4)] sm:left-16">
+            <Image src="/vinara-logo-transparent.png" alt="Vinara Infra LLP" width={28} height={28} className="h-7 w-auto" />
+          </div>
         </div>
       </div>
     </section>

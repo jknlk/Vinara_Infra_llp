@@ -46,7 +46,7 @@ export default function Hero() {
   );
 
   return (
-    <section className="relative min-h-[100svh] w-full overflow-hidden bg-ink">
+    <section className="relative h-[100svh] w-full overflow-hidden bg-ink">
       <div className="absolute inset-0">
         {can3D === true ? (
           <MasterPlanScene activeSlug={activeSlug} />

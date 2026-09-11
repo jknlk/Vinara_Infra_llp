@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowRight, Building2, Check, Mail, MessageSquare, Phone, User } from "lucide-react";
 
 type FormState = {
   name: string;
@@ -11,6 +12,17 @@ type FormState = {
 };
 
 const EMPTY: FormState = { name: "", company: "", email: "", phone: "", brief: "" };
+
+const FIELD_META: Record<
+  keyof FormState,
+  { label: string; placeholder: string; icon: typeof User; type?: string }
+> = {
+  name: { label: "Full name", placeholder: "Your name", icon: User },
+  company: { label: "Company", placeholder: "Your organisation", icon: Building2 },
+  email: { label: "Email", placeholder: "you@company.com", icon: Mail, type: "email" },
+  phone: { label: "Phone", placeholder: "+91", icon: Phone, type: "tel" },
+  brief: { label: "Project brief", placeholder: "Tell us about scope, location, timelines…", icon: MessageSquare },
+};
 
 export default function ContactForm() {
   const [values, setValues] = useState<FormState>(EMPTY);
@@ -36,70 +48,98 @@ export default function ContactForm() {
     }
   }
 
-  function field(name: keyof FormState, label: string, type = "text") {
-    return (
-      <div>
-        <label htmlFor={name} className="block text-caption uppercase tracking-[0.08em] text-grey-300">
-          {label}
-        </label>
-        {type === "textarea" ? (
-          <textarea
-            id={name}
-            rows={4}
-            value={values[name]}
-            onChange={(e) => setValues((v) => ({ ...v, [name]: e.target.value }))}
-            className="mt-2 w-full border-b border-navy-500 bg-transparent py-2 text-body text-white outline-none focus:border-orange-500"
-          />
-        ) : (
-          <input
-            id={name}
-            type={type}
-            value={values[name]}
-            onChange={(e) => setValues((v) => ({ ...v, [name]: e.target.value }))}
-            className="mt-2 w-full border-b border-navy-500 bg-transparent py-2 text-body text-white outline-none focus:border-orange-500"
-          />
-        )}
-        {errors[name] ? <p className="mt-1 text-caption text-orange-300">{errors[name]}</p> : null}
-      </div>
-    );
-  }
+  function field(name: keyof FormState, span?: "full") {
+    const meta = FIELD_META[name];
+    const Icon = meta.icon;
+    const hasError = Boolean(errors[name]);
 
-  if (submitted) {
     return (
-      <div className="rounded-[4px] border border-green-500/40 bg-green-500/10 p-8">
-        <h3 className="text-body-l font-display font-bold text-green-500">Thank you, {values.name.split(" ")[0]}.</h3>
-        <p className="mt-2 max-w-[52ch] text-body text-grey-300">
-          Your enquiry has been received. A senior team member will acknowledge it within 24 hours and follow up
-          with an approach note and indicative programme.
-        </p>
-        <button
-          onClick={() => {
-            setValues(EMPTY);
-            setSubmitted(false);
-          }}
-          className="mt-6 text-caption font-semibold text-sky-200 hover:text-sky-400"
+      <div className={span === "full" ? "sm:col-span-2" : undefined}>
+        <label htmlFor={name} className="mb-2 block text-label font-semibold uppercase tracking-[0.08em] text-grey-500">
+          {meta.label}
+        </label>
+        <div
+          className={`group flex items-start gap-3 rounded-2xl border bg-paper/60 px-4 py-3 transition-colors focus-within:border-blue-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10 ${
+            hasError ? "border-orange-400" : "border-grey-200"
+          }`}
         >
-          Submit another enquiry
-        </button>
+          <Icon size={18} className={`mt-0.5 shrink-0 ${hasError ? "text-orange-500" : "text-grey-300 group-focus-within:text-blue-600"}`} />
+          {name === "brief" ? (
+            <textarea
+              id={name}
+              rows={4}
+              placeholder={meta.placeholder}
+              value={values[name]}
+              onChange={(ev) => setValues((v) => ({ ...v, [name]: ev.target.value }))}
+              className="w-full resize-none bg-transparent text-body text-ink outline-none placeholder:text-grey-300"
+            />
+          ) : (
+            <input
+              id={name}
+              type={meta.type ?? "text"}
+              placeholder={meta.placeholder}
+              value={values[name]}
+              onChange={(ev) => setValues((v) => ({ ...v, [name]: ev.target.value }))}
+              className="w-full bg-transparent text-body text-ink outline-none placeholder:text-grey-300"
+            />
+          )}
+        </div>
+        {hasError ? <p className="mt-1.5 text-caption text-orange-500">{errors[name]}</p> : null}
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      {field("name", "Full name")}
-      {field("company", "Company")}
-      {field("email", "Email", "email")}
-      {field("phone", "Phone", "tel")}
-      <div className="sm:col-span-2">{field("brief", "Project brief", "textarea")}</div>
-      <div className="sm:col-span-2">
-        <button
-          type="submit"
-          className="rounded-full bg-white px-8 py-4 text-body font-semibold text-ink hover:bg-sky-200"
-        >
-          Send enquiry
-        </button>
+    <div className="relative overflow-hidden rounded-[2rem] border border-[#E3EAF4] bg-white p-6 shadow-[0_30px_60px_-20px_rgba(11,42,91,0.25)] sm:p-10">
+      <span className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-blue-50 blur-2xl" aria-hidden />
+
+      <div className="relative flex items-center justify-between gap-4">
+        <h3 className="text-display-m font-display font-bold text-ink">Get a Quote</h3>
+        <span className="hidden shrink-0 items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-caption font-semibold text-blue-600 sm:inline-flex">
+          Reply in 24h
+        </span>
       </div>
-    </form>
+
+      {submitted ? (
+        <div className="relative mt-8 flex flex-col items-start gap-4 rounded-2xl border border-green-500/20 bg-green-500/5 p-8">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-green-500 text-white">
+            <Check size={20} strokeWidth={3} />
+          </span>
+          <div>
+            <h4 className="text-body-l font-display font-bold text-ink">Thank you, {values.name.split(" ")[0]}.</h4>
+            <p className="mt-2 max-w-[52ch] text-body text-grey-500">
+              Your enquiry has been received. A senior team member will acknowledge it within 24 hours and follow up
+              with an approach note and indicative programme.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setValues(EMPTY);
+              setSubmitted(false);
+            }}
+            className="text-caption font-semibold text-blue-600 hover:text-blue-700"
+          >
+            Submit another enquiry
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="relative mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {field("name")}
+          {field("company")}
+          {field("email")}
+          {field("phone")}
+          {field("brief", "full")}
+          <div className="sm:col-span-2">
+            <button
+              type="submit"
+              className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-8 py-4 text-body font-semibold text-white shadow-lg shadow-blue-600/25 transition-all hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/30"
+            >
+              Send enquiry
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 }

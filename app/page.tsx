@@ -7,7 +7,6 @@ import ConstructionTimeline from "@/components/home/ConstructionTimeline";
 import TeamGrid from "@/components/leadership/TeamGrid";
 import TrustedByMarquee from "@/components/home/TrustedByMarquee";
 import GalleryPreview from "@/components/home/GalleryPreview";
-import ContactPreview from "@/components/home/ContactPreview";
 
 export default function HomePage() {
   return (
@@ -37,9 +36,6 @@ export default function HomePage() {
 
       {/* S8b · Gallery preview */}
       <GalleryPreview />
-
-      {/* S9 · Contact */}
-      <ContactPreview />
     </>
   );
 }

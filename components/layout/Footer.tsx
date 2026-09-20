@@ -4,7 +4,7 @@ import { COMPANY_BLURB, CONTACT, FOOTER_COLUMNS, FOOTER_STAT_STRIP } from "@/dat
 
 export default function Footer() {
   return (
-    <footer className="bg-ink px-4 pb-4 pt-5 sm:px-6 lg:px-8">
+    <footer className="bg-surface px-4 pb-4 pt-5 sm:px-6 lg:px-8">
       <div className="relative mx-auto w-full max-w-[1680px] overflow-hidden rounded-[2.5rem] border border-[#E3EAF4] bg-white">
         <span className="absolute left-6 top-6 h-2.5 w-2.5 rounded-full bg-blue-500/40" />
         <span className="absolute right-6 top-6 h-2.5 w-2.5 rounded-full bg-blue-500/40" />

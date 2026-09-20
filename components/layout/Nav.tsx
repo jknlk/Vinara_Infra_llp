@@ -50,9 +50,9 @@ export default function Nav() {
           <Image
             src="/vinara-logo-transparent.png"
             alt="Vinara Infra LLP"
-            width={36}
-            height={36}
-            className="h-9 w-auto"
+            width={52}
+            height={52}
+            className="h-[52px] w-auto"
             priority
           />
         </Link>
@@ -97,16 +97,23 @@ export default function Nav() {
 
       <div
         ref={overlayRef}
-        className="fixed inset-0 z-40 hidden flex-col overflow-y-auto bg-ink px-6 pb-10 pt-28"
+        className="fixed inset-0 z-40 hidden flex-col overflow-y-auto bg-surface px-6 pb-10 pt-28"
         style={{ visibility: "hidden" }}
       >
+        <button
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          className="absolute right-6 top-6 grid h-11 w-11 place-items-center rounded-full border border-ink/15 text-ink xl:hidden"
+        >
+          <X size={20} />
+        </button>
         <nav className="m-auto flex w-full flex-col gap-1.5 py-4">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               data-mobile-link
               href={link.href}
-              className="text-3xl font-display leading-tight text-white sm:text-4xl"
+              className="text-display-m font-display text-ink"
             >
               {link.label}
             </Link>

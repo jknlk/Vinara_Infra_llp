@@ -1,238 +1,354 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/layout/PageHero";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import Container from "@/components/ui/Container";
-import SectionHead from "@/components/ui/SectionHead";
-import DataPanel from "@/components/ui/DataPanel";
-import BuildingRow from "@/components/ui/BuildingRow";
-import ProgressBar from "@/components/ui/ProgressBar";
+import SiteImage from "@/components/ui/SiteImage";
+import StatusPill from "@/components/ui/StatusPill";
 import ProjectPlanViewer from "@/components/projects/ProjectPlanViewer";
-import Gauge from "@/components/projects/Gauge";
 import { IMAGES } from "@/data/images";
 import { PROJECTS, PORTFOLIO_TOTALS } from "@/data/buildings";
 import { CLIENTS, PMC_PARTNERS, TENANTS } from "@/data/content/site";
-import {
-  CONCRETE_CONTROL,
-  BOQ_CONTROL,
-  BOQ_TAKEAWAYS,
-  DASHBOARD,
-  DELIVERY_FACTORS,
-  SITE_CHALLENGES,
-} from "@/data/content/projects";
+import { DELIVERY_FACTORS, SITE_CHALLENGES } from "@/data/content/projects";
+import { listProjects } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
+
+type ProjectCardData = {
+  slug: string;
+  name: string;
+  client: string;
+  plotAcres: number;
+  buildingsCount: number;
+  builtUpSqft: number;
+  completed: number;
+  wip: number;
+  src: string | undefined;
+};
+
+async function loadCards(): Promise<ProjectCardData[]> {
+  try {
+    const rows = await listProjects();
+    return rows.map((r) => ({ ...r, src: r.src ?? undefined }));
+  } catch {
+    // Database unavailable — fall back to the bundled sites so the page never breaks.
+    return PROJECTS.map((p) => ({
+      slug: p.slug,
+      name: p.shortName,
+      client: p.client,
+      plotAcres: p.plotAcres,
+      buildingsCount: p.buildingsCount,
+      builtUpSqft: p.builtUpSqft,
+      completed: p.completed,
+      wip: p.wip,
+      src: IMAGES[PROJECT_IMAGE[p.slug]]?.src,
+    }));
+  }
+}
 
 export const metadata: Metadata = {
   title: "Projects — Vinara Infra LLP",
-  description: "NELA 1, NELA 2 and Bikaner House — 213.06 acres, 23 buildings, 4.23 million sq.ft of Grade-A warehousing.",
+  description: "NELA 1, NELA 2 and Bikaner House — 213.06 acres, 12 buildings in progress or completed, 3.13 million sq.ft of Grade-A warehousing.",
 };
 
 function num(v: number, d = 2) {
   return new Intl.NumberFormat("en-IN", { minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
 }
 
-export default function ProjectsPage() {
+const eyebrow = "text-label uppercase tracking-[0.14em]";
+
+const PROJECT_IMAGE: Record<string, string> = {
+  "nela-1": "showcaseWarehouseAerial2",
+  "nela-2": "showcaseSiteTeam",
+  "bikaner-house": "showcaseBuildingFacade",
+};
+
+const CLIENT_GROUPS: { label: string; names: readonly string[] }[] = [
+  { label: "Clients", names: CLIENTS },
+  { label: "PMC partners", names: PMC_PARTNERS },
+  { label: "Tenants", names: TENANTS },
+];
+
+export default async function ProjectsPage() {
+  const cards = await loadCards();
+  const detailSlugs = new Set<string>(PROJECTS.map((p) => p.slug));
+  const heroStats = [
+    { value: num(PORTFOLIO_TOTALS.plotAcres), label: "acres" },
+    { value: num(PORTFOLIO_TOTALS.builtUpSqft, 0), label: "sq.ft built-up" },
+    { value: String(PORTFOLIO_TOTALS.completed), label: "buildings completed" },
+    { value: String(PORTFOLIO_TOTALS.wip), label: "buildings in progress" },
+  ];
+
   return (
     <>
-      <PageHero
-        title="Portfolio at a glance"
-        standfirst="213.06 acres · 42,30,930.54 sq.ft · 23 buildings · 0.54 FSI · 47.34% ground coverage · 6 completed · 6 in progress · 11 upcoming."
-        image={IMAGES.heroAerial}
-        imageSlot="hero-aerial"
-      />
-
-      {/* S1 · Summary table */}
-      <section className="bg-ink py-24">
-        <Container>
-          <SectionHead title="Summary by project" />
-          <div className="mt-10 overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-body">
-              <thead>
-                <tr className="border-b border-navy-500 text-left text-label uppercase tracking-[0.08em] text-grey-300">
-                  <th className="py-3 pr-4 font-semibold">Project</th>
-                  <th className="py-3 pr-4 text-right font-semibold">Plot</th>
-                  <th className="py-3 pr-4 text-right font-semibold">Built-up</th>
-                  <th className="py-3 pr-4 text-right font-semibold">Buildings</th>
-                  <th className="py-3 pr-4 text-right font-semibold">Completed</th>
-                  <th className="py-3 pr-4 text-right font-semibold">WIP</th>
-                  <th className="py-3 pr-4 text-right font-semibold">Upcoming</th>
-                  <th className="py-3 text-right font-semibold">Ground cov.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {PROJECTS.map((p) => (
-                  <tr key={p.slug} className="border-b border-navy-500/60">
-                    <td className="py-3 pr-4 font-medium text-white">{p.shortName}</td>
-                    <td className="tabular py-3 pr-4 text-right text-grey-300">{num(p.plotAcres)} ac</td>
-                    <td className="tabular py-3 pr-4 text-right text-grey-300">{num(p.builtUpSqft)}</td>
-                    <td className="tabular py-3 pr-4 text-right text-grey-300">{p.buildingsCount}</td>
-                    <td className="tabular py-3 pr-4 text-right text-green-500">{p.completed}</td>
-                    <td className="tabular py-3 pr-4 text-right text-sky-200">{p.wip}</td>
-                    <td className="tabular py-3 pr-4 text-right text-orange-300">{p.upcoming}</td>
-                    <td className="tabular py-3 text-right text-grey-300">{num(p.groundCoverage)}%</td>
-                  </tr>
-                ))}
-                <tr>
-                  <td className="pt-4 font-semibold text-white">Total</td>
-                  <td className="tabular pt-4 text-right font-semibold text-white">{num(PORTFOLIO_TOTALS.plotAcres)} ac</td>
-                  <td className="tabular pt-4 text-right font-semibold text-white">{num(PORTFOLIO_TOTALS.builtUpSqft)}</td>
-                  <td className="tabular pt-4 text-right font-semibold text-white">{PORTFOLIO_TOTALS.buildings}</td>
-                  <td className="tabular pt-4 text-right font-semibold text-green-500">{PORTFOLIO_TOTALS.completed}</td>
-                  <td className="tabular pt-4 text-right font-semibold text-sky-200">{PORTFOLIO_TOTALS.wip}</td>
-                  <td className="tabular pt-4 text-right font-semibold text-orange-300">{PORTFOLIO_TOTALS.upcoming}</td>
-                  <td className="tabular pt-4 text-right font-semibold text-white">{num(PORTFOLIO_TOTALS.groundCoverage)}%</td>
-                </tr>
-              </tbody>
-            </table>
+      {/* Hero */}
+      <section className="overflow-hidden bg-[#f2f7fc] pb-12 pt-28 md:pt-32">
+        <Container className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
+          <div className="lg:col-span-7">
+            <p className={`${eyebrow} flex items-center gap-3 text-[#3e86d0]`}>
+              <span className="h-px w-10 bg-[#3e86d0]" />
+              Projects
+            </p>
+            <h1 className="mt-4 font-display text-5xl font-bold leading-[1.05] text-[#0f2b57] md:text-7xl">
+              Portfolio
+              <span className="block text-[#3e86d0]">at a glance.</span>
+            </h1>
+            <p className="mt-4 max-w-[48ch] text-body-l text-[#5a6b84]">
+              {PROJECTS.length} sites. {PORTFOLIO_TOTALS.buildings} buildings. Grade-A warehousing delivered at scale.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="#nela-1"
+                className="inline-flex items-center gap-2 rounded-full bg-[#0f2b57] px-7 py-3 text-body font-semibold text-white transition hover:bg-[#1d5fb0]"
+              >
+                Explore sites <ArrowUpRight size={18} />
+              </a>
+              <a
+                href="/contact"
+                className="rounded-full border border-[#0f2b57]/25 px-7 py-3 text-body font-semibold text-[#0f2b57] transition hover:border-[#0f2b57]"
+              >
+                Talk to us
+              </a>
+            </div>
+            <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-[#0f2b57]/15 pt-6 sm:grid-cols-4">
+              {heroStats.map((s) => (
+                <div key={s.label}>
+                  <dd className="tabular font-display text-2xl font-bold text-[#0f2b57] md:text-3xl">{s.value}</dd>
+                  <dt className="mt-1 text-caption text-[#5a6b84]">{s.label}</dt>
+                </div>
+              ))}
+            </dl>
           </div>
-          <p className="mt-4 max-w-[60ch] text-caption text-grey-500">
-            Building-count figures shown here reflect the consolidated master plan tables below. Two source
-            documents cite different totals for NELA 1 (14 vs. 16 buildings) and the portfolio (23 vs. 27) —
-            flagged for client confirmation before these figures are treated as final.
-          </p>
-        </Container>
-      </section>
 
-      {/* S2–S4 · Per-project detail */}
-      {PROJECTS.map((project) => (
-        <section key={project.slug} id={project.slug} className="border-t border-navy-500 bg-navy-900 py-24">
-          <Container>
-            <SectionHead title={`${project.name} — ${project.client}`} standfirst={project.description} />
-            <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12">
-              <div className="lg:col-span-5">
-                <ProjectPlanViewer slug={project.slug} />
-                <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <p className="tabular text-body-l font-display font-bold text-white">{num(project.plotAcres)}</p>
-                    <p className="text-caption text-grey-300">Acres</p>
-                  </div>
-                  <div>
-                    <p className="tabular text-body-l font-display font-bold text-white">{project.buildingsCount}</p>
-                    <p className="text-caption text-grey-300">Buildings</p>
-                  </div>
-                  <div>
-                    <p className="tabular text-body-l font-display font-bold text-white">{num(project.groundCoverage)}%</p>
-                    <p className="text-caption text-grey-300">Ground cov.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-7">
-                <div className="grid grid-cols-[2.5rem_1fr_9rem_auto] gap-4 border-b border-navy-500 pb-2 text-label uppercase tracking-[0.08em] text-grey-300 sm:grid-cols-[2.5rem_1fr_9rem_auto]">
-                  <span>#</span>
-                  <span>Building</span>
-                  <span className="text-right">Built-up (sq.ft)</span>
-                  <span className="text-right">Status</span>
-                </div>
-                {project.buildings.map((b, i) => (
-                  <BuildingRow key={b.id} index={i + 1} building={b} />
-                ))}
-                <div className="mt-3 flex items-center justify-between border-t border-navy-500 pt-3 text-body font-semibold text-white">
-                  <span>Total</span>
-                  <span className="tabular">{num(project.builtUpSqft)}</span>
-                </div>
+          <div className="relative lg:col-span-5">
+            <div className="overflow-hidden rounded-[2rem] shadow-2xl">
+              <SiteImage
+                slot="projects-hero"
+                image={{ ...IMAGES.heroAerial, caption: undefined }}
+                ratio="1/1"
+                priority
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="rounded-[2rem] border-0"
+              />
+            </div>
+            <div className="absolute -left-6 bottom-6 rounded-2xl bg-white p-5 shadow-xl">
+              <p className={`${eyebrow} text-[#5a6b84]`}>Delivered</p>
+              <p className="mt-1 font-display text-3xl font-bold text-[#0f2b57]">
+                {PORTFOLIO_TOTALS.completed}
+                <span className="text-body text-[#5a6b84]"> / {PORTFOLIO_TOTALS.buildings} buildings</span>
+              </p>
+              <div className="mt-3 h-1.5 w-48 overflow-hidden rounded-full bg-[#0f2b57]/10">
+                <div
+                  className="h-full rounded-full bg-[#3e86d0]"
+                  style={{ width: `${(PORTFOLIO_TOTALS.completed / PORTFOLIO_TOTALS.buildings) * 100}%` }}
+                />
               </div>
             </div>
-          </Container>
-        </section>
-      ))}
-
-      {/* S5 · Delivery instrumentation */}
-      <section className="bg-ink py-24">
-        <Container>
-          <SectionHead title="Delivery instrumentation" standfirst="The section no competitor shows — every quantity, tracked." />
-
-          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <DataPanel accent="var(--color-sky-400)">
-              <h3 className="text-body-l font-display font-bold text-white">Concrete quantity control</h3>
-              <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
-                <Stat label="Total BOQ" value={`${num(CONCRETE_CONTROL.totalBoqM3, 0)} m³`} />
-                <Stat label="Achieved" value={`${num(CONCRETE_CONTROL.achievedM3, 0)} m³`} />
-                <Stat label="Progress" value={`${CONCRETE_CONTROL.progressPct}%`} accent />
-                <Stat label="Balance" value={`${num(CONCRETE_CONTROL.balanceM3, 0)} m³`} />
-              </div>
-              <ProgressBar percent={CONCRETE_CONTROL.progressPct} color="var(--color-sky-400)" className="mt-6" />
-              <p className="mt-4 text-caption text-grey-300">Major concrete works: {CONCRETE_CONTROL.majorWorks.join(", ")}.</p>
-            </DataPanel>
-
-            <DataPanel accent="var(--color-orange-500)">
-              <h3 className="text-body-l font-display font-bold text-white">BOQ-based control</h3>
-              <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
-                <Stat label="Total BOQ value" value={`₹${BOQ_CONTROL.totalCr}+ Cr`} />
-                <Stat label="Value achieved" value={`₹${BOQ_CONTROL.achievedCr} Cr`} accent />
-                <Stat label="Balance" value={`₹${BOQ_CONTROL.balanceCr} Cr`} />
-                <Stat label="Work packages" value={String(BOQ_CONTROL.workPackages)} />
-              </div>
-              <ProgressBar percent={BOQ_CONTROL.achievedPct} color="var(--color-orange-500)" className="mt-6" />
-            </DataPanel>
-          </div>
-
-          <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {BOQ_TAKEAWAYS.map((t) => (
-              <li key={t} className="border-l-2 border-sky-400 pl-4 text-body text-grey-300">
-                {t}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-16 flex flex-wrap items-center justify-center gap-16 border-t border-navy-500 pt-12">
-            <Gauge percent={DASHBOARD.overallProgressPct} label="Overall progress" color="var(--color-orange-500)" />
-            <Gauge percent={Math.round(DASHBOARD.spi * 100)} label={`SPI · ${DASHBOARD.spi.toFixed(2)}`} color="var(--color-sky-400)" />
-            <Gauge percent={Math.round(DASHBOARD.cpi * 100)} label={`CPI · ${DASHBOARD.cpi.toFixed(2)}`} color="var(--color-green-500)" />
+            <div className="absolute -right-3 top-8 rounded-2xl bg-[#0f2b57] px-5 py-4 text-white shadow-xl">
+              <p className="tabular font-display text-2xl font-bold">{PROJECTS.length}</p>
+              <p className="text-caption text-white/75">active sites</p>
+            </div>
           </div>
         </Container>
       </section>
 
-      {/* S6 · The delivery challenge */}
-      <section className="border-t border-navy-500 bg-navy-900 py-24">
-        <Container className="grid grid-cols-1 gap-16 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <SectionHead title="The delivery challenge" />
-            <ul className="mt-8 space-y-3">
-              {DELIVERY_FACTORS.map((f) => (
-                <li key={f} className="border-b border-navy-500 pb-3 text-body text-grey-300">
+      {/* Project index cards */}
+      <section className="bg-white py-24">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className={`${eyebrow} text-[#3e86d0]`}>Our sites</p>
+              <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">Every site. One standard.</h2>
+            </div>
+          </div>
+          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {cards.map((p, i) => {
+              const pct = p.buildingsCount ? Math.min(100, Math.round(((p.completed + p.wip * 0.5) / p.buildingsCount) * 100)) : 0;
+              return (
+                <a
+                  key={p.slug}
+                  href={detailSlugs.has(p.slug) ? `#${p.slug}` : undefined}
+                  className="group overflow-hidden rounded-2xl border border-[#0f2b57]/15 bg-white transition-shadow hover:shadow-xl"
+                >
+                  <div className="relative overflow-hidden">
+                    <SiteImage
+                      slot={`${p.slug}-card`}
+                      image={{ src: p.src, alt: p.name }}
+                      ratio="16/10"
+                      className="rounded-none border-0 transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute left-4 top-3 font-display text-5xl font-bold text-white drop-shadow-lg">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="font-display text-2xl font-bold text-[#0f2b57]">{p.name}</h3>
+                      <ArrowUpRight
+                        size={22}
+                        className="text-[#0f2b57] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
+                      />
+                    </div>
+                    <p className="mt-1 text-caption text-[#5a6b84]">{p.client}</p>
+                    <dl className="mt-5 grid grid-cols-3 gap-2 border-t border-[#0f2b57]/10 pt-4">
+                      <div>
+                        <dd className="tabular font-display font-bold text-[#0f2b57]">{num(p.plotAcres)}</dd>
+                        <dt className="text-caption text-[#5a6b84]">acres</dt>
+                      </div>
+                      <div>
+                        <dd className="tabular font-display font-bold text-[#0f2b57]">{p.buildingsCount}</dd>
+                        <dt className="text-caption text-[#5a6b84]">buildings</dt>
+                      </div>
+                      <div>
+                        <dd className="tabular font-display font-bold text-[#0f2b57]">{num(p.builtUpSqft / 100000, 1)}L</dd>
+                        <dt className="text-caption text-[#5a6b84]">sq.ft</dt>
+                      </div>
+                    </dl>
+                    <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-[#0f2b57]/10">
+                      <div className="h-full rounded-full bg-[#3e86d0]" style={{ width: `${pct}%` }} />
+                    </div>
+                    <p className="mt-2 text-caption text-[#5a6b84]">
+                      {p.completed} handed over · {p.wip} in progress
+                    </p>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </Container>
+      </section>
+
+      {/* Per-project detail */}
+      {PROJECTS.map((project, i) => {
+        const max = Math.max(...project.buildings.map((b) => b.builtUpSqft));
+        return (
+          <section key={project.slug} id={project.slug} className="scroll-mt-4">
+            {/* Photo banner */}
+            <div className="relative overflow-hidden bg-black text-white">
+              <div className="absolute inset-0">
+                <SiteImage
+                  slot={`${project.slug}-banner`}
+                  image={IMAGES[PROJECT_IMAGE[project.slug]]}
+                  ratio="auto"
+                  className="h-full w-full rounded-none border-0"
+                />
+                <div className="absolute inset-0 bg-black/55" />
+              </div>
+              <Container className="relative grid grid-cols-1 gap-10 py-20 lg:grid-cols-12 lg:items-end">
+                <div className="lg:col-span-7">
+                  <p className={`${eyebrow} flex items-center gap-2 text-[#7fb6e8]`}>
+                    <MapPin size={14} />
+                    {String(i + 1).padStart(2, "0")} · {project.client}
+                  </p>
+                  <h2 className="mt-4 font-display text-5xl font-bold md:text-7xl">{project.name}</h2>
+                  <p className="mt-5 max-w-[56ch] text-body-l text-white/85">{project.description}</p>
+                </div>
+                <dl className="grid grid-cols-3 gap-6 lg:col-span-5">
+                  {[
+                    { v: num(project.plotAcres), l: "Acres" },
+                    { v: String(project.buildingsCount), l: "Buildings" },
+                    { v: `${num(project.groundCoverage)}%`, l: "Ground coverage" },
+                  ].map((s) => (
+                    <div key={s.l} className="border-t border-white/30 pt-4">
+                      <dd className="tabular font-display text-3xl font-bold">{s.v}</dd>
+                      <dt className="mt-1 text-caption text-white/75">{s.l}</dt>
+                    </div>
+                  ))}
+                </dl>
+              </Container>
+            </div>
+
+            {/* Plan + buildings */}
+            <div className={i % 2 === 0 ? "bg-[#f2f7fc]" : "bg-white"}>
+              <Container className="grid grid-cols-1 gap-10 py-16 lg:grid-cols-12">
+                <div className="lg:col-span-5">
+                  <p className={`${eyebrow} mb-4 text-[#3e86d0]`}>Site plan</p>
+                  <ProjectPlanViewer slug={project.slug} />
+                </div>
+                <div className="lg:col-span-7">
+                  <div className="mb-4 flex items-end justify-between">
+                    <p className={`${eyebrow} text-[#3e86d0]`}>Buildings</p>
+                    <p className="text-caption text-[#5a6b84]">
+                      Total <span className="tabular font-semibold text-[#0f2b57]">{num(project.builtUpSqft)}</span> sq.ft
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {project.buildings.map((b, idx) => (
+                      <div key={b.id} className="rounded-xl border border-[#0f2b57]/15 bg-white p-5">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <span className="tabular text-caption text-[#3e86d0]">{String(idx + 1).padStart(2, "0")}</span>
+                            <h3 className="font-display text-body-l font-bold text-[#0f2b57]">{b.name}</h3>
+                          </div>
+                          <StatusPill status={b.status} label={b.statusLabel} />
+                        </div>
+                        <p className="tabular mt-4 font-display text-2xl font-bold text-[#0f2b57]">
+                          {num(b.builtUpSqft)}
+                          <span className="ml-1 text-caption font-normal text-[#5a6b84]">sq.ft</span>
+                        </p>
+                        <div className="mt-3 h-1 overflow-hidden rounded-full bg-[#0f2b57]/10">
+                          <div className="h-full rounded-full bg-[#3e86d0]" style={{ width: `${(b.builtUpSqft / max) * 100}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Container>
+            </div>
+          </section>
+        );
+      })}
+
+      {/* Delivery challenge */}
+      <section className="bg-[#0f2b57] py-24 text-white">
+        <Container>
+          <p className={`${eyebrow} text-[#7fb6e8]`}>The delivery challenge</p>
+          <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold md:text-5xl">What it takes to build at this scale.</h2>
+          <div className="mt-12 grid grid-cols-1 gap-16 lg:grid-cols-2">
+            <ul className="divide-y divide-white/15 border-y border-white/15">
+              {DELIVERY_FACTORS.map((f, i) => (
+                <li key={f} className="flex gap-4 py-4 text-body text-white/85">
+                  <span className="tabular text-caption text-[#7fb6e8]">{String(i + 1).padStart(2, "0")}</span>
                   {f}
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="lg:col-span-6">
-            <SectionHead title="Site challenges" />
-            <div className="mt-8 space-y-6">
+            <div className="space-y-8">
               {SITE_CHALLENGES.map((c) => (
-                <div key={c.title}>
-                  <h3 className="text-body-l font-display font-bold text-white">{c.title}</h3>
-                  <p className="mt-1 text-caption text-grey-300">{c.body}</p>
+                <div key={c.title} className="border-l-2 border-[#3e86d0] pl-5">
+                  <h3 className="font-display text-body-l font-bold">{c.title}</h3>
+                  <p className="mt-1 text-caption text-white/75">{c.body}</p>
                 </div>
               ))}
             </div>
           </div>
-        </Container>
-        <Container className="mt-16">
-          <p className="text-display-m font-display text-white">
+          <p className="mt-20 max-w-3xl font-display text-2xl font-bold text-[#7fb6e8] md:text-4xl">
             Success is not just about building structures, it&rsquo;s about delivering commitments.
           </p>
         </Container>
       </section>
 
-      {/* S7 · Clients & partners */}
-      <section className="bg-ink py-24">
+      {/* Clients & partners */}
+      <section className="bg-white py-24">
         <Container>
-          <SectionHead title="Clients & partners" />
-          <div className="mt-12 grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4">
-            {[...CLIENTS, ...PMC_PARTNERS, ...TENANTS].map((name) => (
-              <div key={name} className="flex h-16 items-center justify-center rounded-lg border border-navy-500 px-4 text-center text-caption font-medium text-grey-300">
-                {name}
+          <p className={`${eyebrow} text-[#3e86d0]`}>Clients &amp; partners</p>
+          <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">Built alongside the best.</h2>
+          <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3">
+            {CLIENT_GROUPS.map((g) => (
+              <div key={g.label}>
+                <h3 className="border-b-2 border-[#3e86d0] pb-3 font-display text-body-l font-bold text-[#0f2b57]">
+                  {g.label}
+                </h3>
+                <ul className="mt-4 divide-y divide-[#0f2b57]/10">
+                  {g.names.map((name) => (
+                    <li key={name} className="py-3 text-body text-[#5a6b84]">
+                      {name}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
         </Container>
       </section>
     </>
-  );
-}
-
-function Stat({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div>
-      <p className={`tabular text-body-l font-display font-bold ${accent ? "text-orange-500" : "text-white"}`}>{value}</p>
-      <p className="mt-1 text-caption text-grey-300">{label}</p>
-    </div>
   );
 }

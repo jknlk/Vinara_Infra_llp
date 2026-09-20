@@ -195,4 +195,16 @@ export const IMAGES: Record<string, ImageSlot> = {
     src: "https://images.unsplash.com/photo-1532986012014-e2ee98d47a46?q=80&w=1000&auto=format&fit=crop",
     alt: "Aerial drone photo of an organised shipping container yard",
   },
+
+  // Planning page — supporting imagery.
+  planningReview: {
+    src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1400&h=1750&auto=format&fit=crop&crop=entropy",
+    alt: "Construction planning schedule and Gantt chart laid out for review on a desk",
+    caption: "Master programme review",
+  },
+  planningOutputs: {
+    src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=2400&auto=format&fit=crop",
+    alt: "Overhead view of an engineer reviewing reinforcement work and control data on an active site",
+    caption: "Progress & control reporting",
+  },
 };

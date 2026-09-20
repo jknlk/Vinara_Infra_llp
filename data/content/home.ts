@@ -43,6 +43,7 @@ export const CAPABILITIES = [
 export const SERVICES_SHOWCASE = [
   {
     icon: "Warehouse",
+    tag: "Warehousing",
     title: "Warehousing",
     body: "Large-format Grade-A warehousing — smart spaces, stronger supply chains.",
     href: "/services#warehousing",
@@ -50,6 +51,7 @@ export const SERVICES_SHOWCASE = [
   },
   {
     icon: "Building2",
+    tag: "Industrial",
     title: "Industrial",
     body: "Built for performance, engineered for progress. Civil + PEB factories.",
     href: "/services#industrial",
@@ -57,6 +59,7 @@ export const SERVICES_SHOWCASE = [
   },
   {
     icon: "Compass",
+    tag: "Infrastructure",
     title: "Infrastructure",
     body: "Building the foundation for tomorrow — industrial parks and estates.",
     href: "/services#infrastructure",
@@ -64,6 +67,7 @@ export const SERVICES_SHOWCASE = [
   },
   {
     icon: "Layers",
+    tag: "Precast",
     title: "Precast Wall Casting & Erection",
     body: "In-house precast systems accelerating quality, safety and schedule.",
     href: "/services#precast",
@@ -71,6 +75,7 @@ export const SERVICES_SHOWCASE = [
   },
   {
     icon: "Droplet",
+    tag: "Irrigation",
     title: "Irrigation & Sewerage",
     body: "Pipe-laying, RCC chambers and headworks for public utility programs.",
     href: "/services#rmc",
@@ -78,6 +83,7 @@ export const SERVICES_SHOWCASE = [
   },
   {
     icon: "Waves",
+    tag: "Water Infra",
     title: "Water Infrastructure (BWSSB)",
     body: "Hard-rock blasting, pipe corridors and controlled RCC sequencing.",
     href: "/services#rmc",
@@ -85,6 +91,7 @@ export const SERVICES_SHOWCASE = [
   },
   {
     icon: "Route",
+    tag: "Roads",
     title: "Roads & Site Development",
     body: "Concrete roads, stormwater drains, compound walls and land development.",
     href: "/services#infrastructure",
@@ -92,6 +99,7 @@ export const SERVICES_SHOWCASE = [
   },
   {
     icon: "Wrench",
+    tag: "Design-Build",
     title: "Design-Build Turnkey",
     body: "End-to-end delivery — civil, PEB, utilities and site development.",
     href: "/services",

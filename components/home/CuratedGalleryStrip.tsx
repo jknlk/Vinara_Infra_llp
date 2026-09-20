@@ -9,7 +9,7 @@ export default function CuratedGalleryStrip() {
   const step = ARC_DEGREES / (STRIP.length - 1);
 
   return (
-    <section className="bg-ink pb-24">
+    <section className="bg-surface pb-24">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-navy-900 py-16">
           <span className="absolute right-6 top-6 z-20 rounded-full border border-white/15 bg-ink/70 px-4 py-1.5 text-caption font-semibold text-white backdrop-blur">

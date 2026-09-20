@@ -1,39 +1,38 @@
 import Image from "next/image";
-import { ArrowUpRight, Quote } from "lucide-react";
+import { Quote } from "lucide-react";
+import Container from "@/components/ui/Container";
 import { TEAM, DIRECTORS } from "@/data/content/leadership";
 
 const REST = TEAM.slice(DIRECTORS.length);
-const MARQUEE = [...REST, ...REST];
 
-function Avatar({
+function Portrait({
   photo,
   name,
-  size,
   className = "",
 }: {
   photo: string;
   name: string;
-  size: string;
   className?: string;
 }) {
   return (
-    <span className={`relative block shrink-0 overflow-hidden ${size} ${className}`}>
+    <div className={`relative overflow-hidden ${className}`}>
       <Image
         src={photo}
         alt={name}
         fill
-        sizes="128px"
-        className="object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
+        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+        className="object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0"
       />
-    </span>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
+    </div>
   );
 }
 
 export default function TeamGrid({ asPageTitle = true }: { asPageTitle?: boolean }) {
   const Heading = asPageTitle ? "h1" : "h2";
   return (
-    <section className="bg-white pb-24 pt-12">
-      <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
+    <section className="bg-surface pb-16 pt-12">
+      <Container>
         <div className="inline-flex items-center gap-2 text-label uppercase tracking-[0.08em] text-grey-500">
           <span className="h-px w-6 bg-blue-500" />
           Leadership
@@ -44,63 +43,49 @@ export default function TeamGrid({ asPageTitle = true }: { asPageTitle?: boolean
           <span className="text-blue-600">behind the build.</span>
         </Heading>
 
-        {/* Directors — spotlight row */}
-        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Directors — spotlight portraits */}
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {DIRECTORS.map((p) => (
             <div
               key={p.name}
-              className="group relative overflow-hidden rounded-3xl border border-[#E3EAF4] bg-white p-8 transition-colors hover:border-blue-400"
+              className="group relative mx-auto w-full max-w-sm overflow-hidden rounded-3xl"
             >
+              <Portrait photo={p.photo} name={p.name} className="aspect-[3/4]" />
               <Quote
-                size={64}
-                className="pointer-events-none absolute -right-2 -top-2 text-[#EEF2F8]"
+                size={72}
+                className="pointer-events-none absolute right-5 top-5 text-white/10"
                 strokeWidth={1}
               />
-              <div className="relative flex items-start justify-between">
-                <Avatar photo={p.photo} name={p.name} size="h-20 w-20" className="rounded-2xl" />
-                <ArrowUpRight
-                  size={18}
-                  className="text-grey-500 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
+              <div className="absolute inset-x-0 bottom-0 p-7 sm:p-8">
+                <h3 className="text-display-m font-display font-bold text-white">{p.name}</h3>
+                <p className="mt-1 text-body-l font-medium text-sky-200">{p.role}</p>
+                <p className="mt-3 max-w-lg text-body text-grey-300 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  {p.bio}
+                </p>
               </div>
-              <h3 className="relative mt-6 text-display-m font-display font-bold text-ink">
-                {p.name}
-              </h3>
-              <p className="mt-1 text-body-l font-medium text-blue-600">{p.role}</p>
-              <p className="mt-4 max-w-lg text-body text-grey-500">{p.bio}</p>
             </div>
           ))}
         </div>
 
-        {/* Management & site team — marquee strip */}
-        <div className="relative mt-10 overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent" />
-
-          <div className="flex w-max animate-marquee items-stretch gap-5 hover:[animation-play-state:paused]">
-            {MARQUEE.map((p, i) => (
-              <div
-                key={`${p.name}-${i}`}
-                className="group flex w-72 shrink-0 flex-col gap-4 rounded-2xl border border-[#E3EAF4] bg-white p-6 transition-colors hover:border-blue-400"
-              >
-                <div className="flex items-center gap-3">
-                  <Avatar
-                    photo={p.photo}
-                    name={p.name}
-                    size="h-12 w-12"
-                    className="rounded-xl border border-[#E3EAF4]"
-                  />
-                  <div>
-                    <h4 className="text-body font-display font-bold text-ink">{p.name}</h4>
-                    <p className="text-caption font-medium text-blue-600">{p.role}</p>
-                  </div>
-                </div>
-                <p className="text-caption text-grey-500">{p.bio}</p>
+        {/* Management & site team — editorial grid */}
+        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {REST.map((p) => (
+            <div
+              key={p.name}
+              className="group relative overflow-hidden rounded-2xl"
+            >
+              <Portrait photo={p.photo} name={p.name} className="aspect-[3/4]" />
+              <div className="absolute inset-x-0 bottom-0 p-5">
+                <h4 className="text-body-l font-display font-bold text-white">{p.name}</h4>
+                <p className="mt-1 text-caption font-medium text-sky-200">{p.role}</p>
+                <p className="mt-2 max-h-0 overflow-hidden text-caption text-grey-300 opacity-0 transition-all duration-300 group-hover:mt-2 group-hover:max-h-24 group-hover:opacity-100">
+                  {p.bio}
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

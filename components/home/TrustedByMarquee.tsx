@@ -4,7 +4,7 @@ const NAMES = [...CLIENTS, ...PMC_PARTNERS, ...TENANTS];
 
 export default function TrustedByMarquee() {
   return (
-    <section className="bg-white pb-24 pt-12">
+    <section className="bg-surface pb-6 pt-12">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-2 text-label uppercase tracking-[0.08em] text-grey-500">
@@ -18,8 +18,8 @@ export default function TrustedByMarquee() {
         </div>
 
         <div className="relative mt-14 overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-surface to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-surface to-transparent" />
 
           <div className="flex w-max animate-marquee items-center gap-4">
             {[...NAMES, ...NAMES].map((name, i) => (

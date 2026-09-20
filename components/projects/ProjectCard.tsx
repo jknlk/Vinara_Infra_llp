@@ -28,7 +28,7 @@ export default function ProjectCard({
       <div>
         <StatusPill status={project.wip > 0 ? "wip" : project.completed === project.buildingsCount ? "completed" : "upcoming"} label={`${project.completed} completed · ${project.wip} in progress`} />
         <p className="mt-4 text-caption uppercase tracking-[0.08em] text-grey-300">{project.client}</p>
-        <h3 className={`mt-1 font-display font-bold text-white ${featured ? "text-display-l" : "text-display-m"}`}>
+        <h3 className={`mt-1 font-display font-bold text-ink ${featured ? "text-display-l" : "text-display-m"}`}>
           {project.name}
         </h3>
       </div>
@@ -36,10 +36,10 @@ export default function ProjectCard({
       <div className="mt-8">
         <div className="flex items-end justify-between text-caption text-grey-300">
           <span>Built-up area</span>
-          <span className="tabular text-white">{formatArea(project.builtUpSqft)} sq.ft</span>
+          <span className="tabular text-ink">{formatArea(project.builtUpSqft)} sq.ft</span>
         </div>
         <ProgressBar percent={progressPct} color="var(--color-sky-400)" className="mt-3" />
-        <span className="mt-4 inline-block text-caption font-medium text-sky-200 group-hover:text-sky-400">
+        <span className="mt-4 inline-block text-caption font-medium text-navy-700 group-hover:text-sky-400">
           View details
         </span>
       </div>

@@ -60,13 +60,13 @@ export default function PlanningLadder() {
               <div className="flex items-baseline gap-4">
                 <span className="tabular text-caption text-sky-400">{lvl.level}</span>
                 <div>
-                  <h3 className="text-body-l font-display font-bold text-white">
+                  <h3 className="text-body-l font-display font-bold text-ink">
                     {lvl.title} <span className="text-caption font-normal text-grey-300">({lvl.term})</span>
                   </h3>
                   <p className="mt-1 max-w-[52ch] text-caption text-grey-300">{lvl.purpose}</p>
                 </div>
               </div>
-              <p className="text-caption text-sky-200 sm:text-right">{lvl.output}</p>
+              <p className="text-caption text-navy-700 sm:text-right">{lvl.output}</p>
             </div>
           </div>
         ))}

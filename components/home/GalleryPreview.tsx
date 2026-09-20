@@ -1,83 +1,91 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Building2 } from "lucide-react";
-import { IMAGES } from "@/data/images";
+import { ArrowUpRight, Sparkles } from "lucide-react";
+import { loadHome } from "@/lib/homeContent";
+import type { HomeData } from "@/data/content/homeAdmin";
 
-const STRIP = [
-  "portraitWarehouseRacking",
-  "portraitTowerCrane",
-  "portraitShippingContainers",
-  "portraitForklift",
-  "portraitScaffoldWorker",
-  "portraitAerialContainerYard",
-  "portraitScaffoldWorkers",
-  "portraitHardHatWorker",
-] as const;
-
-const LOOP = [...STRIP, ...STRIP];
-
-function MarqueeItem({ imageKey }: { imageKey: string }) {
-  const img = IMAGES[imageKey];
-  if (!img?.src) return null;
+function MarqueeCard({ item }: { item: HomeData }) {
+  if (!item.image) return null;
   return (
-    <div className="group/item relative aspect-[9/16] w-36 flex-shrink-0 overflow-hidden rounded-2xl sm:w-44 lg:w-52">
-      <Image
-        src={img.src}
-        alt={img.alt}
-        fill
-        sizes="(max-width: 768px) 30vw, 15vw"
-        className="object-cover transition-transform duration-500 group-hover/item:scale-105"
-      />
+    <div className="group/item relative z-0 flex w-64 flex-shrink-0 origin-top flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_30px_-12px_rgba(11,42,91,0.25)] transition-all duration-300 ease-out hover:z-20 hover:-translate-y-2 hover:shadow-[0_24px_48px_-12px_rgba(11,42,91,0.45)] sm:w-72">
+      <div className="relative aspect-[4/3] w-full overflow-hidden">
+        <Image
+          src={item.image}
+          alt={item.title}
+          fill
+          sizes="(max-width: 768px) 60vw, 300px"
+          className="object-cover"
+        />
+      </div>
+      <div className="flex items-center justify-between px-4 py-3">
+        <p className="truncate text-caption font-semibold text-ink">{item.title}</p>
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-600 transition-colors group-hover/item:bg-blue-600 group-hover/item:text-white">
+          <ArrowUpRight size={13} />
+        </span>
+      </div>
+      <div className="grid grid-rows-[0fr] transition-all duration-300 ease-out group-hover/item:grid-rows-[1fr]">
+        <div className="overflow-hidden">
+          <div className="space-y-1 border-t border-[#E3EAF4] px-4 py-3">
+            <div className="flex items-center justify-between text-caption">
+              <span className="text-grey-500">Category</span>
+              <span className="font-medium text-ink">{item.category}</span>
+            </div>
+            <p className="text-caption text-grey-500">{item.description}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default function GalleryPreview() {
+export default async function GalleryPreview() {
+  const items = await loadHome("work");
+  const LOOP = [...items, ...items];
   return (
-    <section className="bg-ink py-24">
+    <section className="bg-white pb-24 pt-4">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="inline-flex items-center gap-2 text-label uppercase tracking-[0.08em] text-grey-300">
-              <span className="h-px w-6 bg-blue-500" />
-              Gallery
+        <div className="relative mx-2 sm:mx-8 lg:mx-14">
+          {/* single blue backdrop spanning behind the heading and the whole row, incl. gaps between cards */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-navy-700 shadow-[0_24px_60px_-16px_rgba(26,95,196,0.55)]">
+            <span className="absolute -left-6 -top-10 h-28 w-28 rounded-full bg-white/10" />
+            <span className="absolute -right-10 top-1/3 h-32 w-32 rounded-full bg-white/5" />
+          </div>
+
+          <div className="relative z-10 pt-10 text-center sm:pt-12">
+            <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-white/15">
+              <Sparkles size={22} className="text-white" />
             </div>
-            <h2 className="mt-4 text-display-l font-display leading-[1.05]">
-              <span className="text-white">From the </span>
-              <span className="text-sky-400">field.</span>
-            </h2>
+            <h2 className="text-display-m font-display font-bold text-white">Our Work</h2>
+            <p className="mt-2 text-body text-sky-100">A selection of signature projects</p>
           </div>
-          <div className="max-w-md lg:text-right">
-            <p className="text-body-l text-grey-300">
-              Drone captures, in-progress shots and completed builds from live Vinara sites.
-            </p>
-            <Link
-              href="/gallery"
-              className="mt-4 inline-flex items-center gap-1.5 text-caption font-semibold text-sky-200 hover:text-sky-400"
-            >
-              View full gallery
-              <ArrowUpRight size={14} />
-            </Link>
-          </div>
-        </div>
 
-        <div className="relative mt-16 w-full pb-4">
-          <div className="group relative w-full overflow-hidden rounded-[2rem] border border-white/10 bg-navy-900 py-6">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-navy-900 to-transparent sm:w-24" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-navy-900 to-transparent sm:w-24" />
+          <div className="relative z-10 mt-2 pb-10">
+            <div className="relative left-1/2 w-screen -translate-x-1/2">
+              <div className="group relative w-full overflow-x-hidden overflow-y-visible py-8">
+                <div className="animate-marquee flex w-max items-start gap-6 px-4 group-hover:[animation-play-state:paused]">
+                  {LOOP.map((item, i) => (
+                    <MarqueeCard key={`${item.title}-${i}`} item={item} />
+                  ))}
+                </div>
+              </div>
+            </div>
 
-            <div className="animate-marquee flex w-max items-stretch gap-4 px-4 group-hover:[animation-play-state:paused]">
-              {LOOP.map((key, i) => (
-                <MarqueeItem key={`${key}-${i}`} imageKey={key} />
+            <div className="mt-2 flex items-center justify-center gap-2">
+              {items.slice(0, 5).map((item, i) => (
+                <span
+                  key={`${item.title}-${i}`}
+                  className={`h-1.5 rounded-full ${i === 0 ? "w-6 bg-white" : "w-1.5 bg-white/40"}`}
+                />
               ))}
             </div>
-          </div>
 
-          <div className="absolute -top-4 right-8 flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-semibold text-ink shadow-[0_6px_20px_rgba(0,0,0,0.25)] sm:right-16">
-            <Building2 size={14} className="text-blue-600" /> 23 buildings
-          </div>
-          <div className="absolute bottom-8 left-8 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.4)] sm:left-16">
-            <Image src="/vinara-logo-transparent.png" alt="Vinara Infra LLP" width={28} height={28} className="h-7 w-auto" />
+            <Link
+              href="/gallery"
+              aria-label="View full gallery"
+              className="absolute bottom-4 right-2 z-10 grid h-12 w-12 place-items-center rounded-full bg-white text-blue-600 shadow-[0_10px_30px_-8px_rgba(11,20,40,0.45)] transition-transform hover:scale-105 hover:bg-sky-100 sm:right-6"
+            >
+              <ArrowUpRight size={20} />
+            </Link>
           </div>
         </div>
       </div>

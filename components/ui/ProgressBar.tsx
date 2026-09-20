@@ -36,10 +36,10 @@ export default function ProgressBar({
       {label ? (
         <div className="mb-2 flex items-center justify-between text-caption text-grey-300">
           <span>{label}</span>
-          <span className="tabular text-white">{percent}%</span>
+          <span className="tabular text-ink">{percent}%</span>
         </div>
       ) : null}
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/8">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink/10">
         <div
           ref={fillRef}
           className="h-full origin-left rounded-full"

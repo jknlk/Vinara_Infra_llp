@@ -43,29 +43,19 @@ export const PROJECTS: ProjectSite[] = [
     name: "NELA 1",
     client: "Assetz Industrial Park Pvt Ltd",
     plotAcres: 113.01,
-    builtUpSqft: 2648787.64,
-    buildingsCount: 14,
+    builtUpSqft: 1215085.00,
+    buildingsCount: 4,
     groundCoverage: 51.76,
     completed: 2,
     wip: 2,
-    upcoming: 10,
+    upcoming: 0,
     description:
       "A well-planned industrial & logistics park designed for efficient movement, optimum land utilization and seamless operations.",
     buildings: [
       { id: "B400", name: "B400", builtUpSqft: 359754.09, status: "wip", statusLabel: "Work in progress" },
       { id: "B500", name: "B500 — Amazon", builtUpSqft: 421888.63, status: "completed", statusLabel: "Handed over" },
-      { id: "B600", name: "B600", builtUpSqft: 0, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B700", name: "B700", builtUpSqft: 303654.81, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B800", name: "B800", builtUpSqft: 299061.06, status: "upcoming", statusLabel: "Yet to start" },
       { id: "B900", name: "B900", builtUpSqft: 271608.55, status: "completed", statusLabel: "Handed over" },
       { id: "B1000", name: "B1000", builtUpSqft: 161833.73, status: "wip", statusLabel: "Work in progress" },
-      { id: "B1100", name: "B1100", builtUpSqft: 123408.72, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B1200", name: "B1200", builtUpSqft: 134400.70, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B1300", name: "B1300", builtUpSqft: 32982.73, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B1500", name: "B1500", builtUpSqft: 77254.73, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B1600", name: "B1600", builtUpSqft: 83687.09, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B1700", name: "B1700 — Future Multi Story", builtUpSqft: 39804.84, status: "upcoming", statusLabel: "Yet to start" },
-      { id: "B1900", name: "B1900 — Cold Storage / Restaurant", builtUpSqft: 22214.21, status: "upcoming", statusLabel: "Yet to start" },
     ],
   },
   {
@@ -74,12 +64,12 @@ export const PROJECTS: ProjectSite[] = [
     name: "NELA 2",
     client: "Brit Logistics Pvt Ltd",
     plotAcres: 47.50,
-    builtUpSqft: 1124567.20,
-    buildingsCount: 6,
+    builtUpSqft: 1020842.69,
+    buildingsCount: 5,
     groundCoverage: 47.34,
     completed: 3,
     wip: 2,
-    upcoming: 1,
+    upcoming: 0,
     description:
       "A well-planned industrial & logistics park designed for efficient movement, optimum land utilization and seamless operations.",
     buildings: [
@@ -87,7 +77,6 @@ export const PROJECTS: ProjectSite[] = [
       { id: "B200", name: "B200", builtUpSqft: 222472.50, status: "completed", statusLabel: "Completed — handed over" },
       { id: "B300", name: "B300", builtUpSqft: 238426.91, status: "completed", statusLabel: "Completed — handed over" },
       { id: "B400", name: "B400", builtUpSqft: 110031.76, status: "wip", statusLabel: "Work in progress" },
-      { id: "B500", name: "B500", builtUpSqft: 50173.70, status: "upcoming", statusLabel: "Upcoming" },
       { id: "B600", name: "B600", builtUpSqft: 245677.54, status: "wip", statusLabel: "Work in progress" },
     ],
   },
@@ -115,13 +104,13 @@ export const PROJECTS: ProjectSite[] = [
 
 export const PORTFOLIO_TOTALS = {
   plotAcres: 213.06,
-  builtUpSqft: 4230930.54,
-  buildings: 23,
+  builtUpSqft: 3133500.23,
+  buildings: 12,
   fsi: 0.54,
   groundCoverage: 47.34,
   completed: 6,
   wip: 6,
-  upcoming: 11,
+  upcoming: 0,
 };
 
 export function getProject(slug: string) {

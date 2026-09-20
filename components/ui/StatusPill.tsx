@@ -2,8 +2,8 @@ import type { BuildingStatus } from "@/data/buildings";
 
 const STATUS_STYLES: Record<BuildingStatus, string> = {
   completed: "bg-green-500/15 text-green-500 border-green-500/40",
-  wip: "bg-sky-400/15 text-sky-200 border-sky-400/40",
-  upcoming: "bg-orange-500/15 text-orange-300 border-orange-500/40",
+  wip: "bg-sky-400/15 text-navy-700 border-sky-400/40",
+  upcoming: "bg-orange-500/15 text-navy-700 border-orange-500/40",
 };
 
 export default function StatusPill({

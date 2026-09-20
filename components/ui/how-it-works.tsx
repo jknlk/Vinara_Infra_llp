@@ -1,7 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LazyMotion, domAnimation, m } from "motion/react";
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return isDesktop;
+}
 
 interface CardProps {
   number: string;
@@ -122,10 +134,14 @@ const ANCHOR_LEFT_X = 290;
 const ANCHOR_RIGHT_X = 710;
 const ANCHOR_Y_OFFSET = 150;
 
-function buildPositions(count: number): StepPosition[] {
+function buildPositions(count: number, isDesktop: boolean): StepPosition[] {
   return Array.from({ length: count }, (_, index) => {
     const onLeft = index % 2 === 0;
     const top = index * STEP_HEIGHT;
+    if (!isDesktop) {
+      // Mobile: plain stacked flow, no absolute positioning, rotation or offset.
+      return { className: "", rotate: "", style: {} };
+    }
     return {
       className: "md:absolute",
       rotate: onLeft ? "rotate-8" : "-rotate-8",
@@ -194,8 +210,9 @@ export default function HowItWorks({
     },
   ];
 
+  const isDesktop = useIsDesktop();
   const data = features && features.length > 0 ? features : defaultFeatures;
-  const positions = stepPositions || buildPositions(data.length);
+  const positions = stepPositions || buildPositions(data.length, isDesktop);
 
   const height = Math.max(400, (data.length - 1) * STEP_HEIGHT + 300);
 

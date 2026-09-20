@@ -24,53 +24,94 @@ function BuildingMesh({
   onSelect: (b: LaidOutBuilding | null) => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
-  const geometry = useMemo(() => new THREE.BoxGeometry(b.width, b.height, b.depth), [b.width, b.height, b.depth]);
-  const edges = useMemo(() => new THREE.EdgesGeometry(geometry), [geometry]);
+  const isUpcoming = b.status === "upcoming";
+  const h = b.height * 1.7;
+  const rise = Math.max(h * 0.16, 0.12);
+  const docks = Math.max(2, Math.round(b.width / 0.7));
+
+  const bodyGeo = useMemo(() => new THREE.BoxGeometry(b.width, h, b.depth), [b.width, h, b.depth]);
+  const edges = useMemo(() => new THREE.EdgesGeometry(bodyGeo), [bodyGeo]);
+  // shallow gable roof: triangle profile extruded along the building depth
+  const roofGeo = useMemo(() => {
+    const shape = new THREE.Shape();
+    const w = b.width * 1.03;
+    shape.moveTo(-w / 2, 0);
+    shape.lineTo(w / 2, 0);
+    shape.lineTo(0, rise);
+    shape.closePath();
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: b.depth * 1.03, bevelEnabled: false });
+    geo.translate(0, 0, -(b.depth * 1.03) / 2);
+    return geo;
+  }, [b.width, b.depth, rise]);
 
   useEffect(() => {
     if (!groupRef.current) return;
-    gsap.fromTo(
-      groupRef.current.scale,
-      { y: 0.001 },
-      { y: 1, duration: 0.9, ease: "expo.out", delay: 0.05 * Math.random() }
-    );
+    gsap.fromTo(groupRef.current.scale, { y: 0.001 }, { y: 1, duration: 0.9, ease: "expo.out", delay: 0.05 * Math.random() });
   }, [b.id]);
 
-  const isUpcoming = b.status === "upcoming";
+  const color = STATUS_HEX[b.status];
+  const pointer = {
+    onClick: (e: { stopPropagation: () => void }) => {
+      e.stopPropagation();
+      onSelect(b);
+    },
+    onPointerOver: (e: { stopPropagation: () => void }) => {
+      e.stopPropagation();
+      document.body.style.cursor = "pointer";
+    },
+    onPointerOut: () => {
+      document.body.style.cursor = "auto";
+    },
+  };
 
   return (
     <group ref={groupRef} position={[b.x, 0, b.z]}>
-      <mesh
-        geometry={geometry}
-        position={[0, b.height / 2, 0]}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(b);
-        }}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          document.body.style.cursor = "pointer";
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = "auto";
-        }}
-      >
+      {/* yard slab */}
+      <mesh position={[0, 0.02, b.depth * 0.35]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[b.width * 1.25, b.depth * 1.5]} />
+        <meshStandardMaterial color="#0d2a52" roughness={1} />
+      </mesh>
+
+      <mesh geometry={bodyGeo} position={[0, h / 2, 0]} {...pointer}>
         <meshStandardMaterial
-          color={STATUS_HEX[b.status]}
+          color={isUpcoming ? color : "#dbe7f5"}
           wireframe={isUpcoming}
           transparent={isUpcoming || selected}
-          opacity={isUpcoming ? 0.35 : selected ? 0.92 : 1}
-          emissive={!isUpcoming ? new THREE.Color(STATUS_HEX[b.status]) : undefined}
-          emissiveIntensity={b.status === "completed" ? 0.25 : b.status === "wip" ? 0.15 : 0}
-          roughness={0.55}
-          metalness={0.1}
+          opacity={isUpcoming ? 0.45 : selected ? 0.92 : 1}
+          emissive={isUpcoming ? undefined : new THREE.Color(color)}
+          emissiveIntensity={isUpcoming ? 0 : 0.18}
+          roughness={0.5}
+          metalness={0.15}
         />
       </mesh>
-      <lineSegments geometry={edges} position={[0, b.height / 2, 0]}>
+
+      {!isUpcoming ? (
+        <>
+          {/* status-coloured cladding band */}
+          <mesh position={[0, h * 0.86, 0]}>
+            <boxGeometry args={[b.width * 1.005, h * 0.14, b.depth * 1.005]} />
+            <meshStandardMaterial color={color} roughness={0.6} />
+          </mesh>
+          {/* roof */}
+          <mesh geometry={roofGeo} position={[0, h, 0]}>
+            <meshStandardMaterial color={b.status === "wip" ? "#8aa2c2" : "#c5d3e6"} roughness={0.7} metalness={0.25} />
+          </mesh>
+          {/* dock doors along the front face */}
+          {Array.from({ length: docks }).map((_, i) => (
+            <mesh key={i} position={[-b.width / 2 + ((i + 0.5) * b.width) / docks, h * 0.26, b.depth / 2 + 0.01]}>
+              <boxGeometry args={[(b.width / docks) * 0.62, h * 0.4, 0.03]} />
+              <meshStandardMaterial color="#0b2247" roughness={0.8} />
+            </mesh>
+          ))}
+        </>
+      ) : null}
+
+      <lineSegments geometry={edges} position={[0, h / 2, 0]}>
         <lineBasicMaterial color={selected ? "#ffa94d" : "#0b2a5b"} />
       </lineSegments>
+
       {selected ? (
-        <Html position={[0, b.height + 0.6, 0]} center distanceFactor={12} occlude>
+        <Html position={[0, h + rise + 0.6, 0]} center distanceFactor={12} occlude>
           <div className="pointer-events-none w-56 rounded-[4px] border border-navy-500 bg-ink/95 p-3 text-left shadow-lg">
             <p className="text-caption font-semibold text-white">{b.name}</p>
             <p className="mt-1 tabular text-caption text-grey-300">
@@ -78,7 +119,7 @@ function BuildingMesh({
                 ? `${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(b.builtUpSqft)} sq.ft`
                 : "Area not yet released"}
             </p>
-            <p className="mt-1 text-caption" style={{ color: STATUS_HEX[b.status] }}>
+            <p className="mt-1 text-caption" style={{ color }}>
               {b.statusLabel}
             </p>
           </div>
@@ -129,8 +170,8 @@ function Scene({
     <>
       <color attach="background" args={["#050f24"]} />
       <fog attach="fog" args={["#050f24", 14, 42]} />
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[10, 14, 6]} intensity={1.1} />
+      <ambientLight intensity={0.9} />
+      <directionalLight position={[10, 14, 6]} intensity={1.6} />
       <directionalLight position={[-8, 6, -6]} intensity={0.3} />
 
       <Grid

@@ -33,20 +33,26 @@ export default function PageHero({
   );
 
   return (
-    <section ref={scopeRef} className="relative overflow-hidden border-b border-navy-500 bg-ink pb-16 pt-36 md:pb-20 md:pt-44">
+    <section ref={scopeRef} className="relative overflow-hidden border-b border-navy-500 bg-surface pb-16 pt-36 md:pb-20 md:pt-44">
       {image ? (
         <div className="absolute inset-0">
-          <SiteImage slot={imageSlot ?? "hero"} image={image} ratio="21/9" className="h-full rounded-none border-0" />
+          <SiteImage slot={imageSlot ?? "hero"} image={image} ratio="auto" className="h-full w-full rounded-none border-0" />
           <div className="absolute inset-0 bg-ink/75" />
         </div>
       ) : null}
       <div className="grid-rule pointer-events-none absolute inset-0 mx-auto max-w-[1280px]" />
       <Container className="relative">
-        <h1 ref={h1Ref} className="max-w-4xl text-display-xl font-display text-white">
+        <h1
+          ref={h1Ref}
+          className={`max-w-4xl text-display-xl font-display ${image ? "text-white" : "text-ink"}`}
+        >
           {title}
         </h1>
         {standfirst ? (
-          <p data-hero-standfirst className="mt-6 max-w-[60ch] text-body-l text-grey-300">
+          <p
+            data-hero-standfirst
+            className={`mt-6 max-w-[60ch] text-body-l ${image ? "text-grey-300" : "text-grey-500"}`}
+          >
             {standfirst}
           </p>
         ) : null}

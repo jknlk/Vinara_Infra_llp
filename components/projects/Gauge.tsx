@@ -40,7 +40,7 @@ export default function Gauge({
     <div className="flex flex-col items-center">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-          <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={10} />
+          <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(15,43,87,0.12)" strokeWidth={10} />
           <circle
             ref={circleRef}
             cx={size / 2}
@@ -54,7 +54,7 @@ export default function Gauge({
             strokeDashoffset={circumference}
           />
         </svg>
-        <span ref={valueRef} className="tabular absolute inset-0 grid place-items-center text-display-m font-display text-white">
+        <span ref={valueRef} className="tabular absolute inset-0 grid place-items-center text-display-m font-display text-ink">
           0%
         </span>
       </div>

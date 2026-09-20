@@ -7,6 +7,7 @@ const RATIO_CLASS: Record<string, string> = {
   "3/4": "aspect-[3/4]",
   "1/1": "aspect-square",
   "21/9": "aspect-[21/9]",
+  auto: "",
 };
 
 export default function SiteImage({

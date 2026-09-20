@@ -1,17 +1,19 @@
+import { loadHome } from "@/lib/homeContent";
 import HomeHeroLight from "@/components/hero/HomeHeroLight";
 import AboutHighlight from "@/components/home/AboutHighlight";
 import ServicesShowcase from "@/components/home/ServicesShowcase";
 import ProjectsShowcase from "@/components/home/ProjectsShowcase";
-import StatsShowcase from "@/components/home/StatsShowcase";
-import ConstructionTimeline from "@/components/home/ConstructionTimeline";
-import TeamGrid from "@/components/leadership/TeamGrid";
+import LeadershipReel from "@/components/home/LeadershipReel";
 import TrustedByMarquee from "@/components/home/TrustedByMarquee";
 import GalleryPreview from "@/components/home/GalleryPreview";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const stats = await loadHome("hero_stat");
   return (
     <>
-      <HomeHeroLight />
+      <HomeHeroLight stats={stats as { value: string; label: string }[]} />
 
       {/* S3 · About highlight */}
       <AboutHighlight />
@@ -22,14 +24,9 @@ export default function HomePage() {
       {/* S5 · Projects */}
       <ProjectsShowcase />
 
-      {/* S6 · By the numbers */}
-      <StatsShowcase />
-
-      {/* S7 · Construction timeline */}
-      <ConstructionTimeline />
 
       {/* S7b · Leadership */}
-      <TeamGrid asPageTitle={false} />
+      <LeadershipReel />
 
       {/* S8 · Trusted by */}
       <TrustedByMarquee />

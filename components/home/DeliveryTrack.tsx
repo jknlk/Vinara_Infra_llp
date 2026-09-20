@@ -48,7 +48,7 @@ export default function DeliveryTrack() {
         {DELIVERY_STAGES.map((stage, i) => (
           <DataPanel key={stage.title} accent="var(--color-sky-400)" className="lg:w-[300px] lg:shrink-0">
             <span className="tabular text-caption text-sky-400">{String(i + 1).padStart(2, "0")}</span>
-            <h3 className="mt-3 text-display-m font-display text-white">{stage.title}</h3>
+            <h3 className="mt-3 text-display-m font-display text-ink">{stage.title}</h3>
             <p className="mt-2 text-body text-grey-300">{stage.body}</p>
           </DataPanel>
         ))}

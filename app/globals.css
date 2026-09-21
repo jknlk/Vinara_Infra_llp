@@ -2,21 +2,39 @@
 @import "lenis/dist/lenis.css";
 
 @theme {
-  /* ---- brand colour tokens : light blue & white ---- */
-  --color-ink: #0f2b57;
-  --color-surface: #eaf3fb;
-  --color-navy-900: #dceaf9;
-  --color-navy-700: #1d5fb0;
-  --color-navy-500: #bcdcf5;
-  --color-orange-500: #1a5fc4;
-  --color-orange-300: #6fa8e8;
-  --color-yellow-400: #2f9bd6;
-  --color-sky-400: #3e86d0;
-  --color-sky-200: #7fb6e8;
-  --color-green-500: #0b4f96;
-  --color-paper: #f7fafd;
-  --color-grey-500: #5a6b84;
-  --color-grey-300: #6b7d99;
+  /* ---- brand colour tokens : ice blue (#49e8ff) & white ---- */
+  --color-ink: #0a3446;
+  --color-surface: #eafdff;
+  --color-navy-900: #d1fbff;
+  --color-navy-700: #0e9cba;
+  --color-navy-500: #a3f5ff;
+  --color-orange-500: #49e8ff;
+  --color-orange-300: #a3f5ff;
+  --color-yellow-400: #49e8ff;
+  --color-sky-400: #49e8ff;
+  --color-sky-200: #a3f5ff;
+  --color-green-500: #3e86d0;
+  --color-green-100: #dbe9fa;
+  --color-green-700: #2c5f96;
+  --color-paper: #f2fdff;
+  --color-grey-500: #4d7686;
+  --color-grey-300: #6a95a5;
+
+  /* ---- ice-blue overrides for Tailwind's default blue/sky/indigo scales : #49e8ff is the exact brand swatch ---- */
+  --color-blue-50: #ecfdff;
+  --color-blue-100: #d3fbff;
+  --color-blue-200: #a3f5ff;
+  --color-blue-300: #75efff;
+  --color-blue-400: #49e8ff;
+  --color-blue-500: #49e8ff;
+  --color-blue-600: #0e9cba;
+  --color-blue-700: #0c7f99;
+  --color-blue-800: #0c6980;
+  --color-blue-900: #0d5666;
+  --color-sky-50: #f0fdff;
+  --color-sky-100: #d8fbff;
+  --color-sky-300: #75efff;
+  --color-indigo-600: #0e9cba;
 
   /* ---- fonts ---- */
   --font-display: var(--font-archivo), "Arial Narrow", sans-serif;

@@ -97,6 +97,26 @@ export default function AboutPage() {
         </Container>
       </section>
 
+      {/* Founder quote */}
+      <section className="bg-[#f2f7fc] py-24">
+        <Container>
+          <div className="mx-auto max-w-4xl text-center">
+            <span className="font-display text-6xl leading-none text-[#3e86d0]/40">&ldquo;</span>
+            <p className="mt-2 font-display text-2xl font-medium leading-snug text-[#0f2b57] md:text-3xl">
+              Every project we take on is a promise — to build safely, to build well, and to
+              hand over something our clients can rely on for decades.
+            </p>
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <span className="h-px w-10 bg-[#3e86d0]" />
+              <div className="text-left">
+                <p className="font-display text-body font-bold text-[#0f2b57]">Rajat V Panchal</p>
+                <p className="text-caption text-[#5a6b84]">Director &amp; Managing Director, Vinara Infra LLP</p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       {/* Why Vinara + values */}
       <section className="bg-white py-24">
         <Container className="grid grid-cols-1 gap-16 lg:grid-cols-2">

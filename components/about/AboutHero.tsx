@@ -14,7 +14,7 @@ const STATS = [
   { value: "Zero", label: "harm is the goal" },
 ];
 
-const SLIDES = ["homeHeroPhoto", "showcaseWarehouseAerial2", "showcaseCrane", "showcaseContainerYard", "galleryCityCranes"]
+const SLIDES = ["aboutHeroFormwork", "aboutHeroLadderCrew", "aboutHeroRenovation", "aboutHeroSkyline"]
   .map((k) => IMAGES[k])
   .filter((i): i is typeof i & { src: string } => Boolean(i?.src));
 
@@ -41,9 +41,54 @@ export default function AboutHero() {
   );
 
   return (
-    <section ref={scopeRef} className="relative flex h-[100svh] min-h-[640px] w-full flex-col overflow-hidden bg-[#0b2247] text-white">
-      {/* full-bleed slideshow with slow push-in */}
-      <div className="absolute inset-0" aria-hidden>
+    <section ref={scopeRef} className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-[var(--color-ink)] text-white md:flex-row">
+      {/* left: copy panel */}
+      <div className="relative z-10 flex w-full flex-col justify-center px-6 pb-10 pt-32 md:w-[46%] md:px-12 md:pt-36 lg:px-16">
+        <div
+          className="pointer-events-none absolute -left-1/3 top-0 h-[60%] w-[80%] rounded-full opacity-30 blur-3xl"
+          style={{ background: "radial-gradient(closest-side, var(--color-navy-700), transparent)" }}
+        />
+        <div className="grid-rule pointer-events-none absolute inset-0 opacity-20" />
+
+        <p data-ah-fade className="relative flex items-center gap-3 text-label uppercase tracking-[0.18em] text-[var(--color-sky-200)]">
+          <span className="h-px w-12 bg-[var(--color-sky-200)]" />
+          About Vinara Infra LLP
+        </p>
+        <h1 className="relative mt-6 font-display text-4xl font-bold leading-[1.05] md:text-5xl lg:text-6xl">
+          <span className="block overflow-hidden pb-1">
+            <span data-ah-line className="block">A builder&rsquo;s promise,</span>
+          </span>
+          <span className="block overflow-hidden pb-2">
+            <span data-ah-line className="block bg-gradient-to-r from-[var(--color-sky-200)] to-white bg-clip-text text-transparent">
+              kept on every site.
+            </span>
+          </span>
+        </h1>
+        <p data-ah-fade className="relative mt-6 max-w-[42ch] text-body-l text-white/85">
+          From warehousing to infrastructure, we bring technology-driven discipline to every
+          stage of delivery — planned, engineered and handed over with care.
+        </p>
+
+        <div data-ah-fade className="relative mt-10 grid grid-cols-2 gap-6 border-t border-white/15 pt-8 sm:grid-cols-4">
+          {STATS.map((s) => (
+            <div key={s.label} data-ah-stat>
+              <p className="font-display text-2xl font-bold text-white md:text-3xl">{s.value}</p>
+              <p className="mt-1 text-caption text-white/70">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <a
+          href="#about-body"
+          data-ah-fade
+          className="relative mt-10 hidden items-center gap-2 text-caption text-white/80 transition-colors hover:text-white sm:flex"
+        >
+          Scroll to explore <ArrowDown size={14} />
+        </a>
+      </div>
+
+      {/* right: image slideshow */}
+      <div className="relative min-h-[40vh] w-full flex-1 overflow-hidden md:min-h-0">
         {SLIDES.map((img, i) => (
           <Image
             key={img.src}
@@ -51,66 +96,35 @@ export default function AboutHero() {
             alt=""
             fill
             priority={i === 0}
-            sizes="100vw"
+            sizes="(min-width: 768px) 54vw, 100vw"
             className={`object-cover transition-[opacity,transform] ease-out ${
               i === index ? "scale-110 opacity-100 duration-[7000ms]" : "scale-100 opacity-0 duration-[1600ms]"
             }`}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0b2247] via-[#0b2247]/70 to-[#0b2247]/10" />
-        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#0b2247] via-[#0b2247]/70 to-transparent" />
-        <div className="grid-rule pointer-events-none absolute inset-0 opacity-20" />
-      </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[var(--color-ink)]/40 via-transparent to-[var(--color-ink)]/60 md:bg-gradient-to-r md:from-[var(--color-ink)] md:via-[var(--color-ink)]/10 md:to-transparent" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22120%22%20height=%22120%22%3E%3Cfilter%20id=%22n%22%3E%3CfeTurbulence%20type=%22fractalNoise%22%20baseFrequency=%220.9%22%20numOctaves=%222%22%20stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect%20width=%22100%25%22%20height=%22100%25%22%20filter=%22url(%23n)%22/%3E%3C/svg%3E')]" />
 
-      <div className="relative flex flex-1 flex-col justify-center px-6 pt-32 md:px-12 lg:px-16">
-        <p data-ah-fade className="flex items-center gap-3 text-label uppercase tracking-[0.18em] text-[#7fb6e8]">
-          <span className="h-px w-12 bg-[#7fb6e8]" />
-          About Vinara Infra LLP
-        </p>
-        <h1 className="mt-6 max-w-5xl font-display text-5xl font-bold leading-[1.02] md:text-7xl lg:text-[6.5rem]">
-          <span className="block overflow-hidden pb-1">
-            <span data-ah-line className="block">Building today.</span>
+        <div className="absolute bottom-6 left-6 z-10 flex items-center gap-3 md:left-auto md:right-6">
+          <span className="tabular text-caption font-semibold text-white/80">
+            {String(index + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")}
           </span>
-          <span className="block overflow-hidden pb-2">
-            <span data-ah-line className="block bg-gradient-to-r from-[#7fb6e8] to-white bg-clip-text text-transparent">
-              Empowering tomorrow.
-            </span>
-          </span>
-        </h1>
-        <p data-ah-fade className="mt-6 max-w-[48ch] text-body-l text-white/85">
-          Technology-driven construction with a focus on safety, efficiency and long-term value.
-        </p>
-
-        <div data-ah-fade className="mt-8 flex items-center gap-3">
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              aria-label={`Show image ${i + 1}`}
-              className="relative h-1 w-14 overflow-hidden rounded-full bg-white/25"
-            >
-              <span
-                key={i === index ? `on-${index}` : "off"}
-                className="absolute inset-y-0 left-0 bg-white"
-                style={i === index ? { animation: `about-progress ${SLIDE_MS}ms linear forwards` } : { width: i < index ? "100%" : 0 }}
-              />
-            </button>
-          ))}
-          <a href="#about-body" className="ml-4 hidden items-center gap-2 text-caption text-white/80 hover:text-white sm:flex">
-            Scroll <ArrowDown size={14} />
-          </a>
-        </div>
-      </div>
-
-      {/* stats glass bar */}
-      <div className="relative px-6 pb-6 md:px-12 lg:px-16">
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 backdrop-blur-md md:grid-cols-4">
-          {STATS.map((s) => (
-            <div key={s.label} data-ah-stat className="bg-[#0b2247]/60 px-6 py-5">
-              <p className="font-display text-3xl font-bold md:text-4xl">{s.value}</p>
-              <p className="mt-1 text-caption text-white/75">{s.label}</p>
-            </div>
-          ))}
+          <div className="flex items-center gap-2">
+            {SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                aria-label={`Show image ${i + 1}`}
+                className="group relative h-1 w-10 overflow-hidden rounded-full bg-white/25"
+              >
+                <span
+                  key={i === index ? `on-${index}` : "off"}
+                  className="absolute inset-y-0 left-0 bg-[var(--color-sky-200)]"
+                  style={i === index ? { animation: `about-progress ${SLIDE_MS}ms linear forwards` } : { width: i < index ? "100%" : 0 }}
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

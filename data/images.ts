@@ -207,4 +207,22 @@ export const IMAGES: Record<string, ImageSlot> = {
     alt: "Overhead view of an engineer reviewing reinforcement work and control data on an active site",
     caption: "Progress & control reporting",
   },
+
+  // About page hero — unique slideshow, not reused anywhere else on the site.
+  aboutHeroFormwork: {
+    src: "https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?q=80&w=2400&auto=format&fit=crop",
+    alt: "Site crew climbing reinforcement formwork on a high-rise structure",
+  },
+  aboutHeroLadderCrew: {
+    src: "https://images.unsplash.com/photo-1516216628859-9bccecab13ca?q=80&w=2400&auto=format&fit=crop",
+    alt: "Site crew in hard hats climbing a ladder against an open sky",
+  },
+  aboutHeroRenovation: {
+    src: "https://images.unsplash.com/photo-1517581177682-a085bb7ffb15?q=80&w=2400&auto=format&fit=crop",
+    alt: "Structural renovation in progress inside a heritage building",
+  },
+  aboutHeroSkyline: {
+    src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2400&auto=format&fit=crop",
+    alt: "Low-angle view looking up at a cluster of glass high-rise towers",
+  },
 };

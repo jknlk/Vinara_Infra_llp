@@ -116,7 +116,7 @@ export default function AboutHighlight() {
               data-about-pillar
               key={p.title}
               tabIndex={0}
-              className="group relative overflow-hidden rounded-2xl border border-blue-100 bg-white p-5 outline-none transition-all duration-300 hover:border-blue-400 hover:shadow-[0_0_0_1px_rgba(62,134,208,0.45),0_16px_40px_-14px_rgba(26,95,196,0.55)] focus-visible:border-blue-400 focus-visible:shadow-[0_0_0_1px_rgba(62,134,208,0.45),0_16px_40px_-14px_rgba(26,95,196,0.55)] active:border-blue-400 active:shadow-[0_0_0_1px_rgba(62,134,208,0.45),0_16px_40px_-14px_rgba(26,95,196,0.55)]"
+              className="group relative overflow-hidden rounded-2xl border border-blue-100 bg-white p-5 outline-none transition-all duration-300 hover:border-blue-400 hover:shadow-[0_0_0_1px_rgba(73,232,255,0.45),0_16px_40px_-14px_rgba(14,156,186,0.55)] focus-visible:border-blue-400 focus-visible:shadow-[0_0_0_1px_rgba(73,232,255,0.45),0_16px_40px_-14px_rgba(14,156,186,0.55)] active:border-blue-400 active:shadow-[0_0_0_1px_rgba(73,232,255,0.45),0_16px_40px_-14px_rgba(14,156,186,0.55)]"
             >
               <span className="pointer-events-none absolute -right-8 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-blue-400 opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-40 group-focus-visible:opacity-40 group-active:opacity-40" />
               <span className="relative grid h-9 w-9 place-items-center rounded-full bg-blue-50 text-blue-600 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white">

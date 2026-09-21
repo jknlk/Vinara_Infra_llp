@@ -32,7 +32,7 @@ export default function ServicesShowcase() {
               <Link
                 key={`${s.title}-${i}`}
                 href={s.href}
-                className="group flex h-[440px] w-[300px] shrink-0 flex-col overflow-hidden rounded-3xl border-2 border-[#E3EAF4] bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-500 hover:shadow-[0_0_0_3px_rgba(26,95,196,0.55),0_24px_48px_-16px_rgba(11,42,91,0.45)] sm:w-[340px]"
+                className="group flex h-[440px] w-[300px] shrink-0 flex-col overflow-hidden rounded-3xl border-2 border-[#E3EAF4] bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-500 hover:shadow-[0_0_0_3px_rgba(14,156,186,0.55),0_24px_48px_-16px_rgba(13,56,84,0.45)] sm:w-[340px]"
               >
                 <div className="relative h-56 w-full shrink-0 overflow-hidden bg-navy-900">
                   {img?.src && (

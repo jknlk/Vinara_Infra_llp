@@ -7,7 +7,7 @@ import type { HomeData } from "@/data/content/homeAdmin";
 function MarqueeCard({ item }: { item: HomeData }) {
   if (!item.image) return null;
   return (
-    <div className="group/item relative z-0 flex w-64 flex-shrink-0 origin-top flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_30px_-12px_rgba(11,42,91,0.25)] transition-all duration-300 ease-out hover:z-20 hover:-translate-y-2 hover:shadow-[0_24px_48px_-12px_rgba(11,42,91,0.45)] sm:w-72">
+    <div className="group/item relative z-0 flex w-64 flex-shrink-0 origin-top flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_30px_-12px_rgba(13,56,84,0.25)] transition-all duration-300 ease-out hover:z-20 hover:-translate-y-2 hover:shadow-[0_24px_48px_-12px_rgba(13,56,84,0.45)] sm:w-72">
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <Image
           src={item.image}
@@ -46,7 +46,7 @@ export default async function GalleryPreview() {
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="relative mx-2 sm:mx-8 lg:mx-14">
           {/* single blue backdrop spanning behind the heading and the whole row, incl. gaps between cards */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-navy-700 shadow-[0_24px_60px_-16px_rgba(26,95,196,0.55)]">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-navy-700 shadow-[0_24px_60px_-16px_rgba(14,156,186,0.55)]">
             <span className="absolute -left-6 -top-10 h-28 w-28 rounded-full bg-white/10" />
             <span className="absolute -right-10 top-1/3 h-32 w-32 rounded-full bg-white/5" />
           </div>
@@ -82,7 +82,7 @@ export default async function GalleryPreview() {
             <Link
               href="/gallery"
               aria-label="View full gallery"
-              className="absolute bottom-4 right-2 z-10 grid h-12 w-12 place-items-center rounded-full bg-white text-blue-600 shadow-[0_10px_30px_-8px_rgba(11,20,40,0.45)] transition-transform hover:scale-105 hover:bg-sky-100 sm:right-6"
+              className="absolute bottom-4 right-2 z-10 grid h-12 w-12 place-items-center rounded-full bg-white text-blue-600 shadow-[0_10px_30px_-8px_rgba(10,30,45,0.45)] transition-transform hover:scale-105 hover:bg-sky-100 sm:right-6"
             >
               <ArrowUpRight size={20} />
             </Link>

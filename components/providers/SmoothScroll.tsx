@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -12,8 +13,14 @@ export function useLenis() {
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const [lenis, setLenis] = useState<Lenis | null>(null);
+  const pathname = usePathname();
+  // The admin panel is a standalone fixed-overlay screen with its own native
+  // scroll container — Lenis hijacking the document's wheel events would
+  // starve that nested container of scroll input.
+  const isAdmin = pathname?.startsWith("/admin");
 
   useEffect(() => {
+    if (isAdmin) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
@@ -30,7 +37,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       instance.destroy();
       setLenis(null);
     };
-  }, []);
+  }, [isAdmin]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => ScrollTrigger.refresh());

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Container from "@/components/ui/Container";
 import SiteImage from "@/components/ui/SiteImage";
+import TeamMarquee from "@/components/leadership/TeamMarquee";
 import { IMAGES } from "@/data/images";
 import {
   TEAM,
@@ -84,30 +85,13 @@ export default function LeadershipPage() {
       </section>
 
       {/* Team */}
-      <section className="bg-[#f2f7fc] py-20">
+      <section className="overflow-hidden bg-[#f2f7fc] py-20">
         <Container>
           <p className={`${eyebrow} text-[#3e86d0]`}>Management &amp; site team</p>
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {REST.map((p) => (
-              <article key={p.name} className="overflow-hidden rounded-2xl border border-[#0f2b57]/10 bg-white">
-                <div className="relative aspect-[4/5]">
-                  <Image
-                    src={p.photo}
-                    alt={p.name}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover object-top"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display text-body-l font-bold text-[#0f2b57]">{p.name}</h3>
-                  <p className="mt-1 text-caption font-medium text-[#3e86d0]">{p.role}</p>
-                  <p className="mt-3 text-caption text-[#5a6b84]">{p.bio}</p>
-                </div>
-              </article>
-            ))}
-          </div>
         </Container>
+        <div className="mt-8">
+          <TeamMarquee members={REST} />
+        </div>
       </section>
 
       {/* Project organisation */}

@@ -122,6 +122,36 @@ body {
   animation: marquee 32s linear infinite;
 }
 
+/* Distinct names from the block above on purpose — that one is a fixed-speed
+   full-width strip (GalleryPreview); these back the reusable <Marquee> in
+   components/ui/marquee.tsx, whose speed/gap are set per-instance via the
+   --duration/--gap custom properties. */
+@keyframes team-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes team-marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+.animate-team-marquee {
+  animation: team-marquee var(--duration, 40s) infinite linear;
+}
+
+.animate-team-marquee-vertical {
+  animation: team-marquee-vertical var(--duration, 40s) infinite linear;
+}
+
 /* setting-out grid rule, decorative overlay on hero/photo sections */
 .grid-rule {
   background-image: repeating-linear-gradient(

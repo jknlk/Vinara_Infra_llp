@@ -72,7 +72,7 @@ export default function AboutHighlight() {
   );
 
   return (
-    <section ref={sectionRef} className="relative z-10 -mt-4 overflow-hidden bg-surface pb-4 sm:-mt-6 lg:-mt-8">
+    <section ref={sectionRef} className="relative z-10 overflow-hidden bg-surface pb-4">
       <div data-about-image className="relative left-1/2 w-screen -translate-x-1/2">
         <div className="relative aspect-[4/5] w-full overflow-hidden sm:aspect-[16/9] lg:aspect-[32/9]">
             {photo.src ? (

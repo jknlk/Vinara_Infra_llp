@@ -113,7 +113,7 @@ export default function ServicesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex min-h-[90svh] flex-col overflow-hidden bg-[#0b2247] text-white">
+      <section className="relative flex h-[100dvh] min-h-[640px] flex-col overflow-hidden bg-[#0b2247] text-white">
         <div className="absolute inset-0">
           <SiteImage
             slot="services-hero"

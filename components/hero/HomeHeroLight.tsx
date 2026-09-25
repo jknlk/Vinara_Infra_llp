@@ -28,7 +28,7 @@ export default function HomeHeroLight({ stats }: { stats: { value: string; label
   );
 
   return (
-    <section ref={scopeRef} className="relative min-h-[100svh] w-full overflow-hidden bg-white">
+    <section ref={scopeRef} className="relative h-[100dvh] min-h-[600px] w-full overflow-hidden bg-white">
       <div
         className="absolute inset-0 bg-fixed bg-cover bg-center"
         style={{ backgroundImage: photo.src ? `url(${photo.src})` : undefined }}
@@ -36,7 +36,7 @@ export default function HomeHeroLight({ stats }: { stats: { value: string; label
         aria-label={photo.alt}
       />
 
-      <div className="relative z-10 flex h-[100svh] min-h-[600px] flex-col justify-between px-6 pb-6 pt-28 md:px-12">
+      <div className="relative z-10 flex h-full flex-col justify-between px-6 pb-6 pt-28 md:px-12">
         <div className="max-w-4xl pt-4">
           <div
             data-hero-copy

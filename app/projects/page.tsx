@@ -80,9 +80,9 @@ export default async function ProjectsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="overflow-hidden bg-[#f2f7fc] pb-12 pt-28 md:pt-32">
-        <Container className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center">
-          <div className="lg:col-span-7">
+      <section className="relative h-[100dvh] min-h-[640px] w-full overflow-hidden bg-[#f2f7fc]">
+        <div className="mx-auto flex h-full w-full max-w-[1680px] flex-col justify-center gap-10 px-4 pt-24 sm:px-6 lg:flex-row lg:items-center lg:gap-12 lg:px-8 lg:pt-0">
+          <div className="lg:w-7/12">
             <p className={`${eyebrow} flex items-center gap-3 text-[#3e86d0]`}>
               <span className="h-px w-10 bg-[#3e86d0]" />
               Projects
@@ -118,14 +118,14 @@ export default async function ProjectsPage() {
             </dl>
           </div>
 
-          <div className="relative lg:col-span-5">
+          <div className="relative lg:w-5/12">
             <div className="overflow-hidden rounded-[2rem] shadow-2xl">
               <SiteImage
                 slot="projects-hero"
                 image={{ ...IMAGES.heroAerial, caption: undefined }}
                 ratio="1/1"
                 priority
-                sizes="(min-width: 1024px) 40vw, 100vw"
+                sizes="(min-width: 1024px) 42vw, 100vw"
                 className="rounded-[2rem] border-0"
               />
             </div>
@@ -147,7 +147,7 @@ export default async function ProjectsPage() {
               <p className="text-caption text-white/75">active sites</p>
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* Project index cards */}

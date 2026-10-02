@@ -1,0 +1,14 @@
+
+> vinara-infra@0.1.0 dev
+> next dev --port 3010
+
+   ▲ Next.js 15.5.25
+   - Local:        http://localhost:3010
+   - Network:      http://192.168.0.102:3010
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 5.2s
+ ○ Compiling / ...
+ ✓ Compiled / in 8.2s (794 modules)
+ GET / 200 in 9607ms

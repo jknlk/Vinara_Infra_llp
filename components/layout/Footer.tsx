@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { COMPANY_BLURB, CONTACT, FOOTER_COLUMNS, FOOTER_STAT_STRIP } from "@/data/content/site";
+import { CONTACT, FOOTER_COLUMNS, FOOTER_STAT_STRIP } from "@/data/content/site";
 
 export default function Footer() {
   return (
@@ -18,7 +18,11 @@ export default function Footer() {
               Grow <span className="text-blue-600">Together.</span>
             </h2>
           </div>
-          <p className="max-w-[46ch] text-body text-grey-500 lg:ml-auto lg:text-right">{COMPANY_BLURB}</p>
+          <p className="max-w-[46ch] text-body text-grey-500 lg:ml-auto lg:text-right">
+            Vinara Infra LLP provides technology-driven construction solutions for warehousing, industrial, and
+            infrastructure projects, focusing on{" "}
+            <strong className="bg-[#3367d6] font-bold text-white">Safety, Efficiency and Quality.</strong>
+          </p>
         </div>
 
         <div className="border-t border-dashed border-[#E3EAF4]" />

@@ -1,131 +1,158 @@
 "use client";
 
-import { useRef } from "react";
-import { Zap, ShieldCheck, Users, HardHat } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Building2, HardHat, ShieldCheck, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import Container from "@/components/ui/Container";
 import { IMAGES } from "@/data/images";
 
-const PILLARS = [
+const DISCIPLINES = [
+  { icon: Building2, label: "Warehousing" },
+  { icon: HardHat, label: "Industrial" },
+  { icon: ShieldCheck, label: "QHSE" },
+  { icon: Users, label: "Experienced team" },
+];
+
+const PEOPLE = [
+  IMAGES.leadershipPortrait1,
+  IMAGES.leadershipPortrait2,
   {
-    icon: Zap,
-    title: "Technology-led",
-    body: "Tools and methods that accelerate output and improve predictability.",
+    src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=900&auto=format&fit=crop",
+    alt: "Portrait placeholder for Vinara senior manager",
   },
   {
-    icon: ShieldCheck,
-    title: "QHSE Commitment",
-    body: "Uncompromised focus on Quality, Health, Safety and Environment.",
-  },
-  {
-    icon: Users,
-    title: "People & Culture",
-    body: "Trust, transparency, accountability and discipline at every level.",
-  },
-  {
-    icon: HardHat,
-    title: "Design-Build",
-    body: "Efficient, durable, scalable structures aligned to modern needs.",
+    src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=900&auto=format&fit=crop",
+    alt: "Portrait placeholder for Vinara project manager",
   },
 ];
 
+function DisciplineItem({ item }: { item: (typeof DISCIPLINES)[number] }) {
+  const Icon = item.icon;
+
+  return (
+    <div className="flex items-center gap-3 rounded-lg border border-[#0EA0BC]/30 bg-[#0EA0BC] px-3.5 py-2.5 text-white">
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/15 text-white">
+        <Icon size={16} />
+      </span>
+      <span className="font-display text-body-s font-bold">{item.label}</span>
+    </div>
+  );
+}
+
 export default function AboutHighlight() {
-  const photo = IMAGES.aboutInterior;
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [activePerson, setActivePerson] = useState(0);
 
   useGSAP(
     () => {
-      const reveal = (selector: string, vars: gsap.TweenVars = {}) => {
-        gsap.utils.toArray<HTMLElement>(selector).forEach((el) => {
-          gsap.from(el, {
-            y: 28,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            overwrite: true,
-            clearProps: "opacity,transform",
-            ...vars,
-            scrollTrigger: { trigger: el, start: "top 88%", once: true },
-          });
-        });
-      };
-
-      reveal("[data-about-eyebrow]");
-      reveal("[data-about-heading]");
-      reveal("[data-about-copy]");
-      reveal("[data-about-image]", { y: 60, duration: 1 });
-
-      gsap.from("[data-about-pillar]", {
-        y: 28,
+      gsap.from("[data-about-reveal]", {
+        y: 30,
         opacity: 0,
-        duration: 0.8,
+        duration: 0.85,
         ease: "power3.out",
-        stagger: 0.12,
+        stagger: 0.08,
         overwrite: true,
         clearProps: "opacity,transform",
-        scrollTrigger: { trigger: "[data-about-pillars]", start: "top 88%", once: true },
+        scrollTrigger: { trigger: sectionRef.current, start: "top 76%", once: true },
       });
     },
     { scope: sectionRef }
   );
 
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setActivePerson((current) => (current + 1) % PEOPLE.length);
+    }, 2000);
+    return () => window.clearInterval(id);
+  }, []);
+
   return (
-    <section ref={sectionRef} className="relative z-10 overflow-hidden bg-surface pb-4">
-      <div data-about-image className="relative left-1/2 w-screen -translate-x-1/2">
-        <div className="relative aspect-[4/5] w-full overflow-hidden sm:aspect-[16/9] lg:aspect-[32/9]">
-            {photo.src ? (
-              <Image src={photo.src} alt={photo.alt} fill sizes="100vw" className="object-cover" priority />
-            ) : null}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/10" />
+    <section
+      ref={sectionRef}
+      className="relative flex h-[100svh] overflow-hidden bg-[#041423] py-4 text-white sm:py-6"
+    >
+      <div className="pointer-events-none absolute left-[-12rem] top-16 h-64 w-64 rounded-full bg-[#0EA0BC]/25 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-18rem] top-1/4 h-[34rem] w-[34rem] rounded-full border border-[#0EA0BC]/25" />
 
-            <div className="absolute inset-x-0 top-0 px-6 pt-8 sm:px-10 sm:pt-10">
-              <div data-about-eyebrow className="inline-flex items-center gap-2.5 rounded-full bg-white/90 px-4 py-1.5 text-body-l font-display font-bold uppercase tracking-[0.08em] text-ink shadow-sm backdrop-blur">
-                <span className="h-px w-8 bg-blue-600" />
-                About Vinara
-              </div>
-
-              <h2
-                data-about-heading
-                className="mt-4 whitespace-normal text-xl font-display leading-[1.1] sm:whitespace-nowrap sm:text-3xl lg:text-display-m"
-              >
-                <span className="text-white">Technology-led delivery. </span>
-                <span className="text-sky-300">Uncompromised QHSE.</span>
-              </h2>
-
-              <p data-about-copy className="mt-4 w-full text-body-l text-white">
-                At Vinara Infra, we harness cutting-edge technologies to boost productivity and
-                deliver reliable construction outcomes — going beyond conventional approaches across
-                warehousing, industrial, precast and infrastructure projects.
-              </p>
-            </div>
-          </div>
-        <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-[#E3EAF4] bg-white/95 px-6 py-4 shadow-lg backdrop-blur sm:bottom-6 sm:left-6 sm:right-auto">
-          <p className="text-label uppercase tracking-[0.08em] text-blue-600">Flagship Program</p>
-          <p className="tabular mt-1 text-body-l font-display font-bold text-ink">
-            NELA 1 · 113.01 Acres · Assetz Industrial Park
+      <Container className="relative grid flex-1 items-center gap-9 lg:grid-cols-[minmax(0,0.9fr)_minmax(390px,0.78fr)] lg:gap-14">
+        <div>
+          <p data-about-reveal className="text-label uppercase tracking-[0.32em] text-blue-300">
+            About Vinara Infra
           </p>
-        </div>
-      </div>
 
-      <Container className="mt-10">
-        <div data-about-pillars className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {PILLARS.map((p) => (
-            <div
-              data-about-pillar
-              key={p.title}
-              tabIndex={0}
-              className="group relative overflow-hidden rounded-2xl border border-blue-100 bg-white p-5 outline-none transition-all duration-300 hover:border-blue-400 hover:shadow-[0_0_0_1px_rgba(73,232,255,0.45),0_16px_40px_-14px_rgba(14,156,186,0.55)] focus-visible:border-blue-400 focus-visible:shadow-[0_0_0_1px_rgba(73,232,255,0.45),0_16px_40px_-14px_rgba(14,156,186,0.55)] active:border-blue-400 active:shadow-[0_0_0_1px_rgba(73,232,255,0.45),0_16px_40px_-14px_rgba(14,156,186,0.55)]"
+          <h2
+            data-about-reveal
+            className="mt-3 max-w-3xl font-display text-[clamp(1.9rem,4.2vw,3.75rem)] font-extrabold leading-[0.98] text-white"
+          >
+            Industrial Projects, Built With Discipline.
+          </h2>
+
+          <p data-about-reveal className="mt-4 max-w-2xl text-body text-slate-300">
+            Vinara Infra LLP is a Bengaluru-based construction partner focused on warehousing,
+            industrial, infrastructure and precast works. We bring planning discipline, experienced
+            site leadership and uncompromised QHSE systems together to deliver durable spaces for
+            modern businesses.
+          </p>
+
+          <div data-about-reveal className="mt-5 grid max-w-2xl gap-2.5 sm:grid-cols-2">
+            {DISCIPLINES.map((item) => (
+              <DisciplineItem key={item.label} item={item} />
+            ))}
+          </div>
+
+          <div data-about-reveal className="mt-6 flex flex-wrap items-center gap-4">
+            <Link
+              href="/about"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#0EA0BC]/30 bg-[#0EA0BC] px-6 text-body font-bold text-white transition hover:border-white hover:bg-white hover:text-[#041423] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0EA0BC]"
             >
-              <span className="pointer-events-none absolute -right-8 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-blue-400 opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-40 group-focus-visible:opacity-40 group-active:opacity-40" />
-              <span className="relative grid h-9 w-9 place-items-center rounded-full bg-blue-50 text-blue-600 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white">
-                <p.icon size={18} />
-              </span>
-              <h3 className="relative mt-4 text-body font-display font-bold text-ink">{p.title}</h3>
-              <p className="relative mt-1 text-caption text-grey-500">{p.body}</p>
-            </div>
-          ))}
+              Learn More About Us
+            </Link>
+            <Link
+              href="/projects"
+              className="inline-flex min-h-12 items-center gap-2 px-2 text-body font-bold text-slate-200 transition hover:text-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-300"
+            >
+              View Our Works
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </div>
+
+        <div data-about-reveal className="relative mx-auto flex w-full max-w-[460px] flex-col gap-4">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-xl shadow-black/30">
+            {PEOPLE.map((person, index) => (
+              <div
+                key={`${person.alt}-${index}`}
+                className="absolute inset-0 transition-opacity duration-700 ease-out"
+                style={{ opacity: index === activePerson ? 1 : 0 }}
+              >
+                {person.src ? (
+                  <Image
+                    src={person.src}
+                    alt={person.alt}
+                    fill
+                    sizes="(min-width: 1024px) 460px, 90vw"
+                    className="object-cover object-top grayscale-[20%]"
+                    priority={index === 0}
+                  />
+                ) : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#041423]/45 via-transparent to-white/5" />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-center gap-2 self-center">
+            {PEOPLE.map((person, index) => (
+              <span
+                key={`${person.alt}-dot-${index}`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  index === activePerson ? "w-6 bg-blue-400" : "w-1.5 bg-white/25"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </Container>
     </section>

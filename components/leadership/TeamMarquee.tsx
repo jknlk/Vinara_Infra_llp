@@ -6,9 +6,6 @@ type Member = { name: string; role: string; bio: string; photo: string };
 export default function TeamMarquee({ members }: { members: readonly Member[] }) {
   return (
     <div className="relative w-full">
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-[#f2f7fc] to-transparent sm:w-24" />
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-[#f2f7fc] to-transparent sm:w-24" />
-
       <Marquee className="[--gap:1.5rem]" pauseOnHover repeat={3}>
         {members.map((p) => (
           <div key={p.name} className="group flex w-64 shrink-0 flex-col">

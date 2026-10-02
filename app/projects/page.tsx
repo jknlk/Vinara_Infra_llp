@@ -4,10 +4,11 @@ import Container from "@/components/ui/Container";
 import SiteImage from "@/components/ui/SiteImage";
 import StatusPill from "@/components/ui/StatusPill";
 import ProjectPlanViewer from "@/components/projects/ProjectPlanViewer";
+import ProjectIndexGrid from "@/components/projects/ProjectIndexGrid";
+import ClientsPartners from "@/components/projects/ClientsPartners";
 import { IMAGES } from "@/data/images";
 import { PROJECTS, PORTFOLIO_TOTALS } from "@/data/buildings";
 import { CLIENTS, PMC_PARTNERS, TENANTS } from "@/data/content/site";
-import { DELIVERY_FACTORS, SITE_CHALLENGES } from "@/data/content/projects";
 import { listProjects } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -159,61 +160,8 @@ export default async function ProjectsPage() {
               <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">Every site. One standard.</h2>
             </div>
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {cards.map((p, i) => {
-              const pct = p.buildingsCount ? Math.min(100, Math.round(((p.completed + p.wip * 0.5) / p.buildingsCount) * 100)) : 0;
-              return (
-                <a
-                  key={p.slug}
-                  href={detailSlugs.has(p.slug) ? `#${p.slug}` : undefined}
-                  className="group overflow-hidden rounded-2xl border border-[#0f2b57]/15 bg-white transition-shadow hover:shadow-xl"
-                >
-                  <div className="relative overflow-hidden">
-                    <SiteImage
-                      slot={`${p.slug}-card`}
-                      image={{ src: p.src, alt: p.name }}
-                      ratio="16/10"
-                      className="rounded-none border-0 transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <span className="absolute left-4 top-3 font-display text-5xl font-bold text-white drop-shadow-lg">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="font-display text-2xl font-bold text-[#0f2b57]">{p.name}</h3>
-                      <ArrowUpRight
-                        size={22}
-                        className="text-[#0f2b57] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
-                      />
-                    </div>
-                    <p className="mt-1 text-caption text-[#5a6b84]">{p.client}</p>
-                    <dl className="mt-5 grid grid-cols-3 gap-2 border-t border-[#0f2b57]/10 pt-4">
-                      <div>
-                        <dd className="tabular font-display font-bold text-[#0f2b57]">{num(p.plotAcres)}</dd>
-                        <dt className="text-caption text-[#5a6b84]">acres</dt>
-                      </div>
-                      <div>
-                        <dd className="tabular font-display font-bold text-[#0f2b57]">{p.buildingsCount}</dd>
-                        <dt className="text-caption text-[#5a6b84]">buildings</dt>
-                      </div>
-                      <div>
-                        <dd className="tabular font-display font-bold text-[#0f2b57]">{num(p.builtUpSqft / 100000, 1)}L</dd>
-                        <dt className="text-caption text-[#5a6b84]">sq.ft</dt>
-                      </div>
-                    </dl>
-                    <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-[#0f2b57]/10">
-                      <div className="h-full rounded-full bg-[#3e86d0]" style={{ width: `${pct}%` }} />
-                    </div>
-                    <p className="mt-2 text-caption text-[#5a6b84]">
-                      {p.completed} handed over · {p.wip} in progress
-                    </p>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
         </Container>
+        <ProjectIndexGrid cards={cards} detailSlugs={[...detailSlugs]} />
       </section>
 
       {/* Per-project detail */}
@@ -258,7 +206,7 @@ export default async function ProjectsPage() {
 
             {/* Plan + buildings */}
             <div className={i % 2 === 0 ? "bg-[#f2f7fc]" : "bg-white"}>
-              <Container className="grid grid-cols-1 gap-10 py-16 lg:grid-cols-12">
+              <Container full className="grid grid-cols-1 gap-10 py-16 lg:grid-cols-12">
                 <div className="lg:col-span-5">
                   <p className={`${eyebrow} mb-4 text-[#3e86d0]`}>Site plan</p>
                   <ProjectPlanViewer slug={project.slug} />
@@ -297,58 +245,8 @@ export default async function ProjectsPage() {
         );
       })}
 
-      {/* Delivery challenge */}
-      <section className="bg-[#0f2b57] py-24 text-white">
-        <Container>
-          <p className={`${eyebrow} text-[#7fb6e8]`}>The delivery challenge</p>
-          <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold md:text-5xl">What it takes to build at this scale.</h2>
-          <div className="mt-12 grid grid-cols-1 gap-16 lg:grid-cols-2">
-            <ul className="divide-y divide-white/15 border-y border-white/15">
-              {DELIVERY_FACTORS.map((f, i) => (
-                <li key={f} className="flex gap-4 py-4 text-body text-white/85">
-                  <span className="tabular text-caption text-[#7fb6e8]">{String(i + 1).padStart(2, "0")}</span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <div className="space-y-8">
-              {SITE_CHALLENGES.map((c) => (
-                <div key={c.title} className="border-l-2 border-[#3e86d0] pl-5">
-                  <h3 className="font-display text-body-l font-bold">{c.title}</h3>
-                  <p className="mt-1 text-caption text-white/75">{c.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <p className="mt-20 max-w-3xl font-display text-2xl font-bold text-[#7fb6e8] md:text-4xl">
-            Success is not just about building structures, it&rsquo;s about delivering commitments.
-          </p>
-        </Container>
-      </section>
-
       {/* Clients & partners */}
-      <section className="bg-white py-24">
-        <Container>
-          <p className={`${eyebrow} text-[#3e86d0]`}>Clients &amp; partners</p>
-          <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">Built alongside the best.</h2>
-          <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3">
-            {CLIENT_GROUPS.map((g) => (
-              <div key={g.label}>
-                <h3 className="border-b-2 border-[#3e86d0] pb-3 font-display text-body-l font-bold text-[#0f2b57]">
-                  {g.label}
-                </h3>
-                <ul className="mt-4 divide-y divide-[#0f2b57]/10">
-                  {g.names.map((name) => (
-                    <li key={name} className="py-3 text-body text-[#5a6b84]">
-                      {name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
+      <ClientsPartners groups={CLIENT_GROUPS} />
     </>
   );
 }

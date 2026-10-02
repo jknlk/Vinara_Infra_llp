@@ -136,9 +136,29 @@ export const IMAGES: Record<string, ImageSlot> = {
     caption: "PPE compliance on site",
   },
   planningSchedule: {
-    src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2000&auto=format&fit=crop",
-    alt: "Construction planning schedule and Gantt chart on a desk",
+    src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2000&auto=format&fit=crop",
+    alt: "Engineers reviewing blueprints and project plans on site",
     caption: "Master programme review",
+  },
+  cyclePlan: {
+    src: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1400&auto=format&fit=crop",
+    alt: "Team planning a construction schedule around a table with drawings",
+  },
+  cycleExecute: {
+    src: "https://images.unsplash.com/photo-1541976590-713941681591?q=80&w=1400&auto=format&fit=crop",
+    alt: "Construction crew executing work on an active building site",
+  },
+  cycleMeasure: {
+    src: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1400&auto=format&fit=crop",
+    alt: "Engineer measuring and recording site progress with a tablet",
+  },
+  cycleAnalyze: {
+    src: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1400&auto=format&fit=crop",
+    alt: "Analyst reviewing performance charts and progress data",
+  },
+  cycleAct: {
+    src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1400&auto=format&fit=crop",
+    alt: "Site manager directing corrective action on a construction site",
   },
   leadershipPortrait1: {
     src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1400&auto=format&fit=crop",

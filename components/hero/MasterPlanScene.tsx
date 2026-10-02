@@ -201,8 +201,8 @@ function Scene({
         enablePan={false}
         autoRotate={!reduced}
         autoRotateSpeed={0.5}
-        minDistance={10}
-        maxDistance={34}
+        minDistance={6}
+        maxDistance={20}
         minPolarAngle={Math.PI / 5}
         maxPolarAngle={Math.PI / 2.15}
         enableDamping
@@ -243,7 +243,7 @@ export default function MasterPlanScene({ activeSlug }: { activeSlug: string }) 
   return (
     <VisibilityGate>
       <Canvas
-        camera={{ position: [16, 12, 20], fov: 42 }}
+        camera={{ position: [9, 6.5, 11], fov: 42 }}
         dpr={mobile ? [1, 1.5] : [1, 2]}
         gl={{ antialias: true, powerPreference: "high-performance" }}
       >

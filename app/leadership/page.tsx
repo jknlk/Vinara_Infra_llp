@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Container from "@/components/ui/Container";
 import SiteImage from "@/components/ui/SiteImage";
+import DirectorCards from "@/components/leadership/DirectorCards";
 import TeamMarquee from "@/components/leadership/TeamMarquee";
 import { IMAGES } from "@/data/images";
 import {
@@ -28,60 +29,51 @@ export default function LeadershipPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-[#f2f7fc] pb-12 pt-28 md:pt-32">
-        <Container className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-7">
-            <p className={`${eyebrow} flex items-center gap-3 text-[#3e86d0]`}>
-              <span className="h-px w-10 bg-[#3e86d0]" />
-              Leadership
-            </p>
-            <h1 className="mt-4 font-display text-5xl font-bold leading-[1.05] text-[#0f2b57] md:text-7xl">
-              The people
-              <span className="block text-[#3e86d0]">behind the build.</span>
-            </h1>
-          </div>
-          <dl className="grid grid-cols-3 gap-6 lg:col-span-5">
-            {MANPOWER_STATS.map((s) => (
-              <div key={s.label} className="border-t-2 border-[#3e86d0] pt-3">
-                <dd className="tabular font-display text-3xl font-bold text-[#0f2b57]">{fmt(s.value)}</dd>
-                <dt className="mt-1 text-caption text-[#5a6b84]">{s.label}</dt>
+      <section className="flex h-[100dvh] min-h-[640px] w-full items-center justify-center bg-[#f2f7fc] px-2 pb-2 pt-[5.5rem] sm:px-3">
+        <div className="flex h-full min-h-[420px] w-full items-center justify-center rounded-[2rem] bg-[#0f2b57] shadow-2xl">
+          <div className="relative h-[95%] w-[96%] overflow-hidden rounded-3xl">
+            <Image
+              src={IMAGES.planningSchedule.src ?? ""}
+              alt={IMAGES.planningSchedule.alt}
+              fill
+              priority
+              sizes="90vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-[#0f2b57]/75" />
+            <div className="relative flex h-full flex-col p-6 md:p-12">
+              <div className="flex flex-1 flex-col items-center justify-center text-center">
+                <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
+                  <span className="h-px w-10 bg-[#7fb6e8]" />
+                  Leadership
+                  <span className="h-px w-10 bg-[#7fb6e8]" />
+                </p>
+                <h1 className="mt-4 font-display text-5xl font-bold leading-[1.05] text-white md:text-7xl">
+                  The people
+                  <span className="block text-[#7fb6e8]">behind the build.</span>
+                </h1>
               </div>
-            ))}
-          </dl>
-        </Container>
+              <dl className="grid grid-cols-3 gap-6">
+                {MANPOWER_STATS.map((s) => (
+                  <div key={s.label} className="border-t-2 border-[#7fb6e8] pt-3">
+                    <dd className="tabular font-display text-3xl font-bold text-white">{fmt(s.value)}</dd>
+                    <dt className="mt-1 text-caption text-white/70">{s.label}</dt>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Directors */}
       <section className="bg-white py-20">
-        <Container>
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <p className={`${eyebrow} text-[#3e86d0]`}>Directors</p>
-          <div className="mt-8 space-y-8">
-            {DIRECTORS.map((p, i) => (
-              <article
-                key={p.name}
-                className="grid grid-cols-1 overflow-hidden rounded-3xl bg-[#0f2b57] text-white md:grid-cols-12"
-              >
-                <div className={`relative aspect-[4/3] md:col-span-5 md:aspect-auto md:min-h-[380px] ${i % 2 ? "md:order-2" : ""}`}>
-                  <Image
-                    src={p.photo}
-                    alt={p.name}
-                    fill
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover object-top"
-                  />
-                </div>
-                <div className="flex flex-col justify-center p-8 md:col-span-7 md:p-14">
-                  <span className="tabular font-display text-5xl font-bold text-[#7fb6e8]/40">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h2 className="mt-2 font-display text-3xl font-bold md:text-4xl">{p.name}</h2>
-                  <p className="mt-1 text-body-l font-medium text-[#7fb6e8]">{p.role}</p>
-                  <p className="mt-5 max-w-[56ch] text-body text-white/80">{p.bio}</p>
-                </div>
-              </article>
-            ))}
+          <div className="mt-8">
+            <DirectorCards directors={DIRECTORS} />
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* Team */}
@@ -96,7 +88,7 @@ export default function LeadershipPage() {
 
       {/* Project organisation */}
       <section className="bg-white py-20">
-        <Container className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+        <div className="grid w-full grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
           <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
             <p className={`${eyebrow} text-[#3e86d0]`}>Project organisation</p>
             <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">
@@ -138,12 +130,12 @@ export default function LeadershipPage() {
               );
             })}
           </ol>
-        </Container>
+        </div>
       </section>
 
       {/* Culture & careers */}
       <section className="bg-[#0f2b57] py-20 text-white">
-        <Container className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div className="grid w-full grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:px-8">
           <div className="lg:col-span-6">
             <p className={`${eyebrow} text-[#7fb6e8]`}>Culture &amp; careers</p>
             <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">Build your career with us.</h2>
@@ -170,7 +162,7 @@ export default function LeadershipPage() {
               className="rounded-2xl border-0"
             />
           </div>
-        </Container>
+        </div>
       </section>
     </>
   );

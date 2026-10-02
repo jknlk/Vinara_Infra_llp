@@ -61,6 +61,13 @@ export const PROJECT_STRENGTH = [
   { title: "Planning", body: "Advanced monitoring & controls" },
 ];
 
+export const MISSION_VISION = {
+  mission:
+    "To deliver industrial, warehousing and infrastructure projects with uncompromising quality, safety and speed — becoming the execution partner our clients trust for every phase, from planning to handover.",
+  vision:
+    "To be recognized as India's most dependable industrial construction partner, known for engineering discipline, on-time delivery and lasting value for every stakeholder we build with.",
+};
+
 export const CORE_VALUES = [
   { title: "Quality", body: "We build with precision" },
   { title: "Integrity", body: "We do what is right" },

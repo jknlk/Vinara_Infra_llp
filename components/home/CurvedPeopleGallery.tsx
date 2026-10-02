@@ -55,12 +55,18 @@ export default function CurvedPeopleGallery({
 }) {
   const rawId = useId();
   const uid = rawId.replace(/[^a-zA-Z0-9]/g, "");
-  const n = images.length;
+  const validImages = images.filter((img) => img.src.trim().length > 0);
+  const n = validImages.length;
+
+  if (n === 0) {
+    return null;
+  }
+
   const center = (n - 1) / 2;
   const cardWidth = (VIEW_W - (n - 1) * GAP) / n;
-  const showCaptions = images.some((img) => img.name || img.role);
+  const showCaptions = validImages.some((img) => img.name || img.role);
 
-  const cards = images.map((img, i) => {
+  const cards = validImages.map((img, i) => {
     const t = center === 0 ? 0 : Math.abs(i - center) / center;
     const f = Math.pow(t, EASE);
     const y = TOP_CENTER - TOP_TRAVEL * f;

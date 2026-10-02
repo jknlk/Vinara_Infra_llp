@@ -34,7 +34,7 @@ export default function AboutHero() {
       {/* full-bleed background image */}
       <div className="absolute inset-0">
         <Image
-          src={HERO_IMAGE.src}
+          src={HERO_IMAGE.src ?? ""}
           alt={HERO_IMAGE.alt ?? ""}
           fill
           priority

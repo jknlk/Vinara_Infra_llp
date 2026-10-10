@@ -10,9 +10,6 @@ export const NAV_LINKS = [
   { href: "/careers", label: "Careers", navLabel: "Careers" },
 ] as const;
 
-export const FOOTER_STAT_STRIP =
-  "9,96,553 safe manhours · 31,33,500.23 sq.ft delivered · 12 buildings";
-
 export const COMPANY_BLURB =
   "Vinara Infra LLP delivers high-quality, technology-driven construction solutions across warehousing, industrial and infrastructure projects, with a strong focus on safety, efficiency and long-term value.";
 
@@ -34,15 +31,6 @@ export const FOOTER_COLUMNS = [
       { href: "/services", label: "Industrial Construction" },
       { href: "/services", label: "Precast Construction" },
       { href: "/services", label: "RMC Plant & Concrete Supply" },
-    ],
-  },
-  {
-    heading: "Projects",
-    links: [
-      { href: "/projects", label: "NELA 1" },
-      { href: "/projects", label: "NELA 2" },
-      { href: "/projects", label: "Bikaner House" },
-      { href: "/planning", label: "Planning & Controls" },
     ],
   },
 ] as const;

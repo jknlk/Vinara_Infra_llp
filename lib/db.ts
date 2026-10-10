@@ -3,7 +3,9 @@ import { GALLERY_ITEMS } from "@/data/content/gallery";
 import { IMAGES } from "@/data/images";
 import { PROJECTS } from "@/data/buildings";
 import { OPEN_ROLES } from "@/data/content/careers";
+import { CLIENTS, PMC_PARTNERS, TENANTS } from "@/data/content/site";
 import { homeSeed, type HomeData, type HomeKind } from "@/data/content/homeAdmin";
+import { defaultBuildingPhotos } from "@/data/content/buildingPhotos";
 
 // Query over the project's own endpoint host rather than the driver's default api.<region> host,
 // which some local DNS resolvers refuse to resolve.
@@ -55,6 +57,19 @@ export type JobRow = {
   summary: string;
   responsibilities: string[];
   status: JobStatus;
+};
+
+export type PartnerCategory = "client" | "pmc" | "tenant";
+
+export type PartnerRow = { id: number; category: PartnerCategory; name: string; position: number };
+
+export type BuildingPhotoRow = {
+  id: number;
+  projectSlug: string;
+  buildingId: string;
+  src: string;
+  publicId: string | null;
+  caption: string;
 };
 
 /* ---------------------------------------------------------- schema + seed */
@@ -119,6 +134,28 @@ export function ensureSchema() {
       public_id TEXT
     )`;
 
+    await q`CREATE TABLE IF NOT EXISTS partners (
+      id SERIAL PRIMARY KEY,
+      category TEXT NOT NULL,
+      name TEXT NOT NULL,
+      position INT NOT NULL DEFAULT 0
+    )`;
+
+    await q`CREATE TABLE IF NOT EXISTS building_photos (
+      id SERIAL PRIMARY KEY,
+      project_slug TEXT NOT NULL,
+      building_id TEXT NOT NULL,
+      src TEXT NOT NULL,
+      public_id TEXT,
+      caption TEXT NOT NULL DEFAULT '',
+      UNIQUE (project_slug, building_id)
+    )`;
+    // One row per building; any building added to the site data later gets its row here.
+    const photos = defaultBuildingPhotos();
+    await q`INSERT INTO building_photos (project_slug, building_id, src)
+      SELECT * FROM unnest(${photos.map((p) => p.projectSlug)}::text[], ${photos.map((p) => p.buildingId)}::text[], ${photos.map((p) => p.src)}::text[])
+      ON CONFLICT (project_slug, building_id) DO NOTHING`;
+
     const claim = async (key: string) =>
       (await q`INSERT INTO app_flags (key) VALUES (${key}) ON CONFLICT DO NOTHING RETURNING key`).length > 0;
 
@@ -154,6 +191,19 @@ export function ensureSchema() {
         await q`INSERT INTO projects (slug, name, client, location, description, plot_acres, buildings_count, built_up_sqft, completed, wip, src)
           VALUES (${p.slug}, ${p.name}, ${p.client}, ${"Bengaluru"}, ${p.description}, ${p.plotAcres}, ${p.buildingsCount},
                   ${p.builtUpSqft}, ${p.completed}, ${p.wip}, ${src})`;
+      }
+    }
+    if (await claim("partners_seeded")) {
+      const seed: [PartnerCategory, readonly string[]][] = [
+        ["client", CLIENTS],
+        ["pmc", PMC_PARTNERS],
+        ["tenant", TENANTS],
+      ];
+      for (const [category, names] of seed) {
+        let i = 0;
+        for (const name of names) {
+          await q`INSERT INTO partners (category, name, position) VALUES (${category}, ${name}, ${i++})`;
+        }
       }
     }
     if (await claim("jobs_seeded")) {
@@ -336,6 +386,70 @@ export async function updateJob(id: number, v: JobInput) {
 
 export async function deleteJob(id: number) {
   await run((q) => q`DELETE FROM jobs WHERE id = ${id}`);
+}
+
+/* --------------------------------------------------------------- partners */
+
+export async function listPartners() {
+  return run<PartnerRow>((q) => q`SELECT id, category, name, position FROM partners ORDER BY position, id`);
+}
+
+export async function insertPartner(category: PartnerCategory, name: string) {
+  const rows = await run<PartnerRow>(
+    (q) => q`INSERT INTO partners (category, name, position)
+      VALUES (${category}, ${name}, COALESCE((SELECT MAX(position) + 1 FROM partners WHERE category = ${category}), 0))
+      RETURNING id, category, name, position`
+  );
+  return rows[0];
+}
+
+export async function updatePartner(id: number, category: PartnerCategory, name: string) {
+  const rows = await run<PartnerRow>(
+    (q) => q`UPDATE partners SET category = ${category}, name = ${name} WHERE id = ${id}
+      RETURNING id, category, name, position`
+  );
+  return rows[0] ?? null;
+}
+
+export async function deletePartner(id: number) {
+  await run((q) => q`DELETE FROM partners WHERE id = ${id}`);
+}
+
+/* -------------------------------------------------------- building photos */
+
+type BuildingPhotoRaw = {
+  id: number;
+  project_slug: string;
+  building_id: string;
+  src: string;
+  public_id: string | null;
+  caption: string;
+};
+
+const mapBuildingPhoto = (r: BuildingPhotoRaw): BuildingPhotoRow => ({
+  id: r.id,
+  projectSlug: r.project_slug,
+  buildingId: r.building_id,
+  src: r.src,
+  publicId: r.public_id,
+  caption: r.caption,
+});
+
+export async function listBuildingPhotos() {
+  return (await run<BuildingPhotoRaw>((q) => q`SELECT * FROM building_photos ORDER BY id`)).map(mapBuildingPhoto);
+}
+
+export async function getBuildingPhoto(id: number) {
+  const rows = await run<BuildingPhotoRaw>((q) => q`SELECT * FROM building_photos WHERE id = ${id}`);
+  return rows[0] ? mapBuildingPhoto(rows[0]) : null;
+}
+
+export async function updateBuildingPhoto(id: number, v: Pick<BuildingPhotoRow, "src" | "publicId" | "caption">) {
+  const rows = await run<BuildingPhotoRaw>(
+    (q) => q`UPDATE building_photos SET src = ${v.src}, public_id = ${v.publicId}, caption = ${v.caption}
+      WHERE id = ${id} RETURNING *`
+  );
+  return rows[0] ? mapBuildingPhoto(rows[0]) : null;
 }
 
 /* ------------------------------------------------------------- home items */

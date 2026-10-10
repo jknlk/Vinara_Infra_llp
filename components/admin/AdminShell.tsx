@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart3, Briefcase, Building2, Home, Images, LayoutGrid, LogOut, Star, Users } from "lucide-react";
-import type { GalleryRow, HomeRow, JobRow, ProjectRow } from "@/lib/db";
+import { BarChart3, Briefcase, Building2, Camera, Handshake, Home, Images, LayoutGrid, LogOut, Star, Users } from "lucide-react";
+import type { BuildingPhotoRow, GalleryRow, HomeRow, JobRow, PartnerRow, ProjectRow } from "@/lib/db";
 import type { HomeKind } from "@/data/content/homeAdmin";
 import AdminHome from "./AdminHome";
 import AdminGallery from "./AdminGallery";
 import AdminProjects from "./AdminProjects";
 import AdminCareers from "./AdminCareers";
+import AdminPartners from "./AdminPartners";
+import AdminBuildingPhotos from "./AdminBuildingPhotos";
 
-type Section = "gallery" | "projects" | "careers" | "home";
+type Section = "gallery" | "projects" | "photos" | "partners" | "careers" | "home";
 
 const HOME_TABS = [
   { id: "hero_stat", text: "Stats", Icon: BarChart3 },
@@ -22,6 +24,8 @@ const HOME_TABS = [
 const SECTIONS = [
   { id: "gallery", text: "Gallery", Icon: Images },
   { id: "projects", text: "Projects", Icon: Building2 },
+  { id: "photos", text: "Building photos", Icon: Camera },
+  { id: "partners", text: "Clients & partners", Icon: Handshake },
   { id: "careers", text: "Careers", Icon: Briefcase },
   { id: "home", text: "Home", Icon: Home },
 ] as const;
@@ -29,12 +33,16 @@ const SECTIONS = [
 export default function AdminShell({
   gallery,
   projects,
+  buildingPhotos,
   jobs,
+  partners,
   home,
 }: {
   gallery: GalleryRow[];
   projects: ProjectRow[];
+  buildingPhotos: BuildingPhotoRow[];
   jobs: JobRow[];
+  partners: PartnerRow[];
   home: Record<HomeKind, HomeRow[]>;
 }) {
   const router = useRouter();
@@ -78,6 +86,12 @@ export default function AdminShell({
         </div>
         <div hidden={section !== "projects"}>
           <AdminProjects initialItems={projects} onChange={setProjectList} />
+        </div>
+        <div hidden={section !== "photos"}>
+          <AdminBuildingPhotos initialItems={buildingPhotos} />
+        </div>
+        <div hidden={section !== "partners"}>
+          <AdminPartners initialItems={partners} />
         </div>
         <div hidden={section !== "careers"}>
           <AdminCareers initialItems={jobs} />

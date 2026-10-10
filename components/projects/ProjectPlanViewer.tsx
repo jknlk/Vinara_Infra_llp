@@ -6,7 +6,7 @@ import SitePoster from "@/components/hero/SitePoster";
 
 const MasterPlanScene = dynamic(() => import("@/components/hero/MasterPlanScene"), { ssr: false });
 
-export default function ProjectPlanViewer({ slug }: { slug: string }) {
+export default function ProjectPlanViewer({ slug, className = "" }: { slug: string; className?: string }) {
   const [can3D, setCan3D] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -21,11 +21,16 @@ export default function ProjectPlanViewer({ slug }: { slug: string }) {
   }, []);
 
   return (
-    <div className="relative h-[360px] w-full overflow-hidden rounded-2xl border border-navy-500 md:h-[440px]">
-      {can3D === true ? <MasterPlanScene activeSlug={slug} /> : <SitePoster slug={slug} />}
-      <p className="pointer-events-none absolute bottom-4 left-4 text-caption text-grey-300">
-        {can3D === true ? "Drag to orbit · tap a building for details" : "Static site plan"}
-      </p>
+    <div className={`relative h-[360px] w-full overflow-hidden rounded-2xl border border-navy-500 md:h-[440px] ${className}`}>
+      {/* out of flow, so the scene never props the box open and it can follow the height it is given */}
+      <div className="absolute inset-0">
+        {can3D === true ? <MasterPlanScene activeSlug={slug} /> : <SitePoster slug={slug} />}
+      </div>
+      {can3D === true ? null : (
+        <p className="pointer-events-none absolute bottom-4 left-4 rounded-full bg-ink/70 px-3 py-1 text-caption text-white">
+          Static site plan
+        </p>
+      )}
     </div>
   );
 }

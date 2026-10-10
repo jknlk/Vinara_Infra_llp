@@ -1,8 +1,7 @@
-import { CLIENTS, PMC_PARTNERS, TENANTS } from "@/data/content/site";
+import { loadPartnerGroups } from "@/lib/partners";
 
-const NAMES = [...CLIENTS, ...PMC_PARTNERS, ...TENANTS];
-
-export default function TrustedByMarquee() {
+export default async function TrustedByMarquee() {
+  const NAMES = (await loadPartnerGroups()).flatMap((g) => g.names);
   return (
     <section className="bg-surface pb-6 pt-12">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">

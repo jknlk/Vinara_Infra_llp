@@ -138,7 +138,7 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
   return (
     <div
       ref={rootRef}
-      className="relative overflow-hidden bg-[#0a1f3f] text-white motion-reduce:overflow-x-auto"
+      className="relative min-h-[100lvh] overflow-hidden bg-[#0a1f3f] text-white motion-reduce:overflow-x-auto"
       aria-label={`${projectName} buildings`}
     >
       {/* blueprint grid and a soft glow behind the slides */}
@@ -152,7 +152,11 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
       />
       <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 hidden h-[560px] w-[560px] rounded-full bg-[#3e86d0]/25 blur-[140px] md:block" />
 
-      <div ref={trackRef} className="relative flex h-[100svh] min-h-[640px] w-max px-[4vw] pb-28 pt-32">
+      {/* The backdrop above fills the tallest viewport, so nothing shows under the
+          pinned frame when the mobile URL bar collapses; the slides and the strip
+          stay in the shortest one. */}
+      <div className="relative h-[100svh] min-h-[640px]">
+      <div ref={trackRef} className="relative flex h-full w-max px-[4vw] pb-28 pt-32">
         {slides.map((b, i) => {
           const s = STATUS[b.status];
           const share = (b.builtUpSqft / sum) * 100;
@@ -287,6 +291,7 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
           {pad(active + 1)}
           <span className="text-white/45"> / {pad(slides.length)}</span>
         </p>
+      </div>
       </div>
     </div>
   );

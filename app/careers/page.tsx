@@ -34,7 +34,7 @@ export default async function CareersPage() {
   const departments = new Set(roles.map((r) => r.department).filter(Boolean)).size;
   return (
     <>
-      <CareersHero openRoles={roles.length} departments={departments} />
+      <CareersHero openRoles={roles.length} departments={departments} featured={roles.slice(0, 3)} />
       <CareersContent roles={roles} />
     </>
   );

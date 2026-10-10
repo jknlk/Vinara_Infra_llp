@@ -31,7 +31,7 @@ function Portrait({
 export default function TeamGrid({ asPageTitle = true }: { asPageTitle?: boolean }) {
   const Heading = asPageTitle ? "h1" : "h2";
   return (
-    <section className="bg-surface pb-16 pt-12">
+    <section className="bg-surface pb-4 pt-4">
       <Container>
         <div className="inline-flex items-center gap-2 text-label uppercase tracking-[0.08em] text-grey-500">
           <span className="h-px w-6 bg-blue-500" />
@@ -44,7 +44,7 @@ export default function TeamGrid({ asPageTitle = true }: { asPageTitle?: boolean
         </Heading>
 
         {/* Directors — spotlight portraits */}
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="m-scroll mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {DIRECTORS.map((p) => (
             <div
               key={p.name}
@@ -68,7 +68,7 @@ export default function TeamGrid({ asPageTitle = true }: { asPageTitle?: boolean
         </div>
 
         {/* Management & site team — editorial grid */}
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="m-scroll mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {REST.map((p) => (
             <div
               key={p.name}

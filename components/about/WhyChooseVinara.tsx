@@ -1,48 +1,35 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
 import Container from "@/components/ui/Container";
+import CardArc, { COMPACT_RING, t, u, type ArcGeometry } from "@/components/ui/CardArc";
 import { WHY_CHOOSE_VINARA } from "@/data/content/whyChooseVinara";
 
+const WIDE: ArcGeometry = {
+  unit: { min: 13.5, vw: 1, max: 24 },
+  radius: 82,
+  camera: 110.8,
+  step: 22.5,
+  cardW: 29.6,
+  cardH: 39.4,
+  cardTop: 8,
+  originY: -3,
+  type: 1,
+  visibleArc: 80,
+  stageHeight: "min(calc(34 * var(--u)), calc(22.5 * var(--u) + 14vw))",
+};
+
+const COMPACT: ArcGeometry = {
+  ...COMPACT_RING,
+  cardH: 46,
+  cardTop: 10,
+  originY: -4.6,
+  stageHeight: "calc(17.2 * var(--u) + 38.8vw)",
+};
+
 export default function WhyChooseVinara() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const track = trackRef.current;
-      const wrapper = wrapperRef.current;
-      const section = sectionRef.current;
-      if (!track || !wrapper || !section) return;
-
-      const leadingGap = parseFloat(getComputedStyle(wrapper).paddingLeft || "0");
-      const distance = track.scrollWidth - section.clientWidth + leadingGap;
-      if (distance <= 0) return;
-
-      const pause = window.innerHeight * 0.6;
-
-      gsap.to(track, {
-        x: -distance,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${distance + pause}`,
-          scrub: 1,
-          pin: true,
-          invalidateOnRefresh: true,
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-24">
+    <section className="relative overflow-hidden bg-white py-6">
       <Container>
         <p className="text-body font-bold uppercase tracking-[0.14em] text-[#3e86d0]">Why Choose Vinara</p>
         <h2 className="mt-4 max-w-2xl font-display text-display-md text-[#0f2b57]">
@@ -50,32 +37,49 @@ export default function WhyChooseVinara() {
         </h2>
       </Container>
 
-      <div ref={wrapperRef} className="mt-14">
-        <div ref={trackRef} className="flex w-max gap-6">
-          {WHY_CHOOSE_VINARA.map((reason, i) => (
-            <article
-              key={reason.title}
-              className="relative h-[420px] w-[320px] shrink-0 overflow-hidden rounded-2xl bg-[#0f2b57] shadow-xl md:w-[380px]"
-            >
-              <Image
-                src={reason.image}
-                alt={reason.alt}
-                fill
-                sizes="380px"
-                className="object-cover"
-              />
-              <div className="relative flex h-full flex-col justify-end">
-                <div className="bg-[#0f2b57] p-7 text-white">
-                  <span className="tabular font-display text-display-md text-[#7fb6e8]">
+      <div className="mt-10">
+        <CardArc count={WHY_CHOOSE_VINARA.length} geometry={WIDE} compact={COMPACT}>
+          {(i, duplicate) => {
+            const reason = WHY_CHOOSE_VINARA[i];
+            return (
+              <article
+                className="relative flex h-full w-full flex-col overflow-hidden bg-[#0f2b57]"
+                style={{ borderRadius: u(1.6) }}
+              >
+                <div className="relative min-h-0 flex-1">
+                  <Image
+                    src={reason.image}
+                    alt={duplicate ? "" : reason.alt}
+                    fill
+                    draggable={false}
+                    sizes="(min-width: 1350px) 24vw, 320px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="text-white" style={{ padding: u(2) }}>
+                  <span
+                    className="tabular font-display font-bold text-[#7fb6e8]"
+                    style={{ fontSize: t(2.2), lineHeight: 1 }}
+                  >
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="mt-3 font-display text-body-l font-bold">{reason.title}</h3>
-                  <p className="mt-2 text-body text-white/80">{reason.body}</p>
+                  <h3
+                    className="font-display font-bold"
+                    style={{ marginTop: t(0.8), fontSize: t(2.2), lineHeight: 1.15 }}
+                  >
+                    {reason.title}
+                  </h3>
+                  <p
+                    className="line-clamp-3 text-white/80"
+                    style={{ marginTop: t(0.6), fontSize: t(1.5), lineHeight: 1.4 }}
+                  >
+                    {reason.body}
+                  </p>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            );
+          }}
+        </CardArc>
       </div>
     </section>
   );

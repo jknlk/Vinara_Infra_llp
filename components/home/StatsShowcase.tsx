@@ -92,7 +92,7 @@ function StatCard({ stat, index }: { stat: (typeof STATS)[number]; index: number
 
 export default function StatsShowcase() {
   return (
-    <section className="bg-ink pb-12 pt-12">
+    <section className="bg-ink pb-6 pt-6">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-2 text-label uppercase tracking-[0.08em] text-grey-300">
@@ -105,7 +105,7 @@ export default function StatsShowcase() {
           </h2>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
+        <div className="m-scroll mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
           {STATS.map((s, i) => (
             <StatCard key={s.label} stat={s} index={i} />
           ))}

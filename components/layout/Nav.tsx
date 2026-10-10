@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { X, Menu, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { NAV_LINKS } from "@/data/content/site";
@@ -15,6 +16,18 @@ export default function Nav() {
   const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
   const lenis = useLenis();
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [launching, setLaunching] = useState(false);
+
+  const burst = (e: React.MouseEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const id = Date.now();
+    setRipples((rs) => [...rs, { id, x: e.clientX - r.left, y: e.clientY - r.top }]);
+    setLaunching(true);
+    setTimeout(() => setRipples((rs) => rs.filter((x) => x.id !== id)), 800);
+    setTimeout(() => setLaunching(false), 700);
+  };
 
   useEffect(() => {
     setOpen(false);
@@ -57,33 +70,78 @@ export default function Nav() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 xl:flex xl:gap-1">
+        <nav className="hidden items-center gap-0.5 xl:flex xl:gap-1" onMouseLeave={() => setHovered(null)}>
           {NAV_LINKS.map((link) => {
             const isActive: boolean = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors xl:px-3.5 ${
-                  isActive
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
-                    : "text-grey-500 hover:text-ink"
+                onMouseEnter={() => setHovered(link.href)}
+                className={`relative whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors duration-300 xl:px-3.5 ${
+                  isActive ? "text-white" : hovered === link.href ? "text-ink" : "text-grey-500"
                 }`}
               >
-                {link.navLabel}
+                {hovered === link.href && !isActive && (
+                  <motion.span
+                    layoutId="nav-hover"
+                    className="absolute inset-0 rounded-full bg-blue-600/10"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  />
+                )}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-600/30"
+                    transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.8 }}
+                  />
+                )}
+                <motion.span
+                  key={isActive ? "on" : "off"}
+                  className="relative z-10 inline-block"
+                  initial={isActive ? { y: 6, scale: 0.92 } : false}
+                  animate={{ y: 0, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 18, delay: 0.08 }}
+                >
+                  {link.navLabel}
+                </motion.span>
               </Link>
             );
           })}
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/contact"
-            className="hidden items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-caption font-semibold text-white shadow-sm transition-opacity hover:opacity-90 sm:flex"
-          >
-            Get Quote
-            <ArrowRight size={14} />
-          </Link>
+          <motion.div className="hidden sm:block" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.93 }} transition={{ type: "spring", stiffness: 400, damping: 15 }}>
+            <Link
+              href="/contact"
+              onClick={burst}
+              className="group relative flex items-center gap-1.5 overflow-hidden rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-caption font-semibold text-white shadow-md shadow-blue-600/30 transition-shadow hover:shadow-lg hover:shadow-blue-600/40"
+            >
+              <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-white/30 opacity-0 transition-all duration-700 group-hover:left-[130%] group-hover:opacity-100" />
+              <AnimatePresence>
+                {ripples.map((r) => (
+                  <motion.span
+                    key={r.id}
+                    className="pointer-events-none absolute h-4 w-4 rounded-full bg-white/60"
+                    style={{ left: r.x - 8, top: r.y - 8 }}
+                    initial={{ scale: 0, opacity: 0.8 }}
+                    animate={{ scale: 18, opacity: 0 }}
+                    transition={{ duration: 0.75, ease: "easeOut" }}
+                  />
+                ))}
+              </AnimatePresence>
+              <span className="relative">Get Quote</span>
+              <span className="relative block h-3.5 w-3.5 overflow-hidden">
+                <motion.span
+                  className="absolute inset-0"
+                  animate={launching ? { x: [0, 22, -22, 0] } : { x: 0 }}
+                  transition={{ duration: 0.6, times: [0, 0.4, 0.41, 1], ease: "easeInOut" }}
+                >
+                  <ArrowRight size={14} />
+                </motion.span>
+              </span>
+            </Link>
+          </motion.div>
           <button
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}

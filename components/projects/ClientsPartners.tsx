@@ -57,7 +57,7 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
   }, []);
 
   return (
-    <section ref={rootRef} id="clients" className="relative w-full overflow-hidden bg-white py-24 text-[#0b2247]">
+    <section ref={rootRef} id="clients" className="relative w-full overflow-hidden bg-white py-6 text-[#0b2247]">
       <div className="relative w-full px-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-8">
           <div>
@@ -99,7 +99,11 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
                 key={g.label}
                 data-partner-group
                 onMouseMove={trackPointer}
-                className={`group/panel relative w-[85%] shrink-0 snap-center overflow-hidden rounded-3xl sm:w-[60%] lg:w-auto lg:shrink border border-[#0b2247]/10 bg-[#f4f8fd] p-5 shadow-sm transition duration-500 hover:border-[#0b2247]/25 sm:p-6 ${span}`}
+                className={`group/panel relative w-[85%] shrink-0 snap-center overflow-hidden rounded-3xl sm:w-[60%] lg:w-auto lg:shrink border p-5 shadow-md transition duration-500 sm:p-6 ${span}`}
+                style={{
+                  background: `linear-gradient(160deg, ${kind.hex}38 0%, ${kind.hex}18 55%, #ffffff 100%)`,
+                  borderColor: `${kind.hex}55`,
+                }}
               >
                 {/* soft light that follows the cursor across the panel */}
                 <span
@@ -107,21 +111,21 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
                   className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover/panel:opacity-100"
                   style={{ background: `radial-gradient(520px circle at var(--mx, 50%) var(--my, 50%), ${kind.hex}26, transparent 65%)` }}
                 />
-                <span className="absolute inset-x-0 top-0 h-1" style={{ background: `linear-gradient(90deg, ${kind.hex}, transparent)` }} />
+                <span className="absolute inset-x-0 top-0 h-1.5" style={{ background: `linear-gradient(90deg, ${kind.hex}, ${kind.hex}55)` }} />
                 <div className="relative flex items-center gap-3">
                   <span
                     className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition duration-500 group-hover/panel:scale-110"
-                    style={{ background: `${kind.hex}22`, color: kind.hex }}
+                    style={{ background: kind.hex, color: "#fff" }}
                   >
                     <kind.Icon size={24} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="font-display text-body-l font-bold">{g.label}</h3>
-                    {kind.role ? <p className="text-caption text-[#0b2247]/60">{kind.role}</p> : null}
+                    {kind.role ? <p className="text-caption text-[#0b2247]/75">{kind.role}</p> : null}
                   </div>
                   <span
                     className="tabular rounded-full px-2.5 py-1 text-caption font-semibold"
-                    style={{ background: `${kind.hex}22`, color: kind.hex }}
+                    style={{ background: kind.hex, color: "#fff" }}
                   >
                     {g.names.length}
                   </span>
@@ -133,8 +137,8 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
                       key={name}
                       data-fly-item
                       onMouseMove={trackPointer}
-                      className="group relative z-0 flex cursor-default items-center gap-3 overflow-hidden rounded-xl border border-[#0b2247]/10 bg-white px-3 py-2.5 transition duration-300 ease-out hover:z-10 hover:scale-[1.06] hover:border-[var(--accent)] hover:bg-white hover:shadow-[0_14px_36px_-12px_var(--accent)] active:scale-[1.02]"
-                      style={{ "--accent": kind.hex } as React.CSSProperties}
+                      className="group relative z-0 flex cursor-default items-center gap-3 overflow-hidden rounded-xl border bg-white px-3 py-2.5 transition duration-300 ease-out hover:z-10 hover:scale-[1.06] hover:border-[var(--accent)] hover:bg-white hover:shadow-[0_14px_36px_-12px_var(--accent)] active:scale-[1.02]"
+                      style={{ "--accent": kind.hex, borderColor: `${kind.hex}40` } as React.CSSProperties}
                     >
                       {/* bright spot under the cursor, and a sheen that sweeps across on entry */}
                       <span
@@ -148,7 +152,7 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
                       />
                       <span
                         className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg font-display text-caption font-bold tracking-wide transition duration-300 group-hover:scale-110 group-hover:rotate-[-4deg]"
-                        style={{ background: `${kind.hex}26`, color: kind.hex }}
+                        style={{ background: `${kind.hex}33`, color: kind.hex }}
                       >
                         {monogram(name)}
                       </span>

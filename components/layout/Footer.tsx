@@ -16,11 +16,11 @@ export default function Footer() {
             Grow <span className="text-white/70">Together.</span>
           </h2>
           <Image
-            src="/vinara-logo-transparent.png"
+            src="/vinara-logo-footer-white.png"
             alt="Vinara Infra LLP"
-            width={256}
-            height={256}
-            className="h-28 w-auto rounded-3xl bg-white p-2 sm:h-32 lg:ml-auto lg:mr-8"
+            width={1416}
+            height={755}
+            className="h-28 w-auto sm:h-32 lg:ml-auto lg:mr-8"
           />
         </div>
 

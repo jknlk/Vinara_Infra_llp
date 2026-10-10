@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import Container from "@/components/ui/Container";
 import SiteImage from "@/components/ui/SiteImage";
+import ServicesHero from "@/components/services/ServicesHero";
 import RmcCapabilityGrid from "@/components/services/RmcCapabilityGrid";
+import RmcOperations from "@/components/services/RmcOperations";
 import { IMAGES } from "@/data/images";
 import {
   SERVICE_SECTIONS,
-  RMC_FACILITIES,
-  RMC_ORG,
-  RMC_MACHINERY,
-  RMC_SAFETY,
   WORKFLOW,
 } from "@/data/content/services";
 
@@ -20,73 +18,16 @@ export const metadata: Metadata = {
 
 const eyebrow = "text-label uppercase tracking-[0.14em]";
 
-function Bullets({ items, dark }: { items: string[]; dark?: boolean }) {
-  return (
-    <ul className="mt-5 space-y-3">
-      {items.map((p) => (
-        <li key={p} className={`flex items-start gap-3 text-body ${dark ? "text-white/80" : "text-[#5a6b84]"}`}>
-          <Check size={16} className="mt-1 shrink-0 text-[#3e86d0]" />
-          {p}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export default function ServicesPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative flex h-[100dvh] min-h-[640px] flex-col overflow-hidden bg-[#0b2247] text-white">
-        <div className="absolute inset-0">
-          <SiteImage
-            slot="services-hero"
-            image={IMAGES.serviceWarehouse}
-            ratio="auto"
-            className="h-full w-full rounded-none border-0"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0b2247] via-[#0b2247]/85 to-[#0b2247]/25" />
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0b2247] to-transparent" />
-        </div>
-        <Container className="relative flex flex-1 flex-col justify-center pb-16 pt-36">
-          <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
-            <span className="h-px w-10 bg-[#7fb6e8]" />
-            Our services
-          </p>
-          <h1 className="mt-6 max-w-3xl font-display text-5xl font-bold leading-[1.05] md:text-7xl">
-            One partner.
-            <span className="block text-[#7fb6e8]">Every discipline.</span>
-          </h1>
-          <p className="mt-6 max-w-[50ch] text-body-l text-white/85">
-            Four integrated disciplines, one accountable team, backed by an in-house RMC plant.
-          </p>
-        </Container>
-        <Container full className="relative px-6 md:px-12">
-          <nav className="grid grid-cols-2 border-t border-white/20 md:grid-cols-5">
-            {[...SERVICE_SECTIONS.map((s) => ({ id: s.slug, label: s.title })), { id: "rmc", label: "RMC Plant" }].map(
-              (l, i) => (
-                <a
-                  key={l.id}
-                  href={`#${l.id}`}
-                  className="group flex items-center justify-between gap-2 border-white/20 py-5 pr-4 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0"
-                >
-                  <span>
-                    <span className="tabular block text-caption text-[#7fb6e8]">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="font-display text-body font-bold">{l.label}</span>
-                  </span>
-                  <ArrowUpRight size={18} className="shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-                </a>
-              )
-            )}
-          </nav>
-        </Container>
-      </section>
+      <ServicesHero />
 
       {/* Service rows */}
       {SERVICE_SECTIONS.map((s, i) => {
         const flip = i % 2 === 1;
         return (
-          <section key={s.slug} id={s.slug} className={`py-24 ${flip ? "bg-[#f2f7fc]" : "bg-white"}`}>
+          <section key={s.slug} id={s.slug} className={`py-6 ${flip ? "bg-[#f2f7fc]" : "bg-white"}`}>
             <Container className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
               <div className={`lg:col-span-6 ${flip ? "lg:order-2" : ""}`}>
                 <div className="relative overflow-hidden rounded-2xl">
@@ -124,26 +65,43 @@ export default function ServicesPage() {
       })}
 
       {/* RMC */}
-      <section id="rmc" className="relative overflow-hidden bg-[#0f2b57] py-24 text-white">
+      <section id="rmc" className="relative overflow-hidden bg-gradient-to-b from-[#eef5ff] via-white to-[#f3f8ff] py-8 text-[#0f2b57]">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-32 top-0 h-[32rem] w-[32rem] rounded-full bg-[#3e86d0]/15 blur-[120px]" />
-          <div className="absolute -right-24 bottom-0 h-[28rem] w-[28rem] rounded-full bg-[#7fb6e8]/10 blur-[120px]" />
+          <div className="absolute -left-40 -top-20 h-[34rem] w-[34rem] rounded-full bg-[#4d94ff]/20 blur-[120px]" />
+          <div className="absolute -right-32 top-1/3 h-[30rem] w-[30rem] rounded-full bg-[#9fd0ff]/30 blur-[120px]" />
+          <div
+            className="absolute inset-0 opacity-50"
+            style={{
+              backgroundImage: "radial-gradient(#b5cdff 1px, transparent 1px)",
+              backgroundSize: "28px 28px",
+              maskImage: "linear-gradient(to bottom, #000, transparent 60%)",
+              WebkitMaskImage: "linear-gradient(to bottom, #000, transparent 60%)",
+            }}
+          />
         </div>
         <Container className="relative">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-end">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
-              <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
-                <span className="h-px w-10 bg-[#7fb6e8]" />
+              <p className={`${eyebrow} flex items-center gap-3 text-[#3e86d0]`}>
+                <span className="h-px w-10 bg-[#3e86d0]" />
                 In-house
               </p>
-              <h2 className="mt-3 font-display text-4xl font-bold md:text-6xl">RMC Plant &amp; Concrete Supply</h2>
-              <p className="mt-6 max-w-[58ch] text-body-l text-white/80">
+              <h2 className="mt-4 font-display text-4xl font-extrabold leading-[1.02] tracking-tight md:text-6xl">
+                RMC Plant &amp;{" "}
+                <span className="bg-gradient-to-r from-[#0048b0] to-[#4d94ff] bg-clip-text text-transparent">
+                  Concrete Supply
+                </span>
+              </h2>
+              <p className="mt-6 max-w-[58ch] text-body-l text-[#5a6b84]">
                 Efficient, consistent, large-scale production with reliable supply and superior quality for every
                 project.
               </p>
             </div>
-            <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-[0_24px_48px_-16px_rgba(0,0,0,0.5)] lg:col-span-5">
-              <SiteImage slot="service-rmc" image={IMAGES.serviceRmc} ratio="16/10" className="rounded-2xl border-0" />
+            <div className="relative lg:col-span-5">
+              <div className="absolute -inset-3 -z-10 rotate-2 rounded-[28px] bg-gradient-to-br from-[#4d94ff]/40 to-[#9fd0ff]/20 blur-sm" />
+              <div className="overflow-hidden rounded-2xl border border-white bg-white p-2 shadow-[0_30px_60px_-20px_rgba(0,72,176,0.35)]">
+                <SiteImage slot="service-rmc" image={IMAGES.serviceRmc} ratio="16/10" className="rounded-xl border-0" />
+              </div>
             </div>
           </div>
         </Container>
@@ -151,54 +109,16 @@ export default function ServicesPage() {
         <RmcCapabilityGrid />
 
         <Container className="relative">
-          <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-7">
-              <p className={`${eyebrow} text-[#7fb6e8]`}>Team &amp; machinery</p>
-              <div className="mt-5 overflow-x-auto rounded-2xl border border-white/15">
-                <table className="w-full min-w-[520px] border-collapse text-body">
-                  <thead>
-                    <tr className="border-b border-white/15 text-left text-label uppercase tracking-[0.08em] text-white/60">
-                      <th className="py-4 pl-6 pr-4 font-semibold">Role</th>
-                      <th className="py-4 pr-8 text-right font-semibold">Nos</th>
-                      <th className="py-4 pr-4 font-semibold">Asset</th>
-                      <th className="py-4 pr-6 text-right font-semibold">Nos</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {RMC_ORG.map((row, i) => (
-                      <tr key={row.role} className="border-b border-white/10 last:border-0">
-                        <td className="py-3 pl-6 pr-4">{row.role}</td>
-                        <td className="tabular py-3 pr-8 text-right text-white/70">{row.nos}</td>
-                        <td className="py-3 pr-4">{RMC_MACHINERY[i]?.asset ?? ""}</td>
-                        <td className="tabular py-3 pr-6 text-right text-white/70">{RMC_MACHINERY[i]?.nos ?? ""}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="lg:col-span-5">
-              <p className={`${eyebrow} text-[#7fb6e8]`}>Facilities</p>
-              <ul className="mt-5 flex flex-wrap gap-2">
-                {RMC_FACILITIES.map((p) => (
-                  <li key={p} className="rounded-full border border-white/25 px-4 py-1.5 text-caption text-white/85">
-                    {p}
-                  </li>
-                ))}
-              </ul>
-              <p className={`${eyebrow} mt-10 text-[#7fb6e8]`}>Safety &amp; compliance</p>
-              <Bullets items={RMC_SAFETY} dark />
-            </div>
-          </div>
+          <RmcOperations />
 
-          <p className="mt-20 font-display text-2xl font-bold text-[#7fb6e8] md:text-4xl">
+          <p className="mt-8 bg-gradient-to-r from-[#0048b0] via-[#4d94ff] to-[#0048b0] bg-clip-text font-display text-2xl font-extrabold text-transparent md:text-5xl">
             Built for reliability. Designed for performance.
           </p>
         </Container>
       </section>
 
       {/* Workflow */}
-      <section className="bg-white py-24">
+      <section className="bg-white py-6">
         <Container>
           <p className={`${eyebrow} text-[#3e86d0]`}>Workflow</p>
           <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">

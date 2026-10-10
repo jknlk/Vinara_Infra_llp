@@ -1,83 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
-import { MapPin, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { loadHome } from "@/lib/homeContent";
-import type { HomeData } from "@/data/content/homeAdmin";
-
-function ProjectCard({ project, featured = false }: { project: HomeData; featured?: boolean }) {
-  const done = project.status === "completed";
-  const progress = Math.max(0, Math.min(100, Number(project.progress) || 0));
-  const badgeColor = done ? "bg-green-500/90 text-white" : "bg-sky-400/90 text-ink";
-
-  return (
-    <Link
-      href={project.href || "/projects"}
-      className={`group relative flex flex-col justify-end overflow-hidden rounded-2xl border border-white/10 ${
-        featured ? "min-h-[440px]" : "min-h-[320px]"
-      }`}
-    >
-      {project.image ? (
-        <Image
-          src={project.image}
-          alt={project.name}
-          fill
-          sizes={featured ? "(min-width: 1024px) 45vw, 100vw" : "(min-width: 1024px) 30vw, 100vw"}
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      ) : null}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/10" />
-
-      <span
-        className={`absolute left-4 top-4 rounded-full px-3 py-1 text-label font-semibold uppercase tracking-[0.06em] ${badgeColor}`}
-      >
-        {done ? "Completed" : "Ongoing"}
-      </span>
-
-      <div className="relative z-10 p-5">
-        <p className="flex items-center gap-1.5 text-caption text-grey-300">
-          <MapPin size={13} />
-          {project.location}
-        </p>
-        <h3 className="mt-1 text-body-l font-display font-bold text-white">{project.name}</h3>
-
-        <div className="mt-4 flex items-end justify-between gap-4">
-          <div>
-            <p className="text-label uppercase tracking-[0.06em] text-grey-300">Client</p>
-            <p className="mt-0.5 text-caption font-medium text-white">{project.client}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-label uppercase tracking-[0.06em] text-grey-300">Area</p>
-            <p className="tabular mt-0.5 text-caption font-medium text-white">{project.area}</p>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <div className="flex items-center justify-between text-label uppercase tracking-[0.06em] text-grey-300">
-            <span>Progress</span>
-            <span className="tabular">{progress}%</span>
-          </div>
-          <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
-            <div
-              className="h-full rounded-full bg-sky-400"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-
-        <span className="mt-4 inline-flex items-center gap-1 text-caption font-semibold text-white group-hover:text-sky-200">
-          View Details
-          <ArrowUpRight size={14} />
-        </span>
-      </div>
-    </Link>
-  );
-}
+import ProjectsStage from "@/components/home/ProjectsStage";
 
 export default async function ProjectsShowcase() {
-  const [featured1, featured2, ...rest] = await loadHome("featured");
+  const projects = await loadHome("featured");
 
   return (
-    <section className="bg-surface pt-12 pb-16">
+    <section className="bg-white pt-2 pb-0">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -106,18 +36,10 @@ export default async function ProjectsShowcase() {
             </Link>
           </div>
         </div>
-
-        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {featured1 ? <ProjectCard project={featured1} featured /> : null}
-          {featured2 ? <ProjectCard project={featured2} featured /> : null}
-        </div>
-
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {rest.map((p, i) => (
-            <ProjectCard key={`${p.name}-${i}`} project={p} />
-          ))}
-        </div>
       </div>
+
+      {/* full-bleed: the looping rows run edge to edge */}
+      <ProjectsStage projects={projects} />
     </section>
   );
 }

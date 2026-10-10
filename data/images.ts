@@ -135,6 +135,18 @@ export const IMAGES: Record<string, ImageSlot> = {
     alt: "Site welder wearing full protective mask and PPE",
     caption: "PPE compliance on site",
   },
+  careersHero: {
+    src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1400&h=1750&auto=format&fit=crop&crop=focalpoint&fp-x=0.6&fp-y=0.3&fp-z=1",
+    alt: "Site engineers in hard hats and hi-vis working on a reinforcement deck",
+  },
+  careersTeam: {
+    src: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=480&h=600&auto=format&fit=crop&crop=bottom",
+    alt: "Site team in hard hats and hi-vis lined up on a finished slab",
+  },
+  planningHero: {
+    src: "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?q=80&w=2400&auto=format&fit=crop",
+    alt: "Tower cranes and high-rise buildings under construction against a blue sky",
+  },
   planningSchedule: {
     src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2000&auto=format&fit=crop",
     alt: "Engineers reviewing blueprints and project plans on site",
@@ -180,6 +192,26 @@ export const IMAGES: Record<string, ImageSlot> = {
   gallery10: { src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop", alt: "Overhead view of structural work on an active site", caption: "NELA 2 · Precast installation" },
   gallery11: { src: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1600&auto=format&fit=crop", alt: "Safety awareness rally on a construction site", caption: "Safety · Awareness rally" },
   gallery12: { src: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1600&auto=format&fit=crop", alt: "Completed warehouse interior with high-bay racking", caption: "NELA 1 · B900 handed over" },
+
+  // Warehouse photography for the gallery page (Unsplash, free licence).
+  galleryWarehouse1: { src: "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1600&auto=format&fit=crop", alt: "High-bay warehouse aisle with fully loaded pallet racking", caption: "NELA 1 · High-Bay Storage Aisle" },
+  galleryWarehouse2: { src: "https://images.unsplash.com/photo-1684695749267-233af13276d0?q=80&w=1600&auto=format&fit=crop", alt: "Warehouse interior with racking, small-parts storage and floor-level staging", caption: "NELA 2 · Mezzanine & Racking Fit-Out" },
+  galleryWarehouse3: { src: "https://images.unsplash.com/photo-1627309366653-2dedc084cdf1?q=80&w=1600&auto=format&fit=crop", alt: "Tall blue and orange pallet racking in a large warehouse", caption: "NELA 1 · Selective Pallet Racking" },
+  galleryWarehouse4: { src: "https://images.unsplash.com/photo-1644079446600-219068676743?q=80&w=1600&auto=format&fit=crop", alt: "Long central aisle between stocked warehouse shelves", caption: "NELA 2 · Central Warehouse Aisle" },
+  galleryWarehouse5: { src: "https://images.unsplash.com/photo-1586528116022-aeda1613c63d?q=80&w=1600&auto=format&fit=crop", alt: "Workers walking through a wide warehouse aisle", caption: "NELA 1 · Operations Floor" },
+  galleryWarehouse6: { src: "https://images.unsplash.com/photo-1689942010216-dc412bb1e7a9?q=80&w=1600&auto=format&fit=crop", alt: "Forklift parked between tall pallet racks in a warehouse", caption: "NELA 2 · Pallet Storage Bay" },
+  galleryWarehouse7: { src: "https://images.unsplash.com/photo-1740914994657-f1cdffdc418e?q=80&w=1600&auto=format&fit=crop", alt: "Yellow reach truck working in a warehouse racking aisle", caption: "NELA 1 · Reach Truck Aisle" },
+  galleryWarehouse8: { src: "https://images.unsplash.com/photo-1669003153363-6d7ba8e20c7e?q=80&w=1600&auto=format&fit=crop", alt: "Aerial view of a large distribution centre with parking and service yards", caption: "NELA 1 · Distribution Centre Aerial" },
+  galleryWarehouse9: { src: "https://images.unsplash.com/photo-1709804945989-c8be542e04db?q=80&w=1600&auto=format&fit=crop", alt: "Pallet racking under a steel portal-frame roof with skylights", caption: "NELA 2 · Roof Structure & Skylights" },
+  galleryWarehouse10: { src: "https://images.unsplash.com/photo-1726776230760-ae81dc9d4e55?q=80&w=1600&auto=format&fit=crop", alt: "Top-down aerial of a warehouse roof with solar panels and trailers at loading docks", caption: "NELA 1 · Rooftop Solar & Loading Docks" },
+  galleryWarehouse11: { src: "https://images.unsplash.com/photo-1714650601435-67a4d51a0798?q=80&w=1600&auto=format&fit=crop", alt: "Bright warehouse hall with full-height red and white pallet racking", caption: "NELA 2 · Full-Height Racking Hall" },
+  galleryWarehouse12: { src: "https://images.unsplash.com/photo-1669003152237-7bd1ac4c13f3?q=80&w=1600&auto=format&fit=crop", alt: "Aerial view of a logistics park building surrounded by yards and roads", caption: "NELA 2 · Logistics Park Overview" },
+  galleryWarehouse13: { src: "https://images.unsplash.com/photo-1645736315000-6f788915923b?q=80&w=1600&auto=format&fit=crop", alt: "Forklift moving pallets through numbered warehouse dispatch lanes", caption: "NELA 1 · Dispatch Lanes" },
+  galleryWarehouse14: { src: "https://images.unsplash.com/photo-1672552226669-f6c3041972ea?q=80&w=1600&auto=format&fit=crop", alt: "View through deep multi-level warehouse racking", caption: "NELA 2 · Deep Racking Structure" },
+  galleryWarehouse15: { src: "https://images.unsplash.com/photo-1694885169342-909981fb408a?q=80&w=1600&auto=format&fit=crop", alt: "Empty clear-span warehouse shell with steel frame and concrete floor", caption: "NELA 1 · Clear-Span Shell Handover" },
+  galleryWarehouse16: { src: "https://images.unsplash.com/photo-1669003154400-053af9a35eba?q=80&w=1600&auto=format&fit=crop", alt: "Aerial view of a large warehouse with surrounding yards and landscaping", caption: "NELA 1 · Site & Yard Layout" },
+  galleryWarehouse17: { src: "https://images.unsplash.com/photo-1749244768351-2726dc23d26c?q=80&w=1600&auto=format&fit=crop", alt: "Warehouse aisle running through red and green racking portals", caption: "NELA 2 · Racking Portal Aisle" },
+  galleryWarehouse18: { src: "https://images.unsplash.com/photo-1714627798569-b3e36d409c4b?q=80&w=1600&auto=format&fit=crop", alt: "Forklift parked inside a warehouse material handling bay", caption: "NELA 1 · Material Handling Bay" },
 
   // Genuinely portrait-shot (not landscape-cropped) photos for the 9:16 home
   // gallery strip. Verified natural aspect ratio before use.
@@ -240,6 +272,10 @@ export const IMAGES: Record<string, ImageSlot> = {
   aboutHeroRenovation: {
     src: "https://images.unsplash.com/photo-1517581177682-a085bb7ffb15?q=80&w=2400&auto=format&fit=crop",
     alt: "Structural renovation in progress inside a heritage building",
+  },
+  aboutHeroSiteTeam: {
+    src: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2000&auto=format&fit=crop",
+    alt: "Vinara site team in hard hats and hi-vis reviewing a reinforced concrete deck from above",
   },
   aboutHeroSkyline: {
     src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2400&auto=format&fit=crop",

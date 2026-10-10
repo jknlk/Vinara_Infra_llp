@@ -33,7 +33,7 @@ function DisciplineItem({ item }: { item: (typeof DISCIPLINES)[number] }) {
   const Icon = item.icon;
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-[#0EA0BC]/30 bg-[#0EA0BC] px-3.5 py-2.5 text-white">
+    <div className="flex items-center gap-3 rounded-lg border border-blue-400/30 bg-blue-600 px-3.5 py-2.5 text-white">
       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/15 text-white">
         <Icon size={16} />
       </span>
@@ -74,8 +74,8 @@ export default function AboutHighlight() {
       ref={sectionRef}
       className="relative flex h-[100svh] overflow-hidden bg-[#041423] py-4 text-white sm:py-6"
     >
-      <div className="pointer-events-none absolute left-[-12rem] top-16 h-64 w-64 rounded-full bg-[#0EA0BC]/25 blur-3xl" />
-      <div className="pointer-events-none absolute right-[-18rem] top-1/4 h-[34rem] w-[34rem] rounded-full border border-[#0EA0BC]/25" />
+      <div className="pointer-events-none absolute left-[-12rem] top-16 h-64 w-64 rounded-full bg-blue-600/25 blur-3xl" />
+      <div className="pointer-events-none absolute right-[-18rem] top-1/4 h-[34rem] w-[34rem] rounded-full border border-blue-400/25" />
 
       <Container className="relative grid flex-1 items-center gap-9 lg:grid-cols-[minmax(0,0.9fr)_minmax(390px,0.78fr)] lg:gap-14">
         <div>
@@ -106,7 +106,7 @@ export default function AboutHighlight() {
           <div data-about-reveal className="mt-6 flex flex-wrap items-center gap-4">
             <Link
               href="/about"
-              className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#0EA0BC]/30 bg-[#0EA0BC] px-6 text-body font-bold text-white transition hover:border-white hover:bg-white hover:text-[#041423] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0EA0BC]"
+              className="inline-flex min-h-12 items-center justify-center rounded-full border border-blue-400/30 bg-blue-600 px-6 text-body font-bold text-white transition hover:border-white hover:bg-white hover:text-[#041423] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
             >
               Learn More About Us
             </Link>

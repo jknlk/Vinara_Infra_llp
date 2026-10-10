@@ -3,8 +3,7 @@ export const NAV_LINKS = [
   { href: "/about", label: "About", navLabel: "About" },
   { href: "/services", label: "Services", navLabel: "Services" },
   { href: "/projects", label: "Projects", navLabel: "Projects" },
-  { href: "/planning", label: "Planning & Controls", navLabel: "Planning" },
-  { href: "/quality-safety", label: "Quality & Safety", navLabel: "Quality" },
+  { href: "/planning", label: "Controls & QHSE", navLabel: "Controls & QHSE" },
   { href: "/leadership", label: "Leadership", navLabel: "Leadership" },
   { href: "/gallery", label: "Gallery", navLabel: "Gallery" },
   { href: "/careers", label: "Careers", navLabel: "Careers" },
@@ -19,18 +18,9 @@ export const FOOTER_COLUMNS = [
     links: [
       { href: "/about", label: "About" },
       { href: "/leadership", label: "Leadership" },
-      { href: "/quality-safety", label: "Quality & Safety" },
+      { href: "/planning", label: "Controls & QHSE" },
       { href: "/careers", label: "Careers" },
       { href: "/contact", label: "Contact" },
-    ],
-  },
-  {
-    heading: "Capabilities",
-    links: [
-      { href: "/services", label: "Warehousing & Logistics" },
-      { href: "/services", label: "Industrial Construction" },
-      { href: "/services", label: "Precast Construction" },
-      { href: "/services", label: "RMC Plant & Concrete Supply" },
     ],
   },
 ] as const;

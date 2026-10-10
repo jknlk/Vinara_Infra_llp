@@ -616,7 +616,9 @@ function VisibilityGate({
   children,
   overlay,
   capturesWheel,
+  containerProps,
 }: {
+  containerProps?: React.HTMLAttributes<HTMLDivElement>;
   children: (isFullscreen: boolean) => React.ReactNode;
   overlay: (toggleFullscreen: () => void, isFullscreen: boolean) => React.ReactNode;
   // false lets the page keep scrolling when the wheel is over the scene
@@ -649,6 +651,7 @@ function VisibilityGate({
       ref={ref}
       className="relative h-full w-full"
       style={{ background: SKY_HORIZON }}
+      {...containerProps}
       {...(capturesWheel || isFullscreen ? { "data-lenis-prevent": true } : {})}
     >
       {active ? children(isFullscreen) : <div className="h-full w-full" />}
@@ -664,9 +667,12 @@ const iconButton =
 export default function MasterPlanScene({
   activeSlug,
   hero = false,
+  embedded = false,
   onInsideChange,
 }: {
   activeSlug: string;
+  // inline section inside a longer page: the page keeps its scroll wheel until the visitor goes full screen
+  embedded?: boolean;
   // full-bleed page hero: controls clear the site navigation, the page keeps its scroll wheel, the site sits right of centre
   hero?: boolean;
   onInsideChange?: (inside: boolean) => void;
@@ -676,6 +682,8 @@ export default function MasterPlanScene({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [insideId, setInsideId] = useState<string | null>(null);
   const [fading, setFading] = useState(false);
+  // embedded: the wheel zooms only after the visitor clicks the scene, so the page still scrolls past it
+  const [engaged, setEngaged] = useState(false);
 
   const project = PROJECTS.find((p) => p.slug === activeSlug) ?? PROJECTS[0];
   const laid = useMemo(() => layoutBuildings(project.buildings), [project]);
@@ -709,7 +717,12 @@ export default function MasterPlanScene({
 
   return (
     <VisibilityGate
-      capturesWheel={!hero}
+      capturesWheel={(!hero && !embedded) || engaged}
+      containerProps={
+        embedded
+          ? { onPointerDown: () => setEngaged(true), onPointerLeave: () => setEngaged(false) }
+          : undefined
+      }
       overlay={(toggleFullscreen, isFullscreen) => {
         // in the hero the top controls sit below the floating site navigation
         const low = hero && !isFullscreen;
@@ -778,8 +791,10 @@ export default function MasterPlanScene({
               ? mobile
                 ? "Drag to look · tap the floor to walk"
                 : "Drag to look · W A S D or arrow keys to walk · click the floor to go there"
-              : low
-                ? "Drag to orbit · tap a building to walk inside · full screen to zoom"
+              : low || (embedded && !isFullscreen)
+                ? embedded
+                  ? "Drag to orbit · click, then scroll to zoom · tap a building to walk inside"
+                  : "Drag to orbit · tap a building to walk inside · full screen to zoom"
                 : "Drag to orbit · scroll to zoom · tap a building to walk inside"}
           </p>
         </>
@@ -800,7 +815,7 @@ export default function MasterPlanScene({
           insideId={insideId}
           reduced={reduced}
           mobile={mobile}
-          zoom={!hero || isFullscreen}
+          zoom={(!hero && !embedded) || engaged || isFullscreen}
           shift={hero && !isFullscreen ? 0.17 : 0}
           onSelect={setSelectedId}
         />

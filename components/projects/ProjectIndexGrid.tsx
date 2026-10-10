@@ -64,7 +64,7 @@ export default function ProjectIndexGrid({
     <div ref={rootRef}>
       <Container full className="px-6 md:px-12">
         {/* up to three sites fill the row as three columns; more than that drop to four */}
-        <div className={`mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 ${cards.length <= 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}>
+        <div className={`m-scroll mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 ${cards.length <= 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"}`}>
           {cards.map((p, i) => {
             const remaining = Math.max(0, p.buildingsCount - p.completed - p.wip);
             // one segment per building while that stays readable, otherwise three proportional runs

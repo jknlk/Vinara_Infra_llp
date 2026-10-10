@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
 import GalleryGrid, { type GalleryDisplayItem } from "@/components/gallery/GalleryGrid";
-import { GALLERY_ITEMS } from "@/data/content/gallery";
 import { IMAGES } from "@/data/images";
 import { listGallery, listProjects } from "@/lib/db";
-import { GALLERY_CATEGORIES } from "@/data/content/gallery";
+import { GALLERY_CATEGORIES, GALLERY_ITEMS, WAREHOUSE_GALLERY_ITEMS } from "@/data/content/gallery";
 
 export const metadata: Metadata = {
   title: "Gallery — Vinara Infra LLP",
@@ -26,7 +25,7 @@ async function loadItems(): Promise<GalleryDisplayItem[]> {
     }));
   } catch {
     // Database unavailable — fall back to the bundled gallery so the page never breaks.
-    return GALLERY_ITEMS.flatMap((i) => {
+    return [...GALLERY_ITEMS, ...WAREHOUSE_GALLERY_ITEMS].flatMap((i) => {
       const img = IMAGES[i.imageKey];
       return img?.src
         ? [{ id: i.imageKey, src: img.src, alt: img.alt, title: i.title, description: i.description, categories: i.categories }]
@@ -47,8 +46,8 @@ export default async function GalleryPage() {
   const [items, projectNames] = await Promise.all([loadItems(), loadProjectNames()]);
   return (
     <>
-      <section className="bg-[#f2f7fc] pb-10 pt-28 md:pt-32">
-        <Container className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
+      <section className="bg-white pb-2 pt-28 md:pt-32">
+        <Container full className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-8">
             <p className="flex items-center gap-3 text-label uppercase tracking-[0.14em] text-[#3e86d0]">
               <span className="h-px w-10 bg-[#3e86d0]" />
@@ -69,7 +68,8 @@ export default async function GalleryPage() {
           </div>
         </Container>
       </section>
-      <section className="overflow-x-hidden bg-white">
+      {/* no overflow-hidden here: it would trap the sticky filter and push it down */}
+      <section className="bg-white">
         <GalleryGrid items={items} projectNames={projectNames} />
       </section>
     </>

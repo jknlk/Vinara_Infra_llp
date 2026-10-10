@@ -47,7 +47,7 @@ export default function PlanningLadder() {
   );
 
   return (
-    <div ref={sectionRef} className="flex min-h-screen flex-col justify-center py-24">
+    <div ref={sectionRef} className="flex min-h-screen flex-col justify-center py-8">
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-4">
         {PLANNING_LEVELS.map((lvl, i) => (
           <div

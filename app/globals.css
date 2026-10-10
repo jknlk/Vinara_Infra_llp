@@ -2,39 +2,40 @@
 @import "lenis/dist/lenis.css";
 
 @theme {
-  /* ---- brand colour tokens : ice blue (#49e8ff) & white ---- */
-  --color-ink: #0a3446;
-  --color-surface: #eafdff;
-  --color-navy-900: #d1fbff;
-  --color-navy-700: #0e9cba;
-  --color-navy-500: #a3f5ff;
-  --color-orange-500: #49e8ff;
-  --color-orange-300: #a3f5ff;
-  --color-yellow-400: #49e8ff;
-  --color-sky-400: #49e8ff;
-  --color-sky-200: #a3f5ff;
+  /* ---- brand colour tokens : royal blue (#0048b0, from the logo) & white ---- */
+  --color-ink: #06204f;
+  --color-surface: #eef4ff;
+  --color-navy-900: #dfe9ff;
+  --color-navy-700: #0048b0;
+  --color-navy-500: #b5cdff;
+  --color-orange-500: #4d94ff;
+  --color-orange-300: #b5cdff;
+  --color-yellow-400: #4d94ff;
+  --color-sky-400: #4d94ff;
+  --color-sky-200: #b5cdff;
   --color-green-500: #3e86d0;
   --color-green-100: #dbe9fa;
   --color-green-700: #2c5f96;
-  --color-paper: #f2fdff;
-  --color-grey-500: #4d7686;
-  --color-grey-300: #6a95a5;
+  --color-paper: #f5f8ff;
+  --color-grey-500: #4d6086;
+  --color-grey-300: #6a7ea5;
 
-  /* ---- ice-blue overrides for Tailwind's default blue/sky/indigo scales : #49e8ff is the exact brand swatch ---- */
-  --color-blue-50: #ecfdff;
-  --color-blue-100: #d3fbff;
-  --color-blue-200: #a3f5ff;
-  --color-blue-300: #75efff;
-  --color-blue-400: #49e8ff;
-  --color-blue-500: #49e8ff;
-  --color-blue-600: #0e9cba;
-  --color-blue-700: #0c7f99;
-  --color-blue-800: #0c6980;
-  --color-blue-900: #0d5666;
-  --color-sky-50: #f0fdff;
-  --color-sky-100: #d8fbff;
-  --color-sky-300: #75efff;
-  --color-indigo-600: #0e9cba;
+  /* ---- royal-blue overrides for Tailwind's default blue/sky/indigo scales : #0048b0 is the logo's blue ---- */
+  --color-blue-50: #eef4ff;
+  --color-blue-100: #dfe9ff;
+  --color-blue-200: #b5cdff;
+  --color-blue-300: #85b4ff;
+  --color-blue-400: #4d94ff;
+  --color-blue-500: #4d94ff;
+  --color-blue-600: #0048b0;
+  --color-blue-700: #003d96;
+  --color-blue-800: #00327c;
+  --color-blue-900: #062a66;
+  --color-sky-50: #f2f6ff;
+  --color-sky-100: #e2ebff;
+  --color-sky-300: #85b4ff;
+  --color-sky-700: #003d96;
+  --color-indigo-600: #0048b0;
 
   /* ---- fonts ---- */
   --font-display: var(--font-archivo), "Arial Narrow", sans-serif;
@@ -109,6 +110,23 @@ body {
   display: none;
 }
 
+@keyframes gallery-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+.gallery-tile {
+  animation: gallery-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-tile {
+    animation: none;
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -152,6 +170,63 @@ body {
   animation: team-marquee-vertical var(--duration, 40s) infinite linear;
 }
 
+/* CurvedPeopleGallery: the ring turns by exactly one set of people (--ring-loop),
+   landing on an identical frame, so the loop is seamless. */
+@keyframes curved-ring-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(var(--ring-loop));
+  }
+}
+
+.curved-ring {
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation: curved-ring-spin var(--duration, 32s) linear infinite;
+}
+
+/* Pause only while the pointer is on a portrait, not anywhere over the strip. */
+.curved-ring:has(img:hover) {
+  animation-play-state: paused;
+}
+
+/* "Join the team" call-out under the leadership arc: sweeping gradient
+   headline and a button ringed by a rotating colour wheel. */
+@keyframes join-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes join-glow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.join-shine {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-ink) 0%,
+    var(--color-blue-600) 25%,
+    #f59e0b 50%,
+    var(--color-blue-600) 75%,
+    var(--color-ink) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: join-shine 4s linear infinite;
+}
+
+.join-glow {
+  background: conic-gradient(from 0deg, var(--color-blue-400), #f59e0b, var(--color-blue-600), #6366f1, var(--color-blue-400));
+  animation: join-glow 3s linear infinite;
+}
+
 /* setting-out grid rule, decorative overlay on hero/photo sections */
 .grid-rule {
   background-image: repeating-linear-gradient(
@@ -171,5 +246,27 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile-only horizontal card scroller: add `m-scroll` to a card grid/list. */
+@media (max-width: 639px) {
+  .m-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.75rem;
+  }
+  .m-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .m-scroll > * {
+    flex: 0 0 84%;
+    min-width: 0;
+    scroll-snap-align: start;
   }
 }

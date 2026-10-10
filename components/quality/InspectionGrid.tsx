@@ -23,7 +23,7 @@ export default function InspectionGrid() {
         placeholder="Filter by activity — e.g. concreting, MEP, façade"
         className="w-full max-w-md rounded-full border border-navy-500 bg-navy-900 px-5 py-2.5 text-caption text-ink placeholder:text-grey-300 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/40"
       />
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="m-scroll mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((a) => (
           <div key={a.activity} className="rounded-[4px] border border-navy-500 bg-navy-900 p-5">
             <h3 className="text-body-l font-display font-bold text-ink">{a.activity}</h3>

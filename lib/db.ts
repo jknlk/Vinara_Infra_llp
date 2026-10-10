@@ -1,5 +1,5 @@
 import { neon, neonConfig } from "@neondatabase/serverless";
-import { GALLERY_ITEMS } from "@/data/content/gallery";
+import { GALLERY_ITEMS, WAREHOUSE_GALLERY_ITEMS } from "@/data/content/gallery";
 import { IMAGES } from "@/data/images";
 import { PROJECTS } from "@/data/buildings";
 import { OPEN_ROLES } from "@/data/content/careers";
@@ -161,6 +161,14 @@ export function ensureSchema() {
 
     if (await claim("gallery_seeded")) {
       for (const item of GALLERY_ITEMS) {
+        const img = IMAGES[item.imageKey];
+        if (!img?.src) continue;
+        await q`INSERT INTO gallery_items (src, alt, title, description, categories)
+          VALUES (${img.src}, ${img.alt}, ${item.title}, ${item.description}, ${item.categories})`;
+      }
+    }
+    if (await claim("gallery_warehouse_v1")) {
+      for (const item of WAREHOUSE_GALLERY_ITEMS) {
         const img = IMAGES[item.imageKey];
         if (!img?.src) continue;
         await q`INSERT INTO gallery_items (src, alt, title, description, categories)

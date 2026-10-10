@@ -2,7 +2,7 @@ import { CONTROL_CYCLE } from "@/data/content/planning";
 
 export default function ControlCycle() {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-5">
+    <div className="m-scroll grid grid-cols-1 gap-4 sm:grid-cols-5">
       {CONTROL_CYCLE.map((stage, i) => (
         <div key={stage.title} className="relative">
           <div className="rounded-[4px] border border-navy-500 bg-navy-900 p-5">

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowDown } from "lucide-react";
 import Container from "@/components/ui/Container";
-import SiteImage from "@/components/ui/SiteImage";
 import DirectorCards from "@/components/leadership/DirectorCards";
 import TeamMarquee from "@/components/leadership/TeamMarquee";
 import { IMAGES } from "@/data/images";
@@ -12,7 +11,6 @@ import {
   DIRECTORS,
   PROJECT_ORG_CHART,
   MANPOWER_STATS,
-  CULTURE_PILLARS,
 } from "@/data/content/leadership";
 
 export const metadata: Metadata = {
@@ -29,45 +27,66 @@ export default function LeadershipPage() {
   return (
     <>
       {/* Hero */}
-      <section className="flex h-[100dvh] min-h-[640px] w-full items-center justify-center bg-[#f2f7fc] px-2 pb-2 pt-[5.5rem] sm:px-3">
-        <div className="flex h-full min-h-[420px] w-full items-center justify-center rounded-[2rem] bg-[#0f2b57] shadow-2xl">
-          <div className="relative h-[95%] w-[96%] overflow-hidden rounded-3xl">
-            <Image
-              src={IMAGES.planningSchedule.src ?? ""}
-              alt={IMAGES.planningSchedule.alt}
-              fill
-              priority
-              sizes="90vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-[#0f2b57]/75" />
-            <div className="relative flex h-full flex-col p-6 md:p-12">
-              <div className="flex flex-1 flex-col items-center justify-center text-center">
-                <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
-                  <span className="h-px w-10 bg-[#7fb6e8]" />
-                  Leadership
-                  <span className="h-px w-10 bg-[#7fb6e8]" />
-                </p>
-                <h1 className="mt-4 font-display text-5xl font-bold leading-[1.05] text-white md:text-7xl">
-                  The people
-                  <span className="block text-[#7fb6e8]">behind the build.</span>
-                </h1>
-              </div>
-              <dl className="grid grid-cols-3 gap-6">
-                {MANPOWER_STATS.map((s) => (
-                  <div key={s.label} className="border-t-2 border-[#7fb6e8] pt-3">
-                    <dd className="tabular font-display text-3xl font-bold text-white">{fmt(s.value)}</dd>
-                    <dt className="mt-1 text-caption text-white/70">{s.label}</dt>
-                  </div>
-                ))}
-              </dl>
+      <section className="w-full bg-white px-4 pb-12 pt-32 sm:px-6 lg:px-8 lg:pb-16 lg:pt-36">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="lg:col-span-6">
+            <p className={`${eyebrow} flex items-center gap-3 text-[#2f7fd0]`}>
+              <span className="h-px w-10 bg-[#2f7fd0]" />
+              Leadership &amp; team
+            </p>
+            <h1 className="mt-5 font-display text-5xl font-bold leading-[1.03] tracking-tight text-[#0b2247] md:text-7xl">
+              The people
+              <span className="block text-[#2f7fd0]">behind the build.</span>
+            </h1>
+            <p className="mt-6 max-w-[48ch] text-body-l text-[#0b2247]/70">
+              Directors, engineers and site crews accountable for every pour, every schedule and every handover.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#directors"
+                className="inline-flex items-center gap-2 rounded-full bg-[#0b2247] px-7 py-3 text-body font-semibold text-white transition-colors hover:bg-[#2f7fd0]"
+              >
+                Meet the directors
+                <ArrowDown size={18} />
+              </a>
+              <Link
+                href="/careers"
+                className="inline-flex items-center gap-2 rounded-full border border-[#0b2247]/20 px-7 py-3 text-body font-semibold text-[#0b2247] transition-colors hover:bg-[#f2f7fc]"
+              >
+                Join the team
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative lg:col-span-6">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl">
+              <Image
+                src={IMAGES.planningSchedule.src ?? ""}
+                alt={IMAGES.planningSchedule.alt}
+                fill
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
+
+        <dl className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
+          {MANPOWER_STATS.map((s) => (
+            <div key={s.label} className="rounded-2xl border border-[#0b2247]/10 bg-[#f4f8fd] px-6 py-5">
+              <dd className="tabular font-display text-4xl font-bold text-[#0b2247] md:text-5xl">{fmt(s.value)}</dd>
+              <dt className="mt-2 flex items-center gap-2 text-caption text-[#0b2247]/70">
+                <span className="h-px w-6 bg-[#2f7fd0]" />
+                {s.label}
+              </dt>
+            </div>
+          ))}
+        </dl>
       </section>
 
       {/* Directors */}
-      <section className="bg-white py-20">
+      <section id="directors" className="bg-white py-6">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <p className={`${eyebrow} text-[#3e86d0]`}>Directors</p>
           <div className="mt-8">
@@ -77,7 +96,7 @@ export default function LeadershipPage() {
       </section>
 
       {/* Team */}
-      <section className="overflow-hidden bg-[#f2f7fc] py-20">
+      <section className="overflow-hidden bg-[#f2f7fc] py-6">
         <Container>
           <p className={`${eyebrow} text-[#3e86d0]`}>Management &amp; site team</p>
         </Container>
@@ -87,7 +106,7 @@ export default function LeadershipPage() {
       </section>
 
       {/* Project organisation */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-6">
         <div className="grid w-full grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
           <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
             <p className={`${eyebrow} text-[#3e86d0]`}>Project organisation</p>
@@ -130,38 +149,6 @@ export default function LeadershipPage() {
               );
             })}
           </ol>
-        </div>
-      </section>
-
-      {/* Culture & careers */}
-      <section className="bg-[#0f2b57] py-20 text-white">
-        <div className="grid w-full grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:px-8">
-          <div className="lg:col-span-6">
-            <p className={`${eyebrow} text-[#7fb6e8]`}>Culture &amp; careers</p>
-            <h2 className="mt-3 font-display text-4xl font-bold md:text-5xl">Build your career with us.</h2>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {CULTURE_PILLARS.map((c) => (
-                <li key={c} className="rounded-full border border-white/25 px-4 py-1.5 text-caption text-white/85">
-                  {c}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/careers"
-              className="group mt-8 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-body font-semibold text-[#0f2b57] transition-colors hover:bg-[#7fb6e8]"
-            >
-              Explore careers
-              <ArrowUpRight size={18} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-          <div className="overflow-hidden rounded-2xl lg:col-span-6">
-            <SiteImage
-              slot="leadership-culture"
-              image={{ ...IMAGES.showcaseSiteTeam, caption: undefined }}
-              ratio="4/3"
-              className="rounded-2xl border-0"
-            />
-          </div>
         </div>
       </section>
     </>

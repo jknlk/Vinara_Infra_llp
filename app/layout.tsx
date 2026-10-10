@@ -3,6 +3,7 @@ import { archivo, plexSans } from "@/lib/fonts";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import Nav from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
+import StickyMarquee from "@/components/layout/StickyMarquee";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,11 +15,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${archivo.variable} ${plexSans.variable} antialiased`}>
-      <body className="flex min-h-screen flex-col bg-paper font-body text-ink">
+      <body className="flex min-h-screen flex-col bg-paper pb-10 font-body text-ink">
         <SmoothScroll>
           <Nav />
           <main className="flex-1">{children}</main>
           <Footer />
+          <StickyMarquee />
         </SmoothScroll>
       </body>
     </html>

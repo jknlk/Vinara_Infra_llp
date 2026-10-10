@@ -43,7 +43,7 @@ export default function DeliveryTrack() {
   );
 
   return (
-    <div ref={sectionRef} className="overflow-hidden bg-paper py-24 lg:flex lg:min-h-[80vh] lg:items-center lg:py-0">
+    <div ref={sectionRef} className="overflow-hidden bg-paper py-8 lg:flex lg:min-h-[80vh] lg:items-center lg:py-0">
       <div ref={trackRef} className="flex flex-col gap-6 lg:w-max lg:flex-row lg:flex-nowrap lg:gap-6">
         {DELIVERY_STAGES.map((stage, i) => (
           <DataPanel key={stage.title} accent="var(--color-sky-400)" className="lg:w-[300px] lg:shrink-0">

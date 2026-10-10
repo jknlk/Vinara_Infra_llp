@@ -1,22 +1,22 @@
-import { loadHome } from "@/lib/homeContent";
+import KeywordTicker from "@/components/home/KeywordTicker";
 import HomeHeroLight from "@/components/hero/HomeHeroLight";
-import AboutHighlight from "@/components/home/AboutHighlight";
 import ServicesShowcase from "@/components/home/ServicesShowcase";
 import ProjectsShowcase from "@/components/home/ProjectsShowcase";
 import LeadershipReel from "@/components/home/LeadershipReel";
 import TrustedByMarquee from "@/components/home/TrustedByMarquee";
+import Live3DShowcase from "@/components/home/Live3DShowcase";
 import GalleryPreview from "@/components/home/GalleryPreview";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const stats = await loadHome("hero_stat");
   return (
     <>
-      <HomeHeroLight stats={stats as { value: string; label: string }[]} />
+      <HomeHeroLight />
 
-      {/* S3 · About highlight */}
-      <AboutHighlight />
+      {/* Slides up over the pinned hero once the frame scrub finishes */}
+      <div className="relative z-20 -mt-[100svh] bg-white">
+      <KeywordTicker />
 
       {/* S4 · Services */}
       <ServicesShowcase />
@@ -24,15 +24,18 @@ export default async function HomePage() {
       {/* S5 · Projects */}
       <ProjectsShowcase />
 
+      {/* S5b · Live 3D site showcase */}
+      <Live3DShowcase />
 
-      {/* S7b · Leadership */}
-      <LeadershipReel />
+      {/* S8 · Gallery preview */}
+      <GalleryPreview />
 
-      {/* S8 · Trusted by */}
+      {/* S8b · Trusted by */}
       <TrustedByMarquee />
 
-      {/* S8b · Gallery preview */}
-      <GalleryPreview />
+      {/* S9 · Leadership (last section) */}
+      <LeadershipReel />
+      </div>
     </>
   );
 }

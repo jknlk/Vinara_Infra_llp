@@ -11,6 +11,9 @@ export function useLenis() {
   return useContext(LenisContext);
 }
 
+// the mobile URL bar showing/hiding resizes the viewport mid-scroll; don't re-pin on that
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const [lenis, setLenis] = useState<Lenis | null>(null);
   const pathname = usePathname();

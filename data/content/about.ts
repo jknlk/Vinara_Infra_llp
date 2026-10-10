@@ -68,6 +68,14 @@ export const MISSION_VISION = {
     "To be recognized as India's most dependable industrial construction partner, known for engineering discipline, on-time delivery and lasting value for every stakeholder we build with.",
 };
 
+// PLACEHOLDER quote — drafted from the site's own messaging, not something the
+// founder actually said. Replace with their approved words before going live.
+export const FOUNDER_MESSAGE = {
+  quote:
+    "A building is a promise made in concrete and steel. We plan it carefully, build it safely and hand it over on the day we said we would.",
+  note: "Nearly four decades on site have taught us one thing: clients come back for the discipline behind the work — the planning, the checks and the people who refuse to cut corners.",
+};
+
 export const CORE_VALUES = [
   { title: "Quality", body: "We build with precision" },
   { title: "Integrity", body: "We do what is right" },

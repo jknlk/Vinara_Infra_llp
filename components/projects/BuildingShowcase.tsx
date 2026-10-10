@@ -24,15 +24,12 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
   const rootRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<HTMLSpanElement>(null);
-  const zigRef = useRef<SVGPolylineElement>(null);
   const pinRef = useRef<ScrollTrigger | null>(null);
   const [active, setActive] = useState(0);
   const lenis = useLenis();
 
   const sum = slides.reduce((a, b) => a + b.builtUpSqft, 0) || 1;
   const steps = Math.max(slides.length - 1, 1);
-  // the line starts low, passes through each photo (high, low, high…) and runs off the end
-  const zigzag = ["0,60", ...slides.map((_, i) => `${i * 100 + 32},${i % 2 ? 64 : 38}`), `${slides.length * 100},50`].join(" ");
 
   useGSAP(
     () => {
@@ -52,16 +49,16 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
             trigger: root,
             start: "top top",
             end: () => `+=${distance()}`,
-            scrub: 1,
+            scrub: true,
             pin: true,
-            pinType: "transform",
-            anticipatePin: 1,
+            // native scroll + fixed pin: a transform pin jitters against the mobile compositor
+            pinType: "fixed",
+            pinSpacing: true,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               gsap.set(fillRef.current, { scaleX: self.progress });
-              // the zigzag line is drawn as far as the right edge of the screen
-              gsap.set(zigRef.current, { strokeDashoffset: 1 - (self.progress * distance() + root.clientWidth) / track.scrollWidth });
-              setActive(Math.round(self.progress * steps));
+              const next = Math.round(self.progress * steps);
+              setActive((cur) => (cur === next ? cur : next));
             },
           },
         });
@@ -69,29 +66,13 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
 
         gsap.utils.toArray<HTMLElement>("[data-slide]", root).forEach((slide, i) => {
           const q = gsap.utils.selector(slide);
-          // every other slide is mirrored top to bottom, and everything on it moves the opposite way
-          const dir = i % 2 === 0 ? 1 : -1;
-
-          // text zigzags in: letters drop in from above and below by turns and settle on a stepped baseline
-          const tl = gsap.timeline({ paused: true });
-          const title = SplitText.create(q("[data-title]"), { type: "words,chars" });
-          tl.from(q("[data-ghost]"), { yPercent: 40 * dir, rotation: -12 * dir, opacity: 0, duration: 1.2 }, 0)
-            .from(q("[data-line]"), { x: (n) => (n % 2 ? 70 : -70) * dir, opacity: 0, duration: 0.8, stagger: 0.1 }, 0)
-            .fromTo(
-              title.chars,
-              { yPercent: (n) => (n % 2 ? -140 : 140), rotation: (n) => (n % 2 ? -35 : 35), opacity: 0 },
-              {
-                yPercent: (n) => (n % 2 ? -7 : 7),
-                rotation: (n) => (n % 2 ? -3 : 3),
-                opacity: 1,
-                duration: 0.9,
-                ease: "back.out(1.8)",
-                stagger: 0.045,
-              },
-              0.1
-            )
-            .from(q("[data-stat]"), { y: (n) => (n % 2 ? -46 : 46), opacity: 0, duration: 0.7, ease: "back.out(1.6)", stagger: 0.1 }, 0.35)
-            .from(q("[data-bar]"), { scaleX: 0, transformOrigin: "left center", duration: 1.1 }, 0.55);
+          // clean reveal: everything fades up in order
+          const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+          tl.from(q("[data-ghost]"), { opacity: 0, duration: 1 }, 0)
+            .from(q("[data-line]"), { y: 24, opacity: 0, duration: 0.7, stagger: 0.1 }, 0)
+            .from(q("[data-title]"), { y: 36, opacity: 0, duration: 0.8 }, 0.1)
+            .from(q("[data-stat]"), { y: 20, opacity: 0, duration: 0.6, stagger: 0.08 }, 0.35)
+            .from(q("[data-bar]"), { scaleX: 0, transformOrigin: "left center", duration: 1, ease: "power2.out" }, 0.55);
           q("[data-count]").forEach((el) => {
             const end = Number(el.dataset.count);
             const digits = Number(el.dataset.digits ?? 0);
@@ -99,14 +80,14 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
             tl.to(counter, { v: end, duration: 1.3, ease: "power2.out", onUpdate: () => void (el.textContent = num(counter.v, digits)) }, 0.35);
           });
 
-          // caption lines slide in from alternate sides; re-split when fonts load or the width changes
+          // caption lines rise in; re-split when fonts load or the width changes
           let lines: gsap.core.Tween | undefined;
           SplitText.create(q("[data-copy]"), {
             type: "lines",
             autoSplit: true,
             onSplit: (self) =>
               (lines = gsap.from(self.lines, {
-                xPercent: (n) => (n % 2 ? 30 : -30),
+                yPercent: 40,
                 opacity: 0,
                 duration: 0.8,
                 stagger: 0.12,
@@ -131,10 +112,8 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
               : { trigger: slide, containerAnimation: scroll, start: "left 78%", onEnter: show, onLeaveBack: hide }
           );
 
-          // while a slide crosses the screen its photo and text swing past each other, tilting as they go
+          // the photo drifts slightly inside its frame as the slide crosses the screen
           const cross = { trigger: slide, containerAnimation: scroll, start: "left right", end: "right left", scrub: true };
-          gsap.fromTo(q("[data-frame]"), { y: 40 * dir, rotation: -4 * dir }, { y: -40 * dir, rotation: 3 * dir, ease: "none", scrollTrigger: cross });
-          gsap.fromTo(q("[data-text]"), { y: -30 * dir, rotation: 2 * dir }, { y: 30 * dir, rotation: -2 * dir, ease: "none", scrollTrigger: cross });
           gsap.fromTo(q("[data-photo]"), { xPercent: -6 }, { xPercent: 6, ease: "none", scrollTrigger: cross });
         });
 
@@ -171,47 +150,22 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
           backgroundSize: "56px 56px",
         }}
       />
-      <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[560px] w-[560px] rounded-full bg-[#3e86d0]/25 blur-[140px]" />
+      <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 hidden h-[560px] w-[560px] rounded-full bg-[#3e86d0]/25 blur-[140px] md:block" />
 
       <div ref={trackRef} className="relative flex h-[100svh] min-h-[640px] w-max px-[4vw] pb-28 pt-32">
-        {/* one line zigzagging through every photo, drawn as the strip advances */}
-        <svg
-          aria-hidden
-          viewBox={`0 0 ${slides.length * 100} 100`}
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-0 h-full w-full motion-reduce:hidden"
-        >
-          <polyline
-            ref={zigRef}
-            points={zigzag}
-            fill="none"
-            stroke="#7fb6e8"
-            strokeOpacity="0.45"
-            strokeWidth="2"
-            strokeLinejoin="round"
-            vectorEffect="non-scaling-stroke"
-            pathLength={1}
-            strokeDasharray="1"
-            strokeDashoffset="0"
-          />
-        </svg>
-
         {slides.map((b, i) => {
           const s = STATUS[b.status];
           const share = (b.builtUpSqft / sum) * 100;
-          const flip = i % 2 === 1;
           return (
             <article
               key={b.id}
               data-slide
-              className="relative flex h-full shrink-0 gap-6 px-[2vw] lg:gap-10"
+              className="relative flex h-full shrink-0 items-center gap-6 px-[2vw] lg:gap-10"
             >
               <span
                 data-ghost
                 aria-hidden
-                className={`tabular pointer-events-none absolute right-[2vw] hidden select-none font-display text-[15rem] font-bold leading-none text-transparent [-webkit-text-stroke:2px_rgba(127,182,232,0.2)] lg:block ${
-                  flip ? "bottom-0" : "top-0"
-                }`}
+                className="tabular pointer-events-none absolute right-[2vw] top-0 hidden select-none font-display text-[15rem] font-bold leading-none text-transparent [-webkit-text-stroke:2px_rgba(127,182,232,0.2)] lg:block"
               >
                 {pad(i + 1)}
               </span>
@@ -219,9 +173,7 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
               {/* photo: always 16:9, high on one slide, low on the next */}
               <figure
                 data-frame
-                className={`relative aspect-video h-[66%] shrink-0 overflow-hidden rounded-3xl bg-[#0f2b57] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.85)] ${
-                  flip ? "self-end" : "self-start"
-                }`}
+                className="relative aspect-video h-[66%] shrink-0 overflow-hidden rounded-3xl bg-[#0f2b57] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.85)]"
               >
                 <div data-photo className="absolute inset-y-0 -left-[8%] -right-[8%]">
                   {b.src ? (
@@ -245,7 +197,7 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
               </figure>
 
               {/* text: beside the photo, at the opposite edge */}
-              <div data-text className={`relative w-[min(30rem,80vw)] shrink-0 ${flip ? "self-start" : "self-end"}`}>
+              <div data-text className="relative w-[min(30rem,80vw)] shrink-0">
                 <div data-line className="flex flex-wrap items-center gap-3">
                   <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
                     <span className="h-px w-10 bg-[#7fb6e8]" />

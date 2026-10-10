@@ -94,7 +94,7 @@ export default async function ProjectsPage() {
       />
 
       {/* Project index cards */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-6">
         {/* same gutters as the card grid below, so the heading and the cards share a left edge */}
         <Container full className="px-6 md:px-12">
           <div className="flex flex-wrap items-end justify-between gap-4">

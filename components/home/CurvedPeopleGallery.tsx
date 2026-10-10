@@ -1,6 +1,4 @@
-"use client";
-
-import { useId } from "react";
+import type { CSSProperties } from "react";
 
 export type CurvedPersonSlot = {
   src: string;
@@ -14,37 +12,38 @@ const DEFAULT_IMAGES: CurvedPersonSlot[] = Array.from({ length: 7 }, (_, i) => (
   alt: `Team member ${i + 1}`,
 }));
 
-// Reference canvas the whole silhouette is authored against — the SVG scales
-// this uniformly to any container width, so the curvature never flattens.
-// Constants below are fit to pixel measurements taken off the reference
-// screenshot (7-card layout): card heights ~374/264/204/188 edge-to-centre,
-// and the top edge doing ~72% of the height falloff vs. ~28% for the bottom
-// (the strip sits closer to a bottom baseline, it is not symmetric).
-const VIEW_W = 1600;
-const GAP = 12;
-const MIN_H = 180; // centre card height
-const MAX_H = 360; // outermost card height
-const RADIUS = 18;
-const MARGIN = 20; // top/bottom breathing room around the tallest cards
-// Height falls off from the edges toward the centre as t^EASE, t in [0, 1].
-const EASE = 2.2;
-const TOP_SHARE = 0.72; // fraction of the height falloff carried by the top edge
-const BOTTOM_SHARE = 1 - TOP_SHARE;
-const VIEW_H = MAX_H + MARGIN * 2;
-const TOP_TRAVEL = (MAX_H - MIN_H) * TOP_SHARE;
-const BOTTOM_TRAVEL = (MAX_H - MIN_H) * BOTTOM_SHARE;
-const TOP_CENTER = MARGIN + TOP_TRAVEL; // top-edge y of the centre card
-const BOTTOM_CENTER = VIEW_H - MARGIN - BOTTOM_TRAVEL; // bottom-edge y of the centre card
+// Every length below is in `--u` units (1vw, clamped), so the whole scene
+// scales with the viewport and the curvature never flattens.
+//
+// Geometry is fit to the reference: portraits sit on the inside of a cylinder
+// of radius RADIUS and the camera stands inside it, CAMERA behind the axis.
+// That is what makes each card a slanted quad — small and square-on at the
+// centre, tall and raked at the edges — with the top and bottom edges curving
+// symmetrically.
+const UNIT = "clamp(8.5px, 1vw, 17px)";
+const RADIUS = 50;
+const CAMERA = 40.9; // perspective distance; the ring axis sits on the z=0 plane
+const CARD_W = 20;
+const CARD_H = 30;
+const CARD_RADIUS = 2.4;
+const MIN_CARDS = 12; // fewer than this leaves visible holes in the ring
+const SECONDS_PER_CARD = 4.5;
+// Stage extents above/below the portrait centre line. The vw cap takes over
+// on small screens, where `--u` bottoms out and only the short centre cards of
+// the ring are in view.
+const STAGE_TOP = "min(calc(17.5 * var(--u)), 19vw)";
+const STAGE_BOTTOM_IMAGE = "min(calc(17.5 * var(--u)), 19vw)";
+const STAGE_BOTTOM_CAPTION = "min(calc(24 * var(--u)), 26vw)";
+
+const u = (n: number) => `calc(${n} * var(--u))`;
 
 /**
- * A panoramic strip of portrait images sliced into vertical panels and bent
- * into a shallow concave/bowl arc: cards are tallest and highest at the
- * edges, shortest and lowest at the centre. The top and bottom boundaries
- * both curve toward the centre, but asymmetrically — the top edge carries
- * most of the height falloff, the bottom edge only a little.
+ * An endlessly rotating ring of portraits seen from inside: cards drift
+ * sideways along a concave arc, growing and tilting as they approach the
+ * edges, where they fade out. The set of people is repeated to close the ring.
  *
- * Pure geometry component — swap `images` for real photos. Pass `name`/`role`
- * on each slot to show a caption under its card, column-aligned to it.
+ * Swap `images` for real photos. Pass `name`/`role` on each slot to show a
+ * caption under its card; the caption travels with the card.
  */
 export default function CurvedPeopleGallery({
   images = DEFAULT_IMAGES,
@@ -53,81 +52,91 @@ export default function CurvedPeopleGallery({
   images?: CurvedPersonSlot[];
   className?: string;
 }) {
-  const rawId = useId();
-  const uid = rawId.replace(/[^a-zA-Z0-9]/g, "");
-  const validImages = images.filter((img) => img.src.trim().length > 0);
-  const n = validImages.length;
+  const people = images.filter((img) => img.src.trim().length > 0);
+  const n = people.length;
 
   if (n === 0) {
     return null;
   }
 
-  const center = (n - 1) / 2;
-  const cardWidth = (VIEW_W - (n - 1) * GAP) / n;
-  const showCaptions = validImages.some((img) => img.name || img.role);
+  const copies = Math.ceil(MIN_CARDS / n);
+  const total = n * copies;
+  const step = 360 / total;
+  // Keep the card-to-gap ratio constant when the ring holds more than 14 cards.
+  const radius = Math.max(RADIUS, (RADIUS * total) / 14);
+  const showCaptions = people.some((img) => img.name || img.role);
+  const stageBottom = showCaptions ? STAGE_BOTTOM_CAPTION : STAGE_BOTTOM_IMAGE;
 
-  const cards = validImages.map((img, i) => {
-    const t = center === 0 ? 0 : Math.abs(i - center) / center;
-    const f = Math.pow(t, EASE);
-    const y = TOP_CENTER - TOP_TRAVEL * f;
-    const bottom = BOTTOM_CENTER + BOTTOM_TRAVEL * f;
-    const height = bottom - y;
-    const x = i * (cardWidth + GAP);
-    return { ...img, x, y, width: cardWidth, height, clipId: `${uid}-clip-${i}` };
-  });
+  const cards = Array.from({ length: total }, (_, i) => ({
+    ...people[i % n],
+    angle: (i + 0.5) * step,
+    duplicate: i >= n,
+  }));
 
   return (
     <div
-      className={`relative left-1/2 w-screen -translate-x-1/2 overflow-x-auto md:overflow-hidden ${className}`}
+      className={`curved-stage relative left-1/2 w-screen -translate-x-1/2 overflow-hidden ${className}`}
+      style={
+        {
+          "--u": UNIT,
+          "--stage-top": STAGE_TOP,
+          height: `calc(var(--stage-top) + ${stageBottom})`,
+          maskImage: "linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%)",
+        } as CSSProperties
+      }
     >
-      {/* This inner wrapper's width/offset is shared by the SVG and the caption
-          grid below so captions stay column-aligned with their card, including
-          when the edge cards bleed off-screen. */}
-      <div className="w-[900px] shrink-0 md:w-[112%] md:shrink md:-ml-[6%]">
-        <svg
-          viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
-          className="block h-auto w-full"
-          role="img"
-          aria-label="Portraits of the team"
+      <div
+        className="absolute inset-0"
+        style={{ perspective: u(CAMERA), perspectiveOrigin: "50% var(--stage-top)" }}
+      >
+        <div
+          className="curved-ring absolute left-1/2 h-0 w-0"
+          style={
+            {
+              top: "var(--stage-top)",
+              "--ring-loop": `${360 / copies}deg`,
+              "--duration": `${n * SECONDS_PER_CARD}s`,
+            } as CSSProperties
+          }
         >
-          <defs>
-            {cards.map((c) => (
-              <clipPath key={c.clipId} id={c.clipId}>
-                <rect x={c.x} y={c.y} width={c.width} height={c.height} rx={RADIUS} ry={RADIUS} />
-              </clipPath>
-            ))}
-          </defs>
           {cards.map((c, i) => (
-            <g key={i} className="group/card" style={{ filter: "drop-shadow(0 6px 14px rgba(11,42,91,0.14))" }}>
-              <image
-                href={c.src}
-                x={c.x}
-                y={c.y}
-                width={c.width}
-                height={c.height}
-                preserveAspectRatio="xMidYMid slice"
-                clipPath={`url(#${c.clipId})`}
-                aria-label={c.alt}
-                className="transition-transform duration-[650ms] ease-out group-hover/card:scale-[1.03]"
-                style={{ transformBox: "fill-box", transformOrigin: "center" }}
+            <figure
+              key={i}
+              aria-hidden={c.duplicate || undefined}
+              className="absolute m-0"
+              style={{
+                width: u(CARD_W),
+                left: u(-CARD_W / 2),
+                top: u(-CARD_H / 2),
+                transform: `rotateY(${c.angle}deg) translateZ(${u(-radius)})`,
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={c.src}
+                alt={c.duplicate ? "" : (c.alt ?? c.name ?? "")}
+                draggable={false}
+                className="block w-full object-cover"
+                style={{ height: u(CARD_H), borderRadius: u(CARD_RADIUS) }}
               />
-            </g>
+              {(c.name || c.role) && (
+                <figcaption className="text-center" style={{ marginTop: u(1.4) }}>
+                  {c.name && (
+                    <p className="truncate font-semibold text-ink" style={{ fontSize: u(1.9), lineHeight: 1.25 }}>
+                      {c.name}
+                    </p>
+                  )}
+                  {c.role && (
+                    <p className="text-grey-500" style={{ fontSize: u(1.6), lineHeight: 1.25 }}>
+                      {c.role}
+                    </p>
+                  )}
+                </figcaption>
+              )}
+            </figure>
           ))}
-        </svg>
-
-        {showCaptions && (
-          <div
-            className="mt-4 grid"
-            style={{ gridTemplateColumns: `repeat(${n}, 1fr)`, columnGap: `${(GAP / VIEW_W) * 100}%` }}
-          >
-            {cards.map((c, i) => (
-              <div key={i} className="min-w-0 text-center">
-                {c.name && <p className="truncate text-caption font-semibold text-ink">{c.name}</p>}
-                {c.role && <p className="truncate text-caption text-grey-500">{c.role}</p>}
-              </div>
-            ))}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

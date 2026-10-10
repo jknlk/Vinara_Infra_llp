@@ -28,6 +28,25 @@ export const CAREERS_STATS = [
   { value: "37+", label: "Years of engineering legacy" },
 ] as const;
 
+export const HIRING_STEPS = [
+  {
+    title: "Apply",
+    body: "Send your resume against an open role, or as a general application.",
+  },
+  {
+    title: "Conversation",
+    body: "A short call about your experience and what you want to work on next.",
+  },
+  {
+    title: "Technical round",
+    body: "A discussion with the project or department lead for the role.",
+  },
+  {
+    title: "Offer & induction",
+    body: "Offer, onboarding and a structured site induction before you start.",
+  },
+] as const;
+
 export const DEPARTMENT_ICONS = {
   "Engineering & Execution": "HardHat",
   "Planning & Controls": "CalendarClock",

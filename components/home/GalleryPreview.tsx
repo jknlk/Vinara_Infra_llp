@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { loadHome } from "@/lib/homeContent";
+import WorkArc from "@/components/home/WorkArc";
 import type { HomeData } from "@/data/content/homeAdmin";
 
 function MarqueeCard({ item }: { item: HomeData }) {
   if (!item.image) return null;
   return (
-    <div className="group/item relative z-0 flex w-64 flex-shrink-0 origin-top flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_30px_-12px_rgba(13,56,84,0.25)] transition-all duration-300 ease-out hover:z-20 hover:-translate-y-2 hover:shadow-[0_24px_48px_-12px_rgba(13,56,84,0.45)] sm:w-72">
+    <div className="group/item relative z-0 flex w-64 flex-shrink-0 origin-top flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_30px_-12px_rgba(6,32,79,0.25)] transition-all duration-300 ease-out hover:z-20 hover:-translate-y-2 hover:shadow-[0_24px_48px_-12px_rgba(6,32,79,0.45)] sm:w-72">
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <Image
           src={item.image}
@@ -42,11 +43,11 @@ export default async function GalleryPreview() {
   const items = await loadHome("work");
   const LOOP = [...items, ...items];
   return (
-    <section className="bg-white pb-24 pt-4">
+    <section className="bg-white pb-4 pt-4">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="relative mx-2 sm:mx-8 lg:mx-14">
           {/* single blue backdrop spanning behind the heading and the whole row, incl. gaps between cards */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-navy-700 shadow-[0_24px_60px_-16px_rgba(14,156,186,0.55)]">
+          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-navy-700 shadow-[0_24px_60px_-16px_rgba(0,72,176,0.55)]">
             <span className="absolute -left-6 -top-10 h-28 w-28 rounded-full bg-white/10" />
             <span className="absolute -right-10 top-1/3 h-32 w-32 rounded-full bg-white/5" />
           </div>
@@ -61,7 +62,11 @@ export default async function GalleryPreview() {
 
           <div className="relative z-10 mt-2 pb-10">
             <div className="relative left-1/2 w-screen -translate-x-1/2">
-              <div className="group relative w-full overflow-x-hidden overflow-y-visible py-8">
+              {/* phones see the cards on a curve instead of the flat row, with their own dots */}
+              <div className="pb-6 pt-8 md:hidden">
+                <WorkArc items={items} />
+              </div>
+              <div className="group relative w-full overflow-x-hidden overflow-y-visible py-8 max-md:hidden">
                 <div className="animate-marquee flex w-max items-start gap-6 px-4 group-hover:[animation-play-state:paused]">
                   {LOOP.map((item, i) => (
                     <MarqueeCard key={`${item.title}-${i}`} item={item} />
@@ -70,7 +75,7 @@ export default async function GalleryPreview() {
               </div>
             </div>
 
-            <div className="mt-2 flex items-center justify-center gap-2">
+            <div className="mt-2 flex items-center justify-center gap-2 max-md:hidden">
               {items.slice(0, 5).map((item, i) => (
                 <span
                   key={`${item.title}-${i}`}
@@ -82,7 +87,7 @@ export default async function GalleryPreview() {
             <Link
               href="/gallery"
               aria-label="View full gallery"
-              className="absolute bottom-4 right-2 z-10 grid h-12 w-12 place-items-center rounded-full bg-white text-blue-600 shadow-[0_10px_30px_-8px_rgba(10,30,45,0.45)] transition-transform hover:scale-105 hover:bg-sky-100 sm:right-6"
+              className="absolute bottom-4 right-2 z-10 grid h-12 w-12 place-items-center rounded-full bg-white text-blue-600 shadow-[0_10px_30px_-8px_rgba(6,32,79,0.45)] transition-transform hover:scale-105 hover:bg-sky-100 sm:right-6"
             >
               <ArrowUpRight size={20} />
             </Link>

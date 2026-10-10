@@ -88,7 +88,7 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
           </dl>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-12">
+        <div className="-mx-4 mt-12 flex snap-x snap-mandatory items-stretch gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-12 lg:gap-5 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
           {groups.map((g, gi) => {
             const kind = KINDS.find((k) => k.match.test(g.label)) ?? FALLBACK_KIND;
             // with the usual three groups the first (longest) gets half the row and a two-column list
@@ -99,7 +99,7 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
                 key={g.label}
                 data-partner-group
                 onMouseMove={trackPointer}
-                className={`group/panel relative overflow-hidden rounded-3xl border border-[#0b2247]/10 bg-[#f4f8fd] p-5 shadow-sm transition duration-500 hover:border-[#0b2247]/25 sm:p-6 ${span}`}
+                className={`group/panel relative w-[85%] shrink-0 snap-center overflow-hidden rounded-3xl sm:w-[60%] lg:w-auto lg:shrink border border-[#0b2247]/10 bg-[#f4f8fd] p-5 shadow-sm transition duration-500 hover:border-[#0b2247]/25 sm:p-6 ${span}`}
               >
                 {/* soft light that follows the cursor across the panel */}
                 <span
@@ -127,7 +127,7 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
                   </span>
                 </div>
 
-                <ul className={`relative mt-5 grid grid-cols-1 gap-2.5 ${lead ? "sm:grid-cols-2" : ""}`}>
+                <ul className={`relative mt-5 grid grid-cols-1 gap-2.5 ${lead ? "lg:grid-cols-2" : ""}`}>
                   {g.names.map((name) => (
                     <li
                       key={name}

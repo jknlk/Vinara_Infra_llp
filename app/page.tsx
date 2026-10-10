@@ -15,7 +15,7 @@ export default async function HomePage() {
       <HomeHeroLight />
 
       {/* Slides up over the pinned hero once the frame scrub finishes */}
-      <div className="relative z-20 -mt-[100svh] bg-white">
+      <div className="relative z-20 -mt-[100lvh] bg-white">
       <KeywordTicker />
 
       {/* S4 · Services */}

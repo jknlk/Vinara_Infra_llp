@@ -86,15 +86,15 @@ export default function CurvedPeopleGallery({
         } as CSSProperties
       }
     >
+      {/* centred on the vanishing point, so no perspective-origin is needed (Safari mislays it) */}
       <div
-        className="absolute inset-0"
-        style={{ perspective: u(CAMERA), perspectiveOrigin: "50% var(--stage-top)" }}
+        className="absolute inset-x-0 top-0"
+        style={{ height: "calc(2 * var(--stage-top))", perspective: u(CAMERA) }}
       >
         <div
-          className="curved-ring absolute left-1/2 h-0 w-0"
+          className="curved-ring absolute left-1/2 top-1/2 h-0 w-0"
           style={
             {
-              top: "var(--stage-top)",
               "--ring-loop": `${360 / copies}deg`,
               "--duration": `${n * SECONDS_PER_CARD}s`,
             } as CSSProperties

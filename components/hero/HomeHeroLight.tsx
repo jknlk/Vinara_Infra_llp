@@ -122,9 +122,12 @@ export default function HomeHeroLight() {
   );
 
   return (
-    <section ref={scopeRef} className="relative h-[100svh] w-full overflow-hidden bg-ink">
+    // The picture fills the tallest viewport, so no gap opens under the pinned
+    // hero when the mobile URL bar collapses; the copy stays in the shortest one.
+    <section ref={scopeRef} className="relative h-[100lvh] w-full overflow-hidden bg-ink">
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-label="Aerial view of a Vinara Infra warehouse" role="img" />
 
+      <div className="absolute inset-x-0 top-0 h-[100svh]">
       <div className="relative z-10 flex h-full flex-col justify-end px-5 pb-8 pt-28 sm:px-6 md:px-12 md:pb-16">
         <div data-hero-fade className="max-w-4xl pt-4">
           <div
@@ -184,6 +187,7 @@ export default function HomeHeroLight() {
           <p className="mt-2 text-sm font-medium sm:mt-3 sm:text-body">{b.body}</p>
         </div>
       ))}
+      </div>
     </section>
   );
 }

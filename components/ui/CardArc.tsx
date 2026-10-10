@@ -317,14 +317,20 @@ export default function CardArc({ count, geometry, compact, className = "", chil
       style={{ height: "var(--stage-h)" }}
     >
       <style>{styles(`[data-arc="${id}"]`, geometry, compact)}</style>
+      {/* The vanishing point is the centre of this box rather than a
+          perspective-origin: iOS Safari drops an origin above the box and
+          falls back to its centre, which hangs the cards far too low. */}
       <div
-        className="absolute inset-0"
-        style={{ perspective: "var(--camera)", perspectiveOrigin: "50% var(--origin-y)" }}
+        className="absolute inset-x-0"
+        style={{
+          top: "calc(var(--origin-y) - var(--stage-h))",
+          height: "calc(2 * var(--stage-h))",
+          perspective: "var(--camera)",
+        }}
       >
         <div
           ref={ringRef}
-          className="absolute left-1/2 h-0 w-0 will-change-transform [transform-style:preserve-3d]"
-          style={{ top: "var(--origin-y)" }}
+          className="absolute left-1/2 top-1/2 h-0 w-0 will-change-transform [transform-style:preserve-3d]"
         >
           {Array.from({ length: total }, (_, i) => {
             const duplicate = i >= count;

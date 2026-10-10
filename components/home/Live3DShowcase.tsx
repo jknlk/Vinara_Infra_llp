@@ -90,7 +90,7 @@ export default function Live3DShowcase() {
           </div>
 
           <div
-            className={`absolute inset-x-4 bottom-12 flex flex-col items-stretch gap-3 sm:inset-x-8 lg:flex-row lg:items-end lg:justify-between ${fade}`}
+            className={`absolute inset-x-4 bottom-14 flex flex-col items-stretch gap-3 sm:inset-x-8 sm:bottom-12 lg:flex-row lg:items-end lg:justify-between ${fade}`}
           >
             <div className="pointer-events-auto flex flex-wrap items-center gap-3">
               <Link
@@ -107,12 +107,13 @@ export default function Live3DShowcase() {
               </Link>
             </div>
 
-            <div className="pointer-events-auto flex items-center gap-1.5 self-start rounded-full bg-white/90 p-1.5 shadow-lg backdrop-blur-sm lg:self-auto">
+            {/* phones drop the arrows: the three site names alone already fill the width */}
+            <div className="pointer-events-auto flex max-w-full items-center gap-1.5 self-start rounded-full bg-white/90 p-1.5 shadow-lg backdrop-blur-sm lg:self-auto">
               <button
                 type="button"
                 onClick={() => step(-1)}
                 aria-label="Previous site"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-[#0f2b57] transition hover:bg-[#0f2b57]/10"
+                className="hidden h-8 w-8 items-center sm:flex justify-center rounded-full text-[#0f2b57] transition hover:bg-[#0f2b57]/10"
               >
                 <ArrowLeft size={16} />
               </button>
@@ -133,7 +134,7 @@ export default function Live3DShowcase() {
                 type="button"
                 onClick={() => step(1)}
                 aria-label="Next site"
-                className="flex h-8 w-8 items-center justify-center rounded-full text-[#0f2b57] transition hover:bg-[#0f2b57]/10"
+                className="hidden h-8 w-8 items-center sm:flex justify-center rounded-full text-[#0f2b57] transition hover:bg-[#0f2b57]/10"
               >
                 <ArrowRight size={16} />
               </button>

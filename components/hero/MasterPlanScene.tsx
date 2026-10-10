@@ -793,7 +793,9 @@ export default function MasterPlanScene({
                 : "Drag to look · W A S D or arrow keys to walk · click the floor to go there"
               : low || (embedded && !isFullscreen)
                 ? embedded
-                  ? "Drag to orbit · click, then scroll to zoom · tap a building to walk inside"
+                  ? mobile
+                    ? "Drag to orbit · tap a building to enter"
+                    : "Drag to orbit · click, then scroll to zoom · tap a building to walk inside"
                   : "Drag to orbit · tap a building to walk inside · full screen to zoom"
                 : "Drag to orbit · scroll to zoom · tap a building to walk inside"}
           </p>

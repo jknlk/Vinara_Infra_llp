@@ -53,6 +53,7 @@ export default function ProjectIndexGrid({
         duration: 0.8,
         ease: "power3.out",
         stagger: 0.12,
+        clearProps: "all",
         scrollTrigger: { trigger: rootRef.current, start: "top 85%", once: true },
       });
     },
@@ -81,12 +82,12 @@ export default function ProjectIndexGrid({
                 ].filter((s) => s.grow > 0);
 
             return (
+              // the entrance tween runs on this wrapper: the card itself has CSS transitions on transform and opacity that would fight it
+              <div key={p.slug} data-project-card className="flex">
               <a
-                key={p.slug}
-                data-project-card
                 href={detailSlugSet.has(p.slug) ? `#${p.slug}` : undefined}
                 onMouseMove={trackPointer}
-                className="group relative z-0 flex flex-col overflow-hidden rounded-3xl bg-[#0b2247] text-white shadow-[0_18px_40px_-24px_rgba(11,34,71,0.8)] ring-1 ring-white/10 transition duration-500 ease-out hover:z-10 hover:scale-[1.025] hover:shadow-[0_32px_64px_-24px_rgba(62,134,208,0.75)] hover:ring-[#7fb6e8]/60 active:scale-[1.01]"
+                className="group relative z-0 flex w-full flex-col overflow-hidden rounded-3xl bg-[#0b2247] text-white shadow-[0_18px_40px_-24px_rgba(11,34,71,0.8)] ring-1 ring-white/10 transition duration-500 ease-out hover:z-10 hover:scale-[1.025] hover:shadow-[0_32px_64px_-24px_rgba(62,134,208,0.75)] hover:ring-[#7fb6e8]/60 active:scale-[1.01]"
               >
                 <div className="relative overflow-hidden">
                   <SiteImage
@@ -167,6 +168,7 @@ export default function ProjectIndexGrid({
                   className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/4 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition-all duration-1000 ease-out group-hover:left-[120%] group-hover:opacity-100"
                 />
               </a>
+              </div>
             );
           })}
         </div>

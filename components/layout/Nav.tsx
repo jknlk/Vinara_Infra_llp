@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { X, Menu, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useSpring, useMotionValueEvent } from "motion/react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { NAV_LINKS } from "@/data/content/site";
@@ -19,6 +19,25 @@ export default function Nav() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
   const [launching, setLaunching] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const { scrollY, scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.4 });
+
+  // compact once the page moves; slip away on the way down, return on the way up
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    setScrolled(y > 24);
+    if (y < prev - 2) setHidden(false);
+    else if (y > 320 && y > prev + 2 && !open) setHidden(true);
+  });
+
+  // cursor spotlight inside the bar
+  const spot = (e: React.PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+  };
 
   const burst = (e: React.MouseEvent<HTMLElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -57,20 +76,44 @@ export default function Nav() {
   );
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:px-6">
-      <div className="relative z-50 flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-black/5 bg-white/90 px-4 py-2.5 shadow-lg shadow-black/10 backdrop-blur-xl sm:px-6">
-        <Link href="/" className="flex shrink-0 items-center" aria-label="Vinara Infra LLP home">
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 flex justify-center px-4 transition-[transform,padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-6 ${
+          scrolled ? "pt-2" : "pt-4"
+        } ${hidden ? "-translate-y-[130%]" : "translate-y-0"}`}
+      >
+        <div
+          className={`nav-glow relative z-50 w-full rounded-full p-[1.5px] transition-[max-width,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            scrolled
+              ? "max-w-[1120px] shadow-[0_18px_50px_-12px_rgba(0,72,176,0.45)]"
+              : "max-w-[1240px] shadow-[0_14px_40px_-14px_rgba(6,32,79,0.5)]"
+          }`}
+        >
+          <div
+            onPointerMove={spot}
+            className={`nav-bar relative flex w-full items-center justify-between gap-4 overflow-hidden rounded-full bg-white/85 px-4 backdrop-blur-2xl backdrop-saturate-150 transition-[padding] duration-500 sm:px-6 ${
+              scrolled ? "py-1.5" : "py-2.5"
+            }`}
+          >
+        <span className="nav-spot pointer-events-none absolute inset-0" aria-hidden="true" />
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 left-6 right-6 h-[2.5px] origin-left rounded-full bg-gradient-to-r from-blue-400 via-blue-600 to-amber-400"
+          style={{ scaleX: progress }}
+        />
+        <Link href="/" className="nav-logo-link relative flex shrink-0 items-center" aria-label="Vinara Infra LLP home">
           <Image
             src="/vinara-logo-transparent.png"
             alt="Vinara Infra LLP"
             width={52}
             height={52}
-            className="h-[52px] w-auto"
+            className={`w-auto transition-[height] duration-500 ${scrolled ? "h-[44px]" : "h-[52px]"}`}
             priority
+            data-nav-logo
           />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 xl:flex xl:gap-1" onMouseLeave={() => setHovered(null)}>
+        <nav className="relative hidden items-center gap-0.5 xl:flex xl:gap-1" onMouseLeave={() => setHovered(null)}>
           {NAV_LINKS.map((link) => {
             const isActive: boolean = pathname === link.href;
             return (
@@ -85,14 +128,14 @@ export default function Nav() {
                 {hovered === link.href && !isActive && (
                   <motion.span
                     layoutId="nav-hover"
-                    className="absolute inset-0 rounded-full bg-blue-600/10"
+                    className="absolute inset-0 rounded-full bg-blue-600/10 ring-1 ring-blue-600/10"
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
                 {isActive && (
                   <motion.span
                     layoutId="nav-active"
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-600/30"
+                    className="nav-active absolute inset-0 overflow-hidden rounded-full bg-gradient-to-r from-blue-600 via-blue-700 to-blue-600 shadow-[0_6px_18px_-4px_rgba(0,72,176,0.6),inset_0_1px_0_rgba(255,255,255,0.35)]"
                     transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.8 }}
                   />
                 )}
@@ -115,7 +158,7 @@ export default function Nav() {
             <Link
               href="/contact"
               onClick={burst}
-              className="group relative flex items-center gap-1.5 overflow-hidden rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-caption font-semibold text-white shadow-md shadow-blue-600/30 transition-shadow hover:shadow-lg hover:shadow-blue-600/40"
+              className="nav-cta group relative flex items-center gap-2 overflow-hidden rounded-full py-2 pl-5 pr-2 text-caption font-semibold text-white shadow-[0_8px_24px_-6px_rgba(0,72,176,0.65),inset_0_1px_0_rgba(255,255,255,0.3)] transition-shadow hover:shadow-[0_12px_34px_-6px_rgba(0,72,176,0.8),inset_0_1px_0_rgba(255,255,255,0.4)]"
             >
               <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-white/30 opacity-0 transition-all duration-700 group-hover:left-[130%] group-hover:opacity-100" />
               <AnimatePresence>
@@ -131,9 +174,9 @@ export default function Nav() {
                 ))}
               </AnimatePresence>
               <span className="relative">Get Quote</span>
-              <span className="relative block h-3.5 w-3.5 overflow-hidden">
+              <span className="relative grid h-7 w-7 place-items-center overflow-hidden rounded-full bg-white text-blue-600 transition-transform duration-500 group-hover:-rotate-45">
                 <motion.span
-                  className="absolute inset-0"
+                  className="absolute inset-0 grid place-items-center"
                   animate={launching ? { x: [0, 22, -22, 0] } : { x: 0 }}
                   transition={{ duration: 0.6, times: [0, 0.4, 0.41, 1], ease: "easeInOut" }}
                 >
@@ -150,8 +193,10 @@ export default function Nav() {
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>
+          </div>
         </div>
-      </div>
+        </div>
+      </header>
 
       <div
         ref={overlayRef}
@@ -165,14 +210,17 @@ export default function Nav() {
         >
           <X size={20} />
         </button>
-        <nav className="m-auto flex w-full flex-col gap-1.5 py-4">
-          {NAV_LINKS.map((link) => (
+        <nav className="mx-auto flex w-full flex-col gap-1.5 py-4">
+          {NAV_LINKS.map((link, i) => (
             <Link
               key={link.href}
               data-mobile-link
               href={link.href}
-              className="text-display-m font-display text-ink"
+              className={`flex items-baseline gap-3 border-b border-ink/10 py-1.5 font-display text-display-m transition-colors ${
+                pathname === link.href ? "text-blue-600" : "text-ink hover:text-blue-600"
+              }`}
             >
+              <span className="text-label tabular text-grey-300">{String(i + 1).padStart(2, "0")}</span>
               {link.label}
             </Link>
           ))}
@@ -186,6 +234,6 @@ export default function Nav() {
           </Link>
         </nav>
       </div>
-    </header>
+    </>
   );
 }

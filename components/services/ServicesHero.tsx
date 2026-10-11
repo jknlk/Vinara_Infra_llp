@@ -28,7 +28,8 @@ export default function ServicesHero() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#071a3a] text-white">
+    // From lg up the hero is exactly one screen: the panels take whatever height the heading leaves.
+    <section className="relative isolate overflow-hidden bg-[#071a3a] text-white lg:flex lg:min-h-[100svh] lg:flex-col">
       {/* ambient backdrop */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -left-40 -top-40 h-[640px] w-[640px] rounded-full bg-[#1f6fd1]/30 blur-[140px]" />
@@ -45,16 +46,16 @@ export default function ServicesHero() {
         />
       </div>
 
-      <Container className="pb-10 pt-32 md:pt-40">
+      <Container className="pb-10 pt-32 md:pt-40 lg:shrink-0 lg:pb-6 lg:pt-[clamp(7rem,14svh,9rem)]">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
               <span className="h-px w-10 bg-[#7fb6e8]" />
               Our services
             </p>
-            <h1 className="mt-6 font-display text-5xl font-extrabold leading-[0.98] tracking-tight md:text-7xl lg:text-[5.5rem]">
+            <h1 className="mt-6 font-display text-5xl font-extrabold leading-[0.98] tracking-tight md:text-7xl lg:mt-4 lg:text-[length:clamp(2.75rem,min(9.5svh,6.2vw),5.5rem)]">
               One partner.
-              <span className="block bg-gradient-to-r from-[#9fd0ff] via-[#4d94ff] to-[#7fb6e8] bg-clip-text text-transparent">
+              <span className="block join-shine join-shine-dark pb-[0.08em]">
                 Every discipline.
               </span>
             </h1>
@@ -78,8 +79,9 @@ export default function ServicesHero() {
       </Container>
 
       {/* Interactive discipline panels */}
-      <Container className="pb-12">
-        <div className="flex flex-col gap-3 lg:h-[min(52vh,520px)] lg:flex-row">
+      {/* the bottom padding clears the fixed marquee ribbon, which is 3.6vw tall at its crest */}
+      <Container className="pb-12 lg:flex lg:flex-1 lg:flex-col lg:pb-[calc(3.6vw+0.5rem)]">
+        <div className="flex flex-col gap-3 lg:min-h-[220px] lg:flex-1 lg:flex-row">
           {PANELS.map((p, i) => {
             const on = active === i;
             return (
@@ -146,7 +148,7 @@ export default function ServicesHero() {
           })}
         </div>
 
-        <div className="mt-8 flex items-center justify-center gap-2 text-caption text-white/50">
+        <div className="mt-8 flex items-center justify-center gap-2 text-caption text-white/50 lg:mt-3 lg:shrink-0">
           <ChevronDown size={16} className="animate-bounce" />
           Scroll to explore
         </div>

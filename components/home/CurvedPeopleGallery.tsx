@@ -109,7 +109,8 @@ export default function CurvedPeopleGallery({
                 width: u(CARD_W),
                 left: u(-CARD_W / 2),
                 top: u(-CARD_H / 2),
-                transform: `rotateY(${c.angle}deg) translateZ(${u(-radius)})`,
+                // negative, so the people read left to right in the order given
+                transform: `rotateY(${-c.angle}deg) translateZ(${u(-radius)})`,
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

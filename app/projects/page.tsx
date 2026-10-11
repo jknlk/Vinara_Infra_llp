@@ -104,7 +104,7 @@ export default async function ProjectsPage() {
                 Our sites
               </p>
               <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-6xl">
-                Every site. <span className="text-[#3e86d0]">One standard.</span>
+                Every site. <span className="join-shine">One standard.</span>
               </h2>
             </div>
             <p className="max-w-[34ch] text-body text-[#5a6b84] lg:text-right">

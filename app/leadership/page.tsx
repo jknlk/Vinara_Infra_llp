@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown } from "lucide-react";
 import Container from "@/components/ui/Container";
+import JellyFrame from "@/components/ui/JellyFrame";
 import DirectorCards from "@/components/leadership/DirectorCards";
 import TeamMarquee from "@/components/leadership/TeamMarquee";
 import { IMAGES } from "@/data/images";
@@ -36,7 +37,7 @@ export default function LeadershipPage() {
             </p>
             <h1 className="mt-5 font-display text-5xl font-bold leading-[1.03] tracking-tight text-[#0b2247] md:text-7xl">
               The people
-              <span className="block text-[#2f7fd0]">behind the build.</span>
+              <span className="block join-shine pb-[0.08em]">behind the build.</span>
             </h1>
             <p className="mt-6 max-w-[48ch] text-body-l text-[#0b2247]/70">
               Directors, engineers and site crews accountable for every pour, every schedule and every handover.
@@ -59,7 +60,7 @@ export default function LeadershipPage() {
           </div>
 
           <div className="relative lg:col-span-6">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-xl">
+            <JellyFrame className="aspect-[4/3]" echoClassName="stroke-[#2f7fd0]/35">
               <Image
                 src={IMAGES.planningSchedule.src ?? ""}
                 alt={IMAGES.planningSchedule.alt}
@@ -68,7 +69,7 @@ export default function LeadershipPage() {
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
               />
-            </div>
+            </JellyFrame>
           </div>
         </div>
 
@@ -112,7 +113,7 @@ export default function LeadershipPage() {
             <p className={`${eyebrow} text-[#3e86d0]`}>Project organisation</p>
             <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">
               Clear roles.
-              <span className="block text-[#3e86d0]">Clear reporting.</span>
+              <span className="block join-shine pb-[0.08em]">Clear reporting.</span>
             </h2>
             <p className="mt-5 max-w-[40ch] text-body text-[#5a6b84]">
               Five levels, one chain of accountability from the project head to every execution team on site.

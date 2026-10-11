@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import JellyRibbon from "@/components/ui/JellyRibbon";
 
 const ITEMS = [
   { tag: "Our Work", text: "213.06 acres under development across three parks", href: "/projects" },
@@ -8,27 +11,46 @@ const ITEMS = [
   { tag: "Legacy", text: "37+ years of engineering experience", href: "/about" },
 ];
 
+// Spaces inside SVG text collapse, so the gaps are non-breaking ones.
+const GAP = "   ";
+
 export default function StickyMarquee() {
   return (
-    <div className="group fixed inset-x-0 bottom-0 z-40 overflow-hidden border-t border-white/10 bg-ink/95 backdrop-blur-md">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-ink to-transparent sm:w-24" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-ink to-transparent sm:w-24" />
-      <ul className="flex w-max animate-marquee items-center py-2 [animation-duration:60s] group-hover:[animation-play-state:paused]">
-        {/* Two identical halves; the loop shifts by exactly one half. */}
-        {[0, 1].flatMap((half) =>
-          [...ITEMS, ...ITEMS].map((it, i) => (
-            <li key={`${half}-${i}`} aria-hidden={half === 1 || undefined} className="flex shrink-0 items-center">
-              <Link href={it.href} tabIndex={half === 1 ? -1 : undefined} className="flex items-center gap-3 px-5 sm:px-8">
-                <span className="rounded-full bg-blue-600 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white sm:text-xs">
-                  {it.tag}
-                </span>
-                <span className="whitespace-nowrap text-xs font-medium text-white/90 sm:text-sm">{it.text}</span>
-              </Link>
-              <span className="h-1 w-1 rotate-45 bg-sky-400" />
-            </li>
+    // Only the text takes the pointer: the box around the ribbon lies over the page.
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 overflow-x-clip">
+      <JellyRibbon
+        band={34}
+        sway={9}
+        breath={4}
+        repeats={2}
+        flatBottom
+        pauseOnHover
+        decorative={false}
+        className="drop-shadow-[0_-6px_12px_rgba(6,32,79,0.25)]"
+        bandClassName="fill-ink"
+        textClassName="pointer-events-auto text-[15px] font-medium"
+      >
+        {(copy) =>
+          ITEMS.map((it) => (
+            <Link
+              key={it.tag}
+              href={it.href}
+              tabIndex={copy > 0 ? -1 : undefined}
+              aria-hidden={copy > 0 || undefined}
+              className="group/item"
+            >
+              <tspan className="fill-sky-300 font-semibold uppercase tracking-[0.14em]">{it.tag}</tspan>
+              <tspan className="fill-white/90 transition-colors group-hover/item:fill-white">
+                {GAP}
+                {it.text.replace(/ /g, " ")}
+              </tspan>
+              <tspan className="fill-sky-400">
+                {GAP}◆{GAP}
+              </tspan>
+            </Link>
           ))
-        )}
-      </ul>
+        }
+      </JellyRibbon>
     </div>
   );
 }

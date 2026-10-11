@@ -128,7 +128,7 @@ export default function RmcOperations() {
         <span className="h-px w-10 bg-[#3e86d0]" />
         Team &amp; machinery
       </p>
-      <h3 className="mt-4 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-[#0f2b57] md:text-4xl">
+      <h3 className="mt-4 max-w-2xl font-display text-3xl font-extrabold tracking-tight join-shine pb-[0.08em] md:text-4xl">
         The people and plant behind every pour.
       </h3>
 

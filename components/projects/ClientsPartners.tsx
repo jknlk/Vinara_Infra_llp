@@ -66,7 +66,7 @@ export default function ClientsPartners({ groups }: { groups: Group[] }) {
               Clients &amp; partners
             </p>
             <h2 className="mt-4 font-display text-4xl font-bold md:text-6xl">
-              Built alongside <span className="text-[#2f7fd0]">the best.</span>
+              Built alongside <span className="join-shine">the best.</span>
             </h2>
             <p className="mt-4 max-w-[52ch] text-body-l text-[#0b2247]/70">
               The developers, project managers and occupiers behind every site we deliver.

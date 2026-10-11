@@ -27,7 +27,7 @@ export default function WhyVinaraValues() {
             <span className="h-px w-12 bg-[#3e86d0]" />
             Why Vinara
           </p>
-          <h2 className="mt-4 font-display text-display-m text-[#0f2b57]">Built on systems, not luck.</h2>
+          <h2 className="mt-4 font-display text-display-m join-shine pb-[0.08em]">Built on systems, not luck.</h2>
           <ul className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {WHY_VINARA.map((w, i) => {
               const Icon = WHY_ICONS[i];
@@ -51,7 +51,7 @@ export default function WhyVinaraValues() {
             <span className="h-px w-12 bg-[#3e86d0]" />
             Our values
           </p>
-          <h2 className="mt-4 font-display text-display-m text-[#0f2b57]">What we stand for.</h2>
+          <h2 className="mt-4 font-display text-display-m join-shine pb-[0.08em]">What we stand for.</h2>
           <div className="m-scroll mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {CORE_VALUES.map((v, i) => {
               const Icon = VALUE_ICONS[i];

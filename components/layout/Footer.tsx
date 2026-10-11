@@ -13,7 +13,7 @@ export default function Footer() {
           <h2 className="text-display-m font-display leading-[0.95] text-white">
             Let&rsquo;s
             <br />
-            Grow <span className="text-white/70">Together.</span>
+            Grow <span className="join-shine join-shine-dark">Together.</span>
           </h2>
           <Image
             src="/vinara-logo-footer-white.png"
@@ -57,7 +57,11 @@ export default function Footer() {
 
         <div className="border-t border-dashed border-white/30" />
 
-        <div className="flex flex-col items-start justify-between gap-2 px-8 py-3 text-caption text-white/80 sm:flex-row sm:items-center sm:px-12">
+        {/* last line of the page: a scroll-triggered reveal may never reach its start here */}
+        <div
+          data-no-reveal
+          className="flex flex-col items-start justify-between gap-2 px-8 py-3 text-caption text-white/80 sm:flex-row sm:items-center sm:px-12"
+        >
           <p>&copy; {new Date().getFullYear()} Vinara Infra LLP. All rights reserved.</p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Quote } from "lucide-react";
 import Container from "@/components/ui/Container";
+import JellyFrame from "@/components/ui/JellyFrame";
 import { FOUNDER_MESSAGE } from "@/data/content/about";
 import { DIRECTORS } from "@/data/content/leadership";
 
@@ -30,11 +31,7 @@ export default function FounderQuote() {
             {/* portrait */}
             <div className="lg:col-span-5">
               <div className="relative mx-auto max-w-[400px]">
-                <span
-                  aria-hidden
-                  className="absolute -bottom-4 -left-4 h-full w-full rounded-[28px] border border-[#7fb6e8]/40"
-                />
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] ring-1 ring-white/15">
+                <JellyFrame className="aspect-[4/5]" echoClassName="stroke-[#7fb6e8]/40">
                   <Image
                     src={FOUNDER.photo}
                     alt={FOUNDER.name}
@@ -43,7 +40,7 @@ export default function FounderQuote() {
                     className="object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0b2247]/70 via-transparent to-transparent" />
-                </div>
+                </JellyFrame>
                 <span className="absolute -right-3 -top-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0b4fc2] shadow-[0_18px_36px_-12px_rgba(11,79,194,0.9)] sm:-right-5">
                   <Quote size={28} fill="currentColor" strokeWidth={0} />
                 </span>

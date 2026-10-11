@@ -1,7 +1,7 @@
 export const CAPABILITY_STRIP = [
   { title: "Warehousing", line: "Smart spaces. Stronger supply chains." },
   { title: "Industrial", line: "Built for performance. Engineered for progress." },
-  { title: "Infrastructure", line: "Building the foundation. Empowering tomorrow." },
+  { title: "Infrastructure", line: "Building the foundation. Growing together." },
   { title: "QHSE Driven", line: "Quality at every step. Safety in every action." },
   { title: "Experienced Team", line: "Skilled professionals with deep industry knowledge." },
 ];

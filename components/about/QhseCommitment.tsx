@@ -11,7 +11,7 @@ export default function QhseCommitment() {
       <Container>
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-body font-bold uppercase tracking-[0.14em] text-[#3e86d0]">QHSE Commitment</p>
-          <h2 className="mt-4 font-display text-display-m">Quality, Health, Safety &amp; Environment.</h2>
+          <h2 className="mt-4 font-display text-display-m join-shine pb-[0.08em]">Quality, Health, Safety &amp; Environment.</h2>
           <p className="mt-5 text-body-l text-[#5a6b84]">
             Five commitments that govern every site we run and every structure we hand over.
           </p>

@@ -57,7 +57,7 @@ export default function Live3DShowcase() {
             </div>
             <h2 className="mt-4 max-w-2xl text-display-m font-display leading-[1.1]">
               <span className="text-ink">Walk our sites </span>
-              <span className="text-blue-600">before you visit.</span>
+              <span className="join-shine">before you visit.</span>
             </h2>
           </div>
           <p className="max-w-md text-body-l text-grey-500">
@@ -67,7 +67,7 @@ export default function Live3DShowcase() {
 
         <div
           ref={ref}
-          className="relative mt-8 aspect-[4/5] w-full overflow-hidden rounded-3xl bg-[#dbe9f4] shadow-xl sm:aspect-[16/9] lg:aspect-auto lg:h-[460px]"
+          className="relative mt-8 aspect-[4/5] w-full overflow-hidden rounded-3xl bg-[#dbe9f4] shadow-xl sm:aspect-[16/9] lg:aspect-auto lg:h-[540px]"
         >
           {can3D && near ? (
             <MasterPlanScene activeSlug={project.slug} embedded onInsideChange={setInside} />

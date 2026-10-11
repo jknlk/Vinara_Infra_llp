@@ -54,7 +54,7 @@ export default async function GalleryPage() {
               Gallery
             </p>
             <h1 className="mt-4 font-display text-5xl font-bold leading-[1.05] text-[#0f2b57] md:text-7xl">
-              From the <span className="text-[#3e86d0]">field.</span>
+              From the <span className="join-shine">field.</span>
             </h1>
           </div>
           <div className="lg:col-span-4">

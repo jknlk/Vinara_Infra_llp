@@ -23,18 +23,18 @@ const RAW_TEAM = [
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
   },
   {
-    name: "Mr. Sanjay Singh",
-    initials: "MS",
-    role: "Project Manager",
-    bio: "Leads project execution teams and ensures quality, safety and timely delivery on active warehousing sites.",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
-  },
-  {
     name: "Mr. Robin Chauhan",
     initials: "MR",
     role: "Senior Project Manager",
     bio: "Manages site operations and resources with a focus on efficient and safe project delivery.",
     photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    name: "Mr. Sanjay Singh",
+    initials: "MS",
+    role: "Project Manager",
+    bio: "Leads project execution teams and ensures quality, safety and timely delivery on active warehousing sites.",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
   },
   {
     name: "Mr. Rahul Pandey",
@@ -52,7 +52,14 @@ const RAW_TEAM = [
   },
 ] as const;
 
+// Listed from the most senior designation down; this order is the hierarchy.
 export const TEAM = RAW_TEAM;
+
+// Seniority of a designation, for ordering people who come from the database. Unknown roles go last.
+export const roleRank = (role: string) => {
+  const i = TEAM.findIndex((p) => p.role.toLowerCase() === role.trim().toLowerCase());
+  return i < 0 ? TEAM.length : i;
+};
 
 export const DIRECTORS = TEAM.slice(0, 2);
 

@@ -105,7 +105,7 @@ export default function CareersContent({ roles: allRoles }: { roles: JobRole[] }
               <div className="lg:sticky lg:top-32">
                 <Eyebrow>Why Vinara</Eyebrow>
                 <h2 className="mt-5 text-display-m font-display leading-[1.05] text-ink">
-                  Work that leaves something <span className="text-blue-600">standing.</span>
+                  Work that leaves something <span className="join-shine">standing.</span>
                 </h2>
                 <p className="mt-5 max-w-[40ch] text-body text-grey-500">
                   A lean, delivery-focused team where what you plan on Monday is poured, erected or
@@ -167,7 +167,7 @@ export default function CareersContent({ roles: allRoles }: { roles: JobRole[] }
             <div>
               <Eyebrow dark>How hiring works</Eyebrow>
               <h2 className="mt-5 max-w-[18ch] text-display-m font-display leading-[1.05]">
-                Four steps, <span className="text-blue-400">no runaround.</span>
+                Four steps, <span className="join-shine join-shine-dark">no runaround.</span>
               </h2>
             </div>
             <p className="max-w-[38ch] text-body text-white/60">
@@ -200,7 +200,7 @@ export default function CareersContent({ roles: allRoles }: { roles: JobRole[] }
             <div>
               <Eyebrow>Open roles</Eyebrow>
               <h2 className="mt-5 text-display-m font-display leading-[1.05] text-ink">
-                <span className="tabular text-blue-600">{roles.length}</span>{" "}
+                <span className="tabular join-shine">{roles.length}</span>{" "}
                 {roles.length === 1 ? "position" : "positions"} open
               </h2>
             </div>
@@ -363,7 +363,7 @@ export default function CareersContent({ roles: allRoles }: { roles: JobRole[] }
               <div className="lg:col-span-8">
                 <Eyebrow dark>General applications</Eyebrow>
                 <h2 className="mt-5 font-display text-display-l leading-[1]">
-                  Don&rsquo;t see your role? <span className="text-blue-400">Write to us anyway.</span>
+                  Don&rsquo;t see your role? <span className="join-shine join-shine-dark">Write to us anyway.</span>
                 </h2>
                 <p className="mt-5 max-w-[52ch] text-body-l text-white/70">
                   We&rsquo;re always looking for driven engineers and site professionals. Send us your

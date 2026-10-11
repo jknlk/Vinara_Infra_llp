@@ -6,13 +6,18 @@ import { ArrowDown, ShieldCheck, Building2 } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { IMAGES } from "@/data/images";
+import JellyRibbon from "@/components/ui/JellyRibbon";
+import JellyFrame from "@/components/ui/JellyFrame";
 
 const STATS = [
-  { value: "2M+", count: 2, suffix: "M+", label: "sq.ft under execution" },
-  { value: "4", count: 4, suffix: "", label: "core verticals" },
-  { value: "6", count: 6, suffix: "", label: "step delivery system" },
+  { value: "2M+", label: "sq.ft under execution" },
+  { value: "4", label: "core verticals" },
+  { value: "6", label: "step delivery system" },
   { value: "Zero", label: "harm is the goal" },
 ];
+
+// Spaces inside SVG text collapse, so the ribbon's gaps are non-breaking ones.
+const NBSP = " ";
 
 const HERO_IMAGE = IMAGES.aboutHeroSiteTeam;
 
@@ -30,21 +35,6 @@ export default function AboutHero() {
 
       gsap.fromTo("[data-ah-img]", { scale: 1.18 }, { scale: 1, duration: 2.2, ease: "power3.out" });
       gsap.to("[data-ah-badge]", { y: "-=10", duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.8, delay: 1.6 });
-
-      gsap.utils.toArray<HTMLElement>("[data-ah-count]").forEach((el) => {
-        const target = Number(el.dataset.ahCount);
-        const suffix = el.dataset.ahSuffix ?? "";
-        const o = { v: 0 };
-        gsap.to(o, {
-          v: target,
-          duration: 1.8,
-          delay: 0.9,
-          ease: "power2.out",
-          onUpdate: () => {
-            el.textContent = Math.round(o.v) + suffix;
-          },
-        });
-      });
     },
     { scope: scopeRef }
   );
@@ -73,7 +63,7 @@ export default function AboutHero() {
               <span data-ah-line className="block">A builder&rsquo;s promise,</span>
             </span>
             <span className="block overflow-hidden pb-2">
-              <span data-ah-line className="block bg-gradient-to-r from-[#0b4fc2] via-[#2f7bf0] to-[#3e86d0] bg-clip-text text-transparent">kept on every site.</span>
+              <span data-ah-line className="block join-shine">kept on every site.</span>
             </span>
           </h1>
           <p data-ah-fade className="mt-6 max-w-[46ch] text-body-l text-[#5a6b84]">
@@ -92,24 +82,21 @@ export default function AboutHero() {
 
         {/* photo */}
         <div className="relative lg:col-span-6">
-          {/* offset outline frame */}
-          <div aria-hidden className="absolute -bottom-4 -right-4 hidden h-full w-full rounded-[28px] border-2 border-[#0b4fc2]/25 sm:block" />
-          <div
-            data-ah-frame
-            className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] shadow-[0_40px_80px_-24px_rgba(15,43,87,0.45)] lg:aspect-[5/4]"
-          >
-            {HERO_IMAGE.src ? (
-              <Image
-                data-ah-img
-                src={HERO_IMAGE.src}
-                alt={HERO_IMAGE.alt}
-                fill
-                priority
-                sizes="(min-width: 1024px) 48vw, 100vw"
-                className="object-cover"
-              />
-            ) : null}
-            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#0f2b57]/45 via-transparent to-transparent" />
+          <div data-ah-frame className="drop-shadow-[0_30px_40px_rgba(15,43,87,0.35)]">
+            <JellyFrame className="aspect-[4/3] w-full lg:aspect-[5/4]" echoClassName="stroke-[#0b4fc2]/30">
+              {HERO_IMAGE.src ? (
+                <Image
+                  data-ah-img
+                  src={HERO_IMAGE.src}
+                  alt={HERO_IMAGE.alt}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 48vw, 100vw"
+                  className="object-cover"
+                />
+              ) : null}
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#0f2b57]/45 via-transparent to-transparent" />
+            </JellyFrame>
           </div>
 
           {/* floating glass badges */}
@@ -140,27 +127,40 @@ export default function AboutHero() {
         </div>
       </div>
 
-      {/* stat rail */}
-      <div className="relative border-t border-[#0f2b57]/10 bg-white/70 backdrop-blur">
-        <dl className="mx-auto grid w-full max-w-[1440px] grid-cols-2 px-6 md:px-12 lg:grid-cols-4 lg:px-16">
-          {STATS.map((s, i) => (
-            <div
-              key={s.label}
-              data-ah-stat
-              className={`py-7 pr-6 ${i > 0 ? "lg:border-l lg:border-[#0f2b57]/10 lg:pl-8" : ""} ${
-                i % 2 === 1 ? "border-l border-[#0f2b57]/10 pl-6" : ""
-              } ${i > 1 ? "border-t border-[#0f2b57]/10 lg:border-t-0" : ""}`}
-            >
-              <dd
-                className="font-display text-3xl font-bold text-[#0b4fc2] md:text-4xl"
-                {...(s.count ? { "data-ah-count": s.count, "data-ah-suffix": s.suffix } : {})}
-              >
-                {s.value}
-              </dd>
-              <dt className="mt-1 text-caption text-[#5a6b84]">{s.label}</dt>
-            </div>
+      {/* stat ribbon: the figures loop along it, hidden from assistive tech,
+          which reads the list instead */}
+      <dl className="sr-only">
+        {STATS.map((s) => (
+          <div key={s.label}>
+            <dt>{s.label}</dt>
+            <dd>{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <div data-ah-stat className="pointer-events-none relative -mt-6 overflow-x-clip">
+        <JellyRibbon
+          band={76}
+          sway={20}
+          repeats={4}
+          stitched
+          className="drop-shadow-[0_14px_18px_rgba(15,43,87,0.25)]"
+          bandClassName="fill-[#0b4fc2]"
+          textClassName="font-display text-[34px] font-bold"
+        >
+          {STATS.map((s) => (
+            <tspan key={s.label}>
+              <tspan className="fill-white">{s.value}</tspan>
+              <tspan className="fill-blue-200 font-medium [font-family:var(--font-body)]" style={{ fontSize: "0.6em" }}>
+                {NBSP}
+                {NBSP}
+                {s.label.replace(/ /g, NBSP)}
+              </tspan>
+              <tspan className="fill-white" style={{ fontSize: "0.7em" }}>
+                {NBSP.repeat(4)}✦{NBSP.repeat(4)}
+              </tspan>
+            </tspan>
           ))}
-        </dl>
+        </JellyRibbon>
       </div>
     </section>
   );

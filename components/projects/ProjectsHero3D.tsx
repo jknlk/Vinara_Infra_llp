@@ -102,7 +102,7 @@ export default function ProjectsHero3D({
             Projects
           </p>
           <h1 className="font-display text-2xl font-bold leading-[1.05] text-[#0f2b57] sm:text-3xl lg:mt-4 lg:text-7xl">
-            Portfolio <span className="text-[#3e86d0] lg:block">at a glance.</span>
+            Portfolio <span className="join-shine lg:block">at a glance.</span>
           </h1>
           <p className="mt-4 hidden max-w-[48ch] text-body-l text-[#42536c] lg:block">{summary}</p>
           <div className={`mt-3 flex flex-wrap items-center gap-3 lg:mt-6 ${inside ? "" : "pointer-events-auto"}`}>

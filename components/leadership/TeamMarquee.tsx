@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Marquee } from "@/components/ui/marquee";
+import JellyFrame from "@/components/ui/JellyFrame";
 
 type Member = { name: string; role: string; bio: string; photo: string };
 
@@ -9,7 +10,7 @@ export default function TeamMarquee({ members }: { members: readonly Member[] })
       <Marquee className="[--gap:1.5rem]" pauseOnHover repeat={3}>
         {members.map((p) => (
           <div key={p.name} className="group flex w-64 shrink-0 flex-col">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[#0f2b57]/5">
+            <JellyFrame className="aspect-[4/5] w-full" echoClassName="stroke-[#2f7fd0]/30">
               <Image
                 src={p.photo}
                 alt={p.name}
@@ -21,7 +22,7 @@ export default function TeamMarquee({ members }: { members: readonly Member[] })
                 <h3 className="font-display text-body-l font-bold text-[#0f2b57]">{p.name}</h3>
                 <p className="mt-1 text-caption font-medium text-blue-600">{p.role}</p>
               </div>
-            </div>
+            </JellyFrame>
           </div>
         ))}
       </Marquee>

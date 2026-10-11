@@ -127,6 +127,26 @@ body {
   }
 }
 
+@keyframes hero-zoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.hero-zoom {
+  animation: hero-zoom 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-zoom {
+    animation: none;
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -222,9 +242,854 @@ body {
   animation: join-shine 4s linear infinite;
 }
 
+/* same sweep for titles on dark or photo backdrops */
+.join-shine.join-shine-dark {
+  background-image: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    var(--color-blue-300) 25%,
+    #f59e0b 50%,
+    var(--color-blue-300) 75%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+}
+
 .join-glow {
   background: conic-gradient(from 0deg, var(--color-blue-400), #f59e0b, var(--color-blue-600), #6366f1, var(--color-blue-400));
   animation: join-glow 3s linear infinite;
+}
+
+/* ---- Preloader (components/layout/Preloader.tsx) --------------------------
+   A setting-out sheet: the site elevation draws itself in line (warehouse,
+   steel frame, tower crane) on a faint grid, and the logo's tower pops up on
+   the ground line and breathes — squashing from its base like jelly — until
+   the page is ready, then travels to its seat in the navbar. */
+.preloader {
+  --breath: 3.2s;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  /* if scripts never arrive, don't trap the visitor behind the loader */
+  animation: preloader-failsafe 0.6s 10s forwards;
+}
+
+.preloader[data-leaving] {
+  pointer-events: none;
+}
+
+/* The backdrop is its own layer so it can lift away while the logo, which is
+   not inside it, travels up to the navbar. */
+.preloader-curtain {
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+  transition: transform 1.05s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* curved edge that trails the curtain as it lifts */
+.preloader-curtain::after {
+  content: "";
+  position: absolute;
+  left: -15%;
+  right: -15%;
+  bottom: -9vh;
+  height: 18vh;
+  border-radius: 50%;
+  background: var(--color-paper);
+}
+
+.preloader[data-leaving] .preloader-curtain {
+  transform: translateY(calc(-100% - 10vh));
+}
+
+/* drafting grid, faded out towards the edges of the sheet */
+.preloader-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 72, 176, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 72, 176, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(0, 72, 176, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 72, 176, 0.035) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse 62% 58% at 50% 46%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 62% 58% at 50% 46%, #000 20%, transparent 75%);
+}
+
+.preloader-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 3.5vmin, 2.25rem);
+  overflow: hidden;
+}
+
+.preloader-scene,
+.preloader-halo,
+.preloader-rays,
+.preloader-sheet,
+.preloader-shine,
+.preloader-caption {
+  transition: opacity 0.35s ease;
+}
+
+.preloader[data-leaving] .preloader-scene,
+.preloader[data-leaving] .preloader-halo,
+.preloader[data-leaving] .preloader-rays,
+.preloader[data-leaving] .preloader-sheet,
+.preloader[data-leaving] .preloader-shine,
+.preloader[data-leaving] .preloader-caption {
+  opacity: 0;
+}
+
+/* drawing-sheet frame: a hairline border with heavier marks at the corners */
+.preloader-sheet {
+  --mark: rgba(0, 72, 176, 0.55);
+  position: absolute;
+  inset: clamp(14px, 3vmin, 32px);
+  border: 1px solid rgba(0, 72, 176, 0.1);
+  background:
+    linear-gradient(var(--mark), var(--mark)) top left / 26px 2px,
+    linear-gradient(var(--mark), var(--mark)) top left / 2px 26px,
+    linear-gradient(var(--mark), var(--mark)) top right / 26px 2px,
+    linear-gradient(var(--mark), var(--mark)) top right / 2px 26px,
+    linear-gradient(var(--mark), var(--mark)) bottom left / 26px 2px,
+    linear-gradient(var(--mark), var(--mark)) bottom left / 2px 26px,
+    linear-gradient(var(--mark), var(--mark)) bottom right / 26px 2px,
+    linear-gradient(var(--mark), var(--mark)) bottom right / 2px 26px;
+  background-repeat: no-repeat;
+  animation: preloader-sheet-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.preloader-sheet p {
+  position: absolute;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-grey-500);
+  animation: preloader-letter 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.9s backwards;
+}
+
+/* 0 → 100 without script: the integer custom property is animated and printed
+   through a CSS counter, so it runs before hydration */
+@property --preloader-n {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+.preloader-count {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0.5rem 1.1rem;
+  font-size: clamp(2.5rem, 7vmin, 4.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-blue-600);
+  counter-reset: preloader-n var(--preloader-n);
+  animation: preloader-count 2.7s cubic-bezier(0.65, 0, 0.35, 1) 0.25s forwards;
+}
+
+.preloader-count::before {
+  content: counter(preloader-n);
+}
+
+.preloader-count span {
+  margin-left: 0.15em;
+  font-size: 0.4em;
+  letter-spacing: 0;
+  color: #f59e0b;
+}
+
+/* sunburst behind the tower, centred on the sun in the logo */
+.preloader-rays {
+  position: absolute;
+  left: 50%;
+  top: 45.4%;
+  height: 230%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(245, 158, 11, 0.2) 0 3.5deg, transparent 3.5deg 15deg);
+  -webkit-mask-image: radial-gradient(circle, transparent 14%, #000 20%, transparent 62%);
+  mask-image: radial-gradient(circle, transparent 14%, #000 20%, transparent 62%);
+  animation:
+    preloader-rays-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) 1.1s backwards,
+    preloader-turn 50s linear infinite;
+}
+
+.preloader-stage {
+  position: relative;
+  width: min(92vw, 920px);
+  height: clamp(190px, 36vmin, 300px);
+}
+
+/* The drawing is 1000 x 300 with the ground line at y = 250. It is fitted by
+   height and cropped at the sides, which only ever trims the empty margins of
+   the sheet: narrower screens give the stage the drawing's own shape instead
+   (see "Preloader on narrow screens" below). */
+.preloader-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  stroke: var(--color-blue-600);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.preloader-stroke {
+  opacity: 0.85;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: preloader-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.preloader-stroke--faint {
+  opacity: 0.4;
+  stroke-width: 1;
+}
+
+.preloader-skyline {
+  stroke: none;
+  fill: rgba(0, 72, 176, 0.05);
+  animation:
+    preloader-fade-in 1.2s ease 0.2s backwards,
+    preloader-skyline 9s ease-in-out infinite alternate;
+}
+
+/* cladding goes on once the outline is drawn */
+.preloader-fill {
+  stroke: none;
+  animation: preloader-fade-in 0.9s ease 1.7s backwards;
+}
+
+.preloader-fill--door {
+  fill: rgba(0, 72, 176, 0.1);
+  animation-delay: 2s;
+}
+
+/* the crane's load hangs from the trolley, is lowered and hoisted, and swings */
+.preloader-hook {
+  transform-origin: 745px 58px;
+  animation:
+    preloader-fade-in 0.6s ease 2.1s backwards,
+    preloader-swing var(--breath) ease-in-out infinite alternate;
+}
+
+.preloader-cable {
+  transform-origin: 745px 58px;
+  animation: preloader-cable 5s ease-in-out 2.1s infinite alternate;
+}
+
+.preloader-load-drop {
+  animation: preloader-lower 5s ease-in-out 2.1s infinite alternate;
+}
+
+.preloader-truck {
+  animation: preloader-drive 6s linear 0.9s infinite backwards;
+}
+
+.preloader-truck-body {
+  fill: var(--color-paper);
+}
+
+.preloader-wheel {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: preloader-turn 0.7s linear infinite;
+}
+
+/* hairline detail: the truck's panel lines and wheel spokes */
+.preloader-hair {
+  stroke-width: 1;
+}
+
+.preloader-load-bar {
+  stroke-width: 3.5;
+}
+
+.preloader-dim {
+  opacity: 0;
+  stroke-width: 1;
+  animation: preloader-fade 0.7s ease 2.2s forwards;
+}
+
+/* the same dimension line with a wider break, for the larger figure a small
+   screen needs */
+.preloader-dim-narrow {
+  display: none;
+}
+
+.preloader-dim text {
+  stroke: none;
+  fill: var(--color-grey-500);
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 2.4px;
+}
+
+.preloader-halo {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  height: 62%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(77, 148, 255, 0.3), transparent 68%);
+  filter: blur(18px);
+  animation: preloader-halo var(--breath) ease-in-out infinite;
+}
+
+/* stands on the ground line: 14.3% up = the 250/300 ground minus the mark's
+   own bottom padding */
+.preloader-logo {
+  position: absolute;
+  left: 50%;
+  bottom: 14.3%;
+  height: 64%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  transform-origin: 50% 96%;
+  will-change: transform;
+  animation: preloader-pulse var(--breath) cubic-bezier(0.45, 0, 0.3, 1) infinite;
+}
+
+.preloader-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 14px rgba(0, 72, 176, 0.22));
+  /* built floor by floor from the ground up, then a jelly wobble as the last
+     tier lands, before the breathing takes over */
+  transform-origin: 50% 96%;
+  animation:
+    preloader-build 1.1s steps(6, end) 0.2s backwards,
+    preloader-settle 0.95s linear 1.3s;
+}
+
+/* a band of light crossing the mark once per breath, masked to its shape */
+.preloader-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 42%, rgba(255, 255, 255, 0.9) 50%, transparent 58%) no-repeat;
+  background-size: 300% 100%;
+  background-position: 150% 0;
+  -webkit-mask: url("/vinara-mark.png") center / contain no-repeat;
+  mask: url("/vinara-mark.png") center / contain no-repeat;
+  animation: preloader-shine var(--breath) ease-in-out 2.1s infinite;
+}
+
+.preloader[data-leaving] .preloader-logo img {
+  filter: drop-shadow(0 0 0 rgba(0, 72, 176, 0));
+  transition: filter 0.7s ease;
+}
+
+.preloader-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  text-align: center;
+}
+
+.preloader-word {
+  /* tracking leaves a gap after the last letter; nudge back to optical centre */
+  padding-left: 0.32em;
+}
+
+.preloader-word span {
+  display: inline-block;
+  animation: preloader-letter 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.preloader-tag {
+  animation: preloader-letter 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.45s backwards;
+}
+
+.preloader-load {
+  display: flex;
+  gap: 4px;
+}
+
+.preloader-load span {
+  width: 12px;
+  height: 6px;
+  border-radius: 1px;
+  background: rgba(0, 72, 176, 0.14);
+  animation: preloader-block 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.preloader-load span:last-child {
+  --block: #f59e0b;
+}
+
+/* ---- Preloader on narrow screens ------------------------------------------
+   A phone or an upright tablet is too narrow for the elevation at the height
+   above, and fitting it by height cut the warehouse and the steel frame off at
+   the edges of the screen. Here the stage takes the drawing's own 10:3 shape,
+   so the whole sheet shows with its margins, as it does on a wide screen. The
+   linework is drawn heavier and the dimension figure larger, to stay legible
+   at the smaller scale. */
+@media (max-width: 900px) {
+  .preloader-stage {
+    /* the second term keeps the sheet inside a phone held on its side */
+    width: min(92vw, max(15rem, calc((100svh - 13rem) * 10 / 3)));
+    height: auto;
+    aspect-ratio: 10 / 3;
+  }
+
+  .preloader-scene {
+    stroke-width: 2.3;
+  }
+
+  .preloader-stroke--faint,
+  .preloader-hair,
+  .preloader-dim {
+    stroke-width: 1.4;
+  }
+
+  .preloader-load-bar {
+    stroke-width: 4.4;
+  }
+
+  .preloader-dim-wide {
+    display: none;
+  }
+
+  .preloader-dim-narrow {
+    display: inline;
+  }
+
+  .preloader-dim text {
+    font-size: 18px;
+    letter-spacing: 3px;
+    /* keeps the taller figure centred on the dimension line */
+    transform: translateY(2.5px);
+  }
+}
+
+@media (max-width: 560px) {
+  .preloader-scene {
+    stroke-width: 3.2;
+  }
+
+  .preloader-stroke--faint,
+  .preloader-hair,
+  .preloader-dim {
+    stroke-width: 1.9;
+  }
+
+  .preloader-load-bar {
+    stroke-width: 6;
+  }
+
+  /* too small to read as spokes at this scale */
+  .preloader-spoke {
+    display: none;
+  }
+
+  .preloader-dim text {
+    font-size: 26px;
+    transform: translateY(5px);
+  }
+
+  .preloader-sheet p {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+  }
+
+  .preloader-count {
+    padding: 0.4rem 0.8rem;
+    font-size: 2.1rem;
+  }
+}
+
+@keyframes preloader-build {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes preloader-settle {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  22% {
+    transform: scale(1.16, 0.87);
+  }
+  42% {
+    transform: scale(0.91, 1.1);
+  }
+  60% {
+    transform: scale(1.05, 0.96);
+  }
+  78% {
+    transform: scale(0.98, 1.02);
+  }
+}
+
+@keyframes preloader-shine {
+  0% {
+    background-position: 150% 0;
+  }
+  35%,
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+@keyframes preloader-count {
+  to {
+    --preloader-n: 100;
+  }
+}
+
+@keyframes preloader-sheet-in {
+  from {
+    opacity: 0;
+    scale: 1.04;
+  }
+}
+
+@keyframes preloader-rays-in {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+}
+
+@keyframes preloader-turn {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes preloader-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes preloader-skyline {
+  from {
+    transform: translateX(-14px);
+  }
+  to {
+    transform: translateX(14px);
+  }
+}
+
+@keyframes preloader-drive {
+  from {
+    transform: translateX(-180px);
+  }
+  to {
+    transform: translateX(1060px);
+  }
+}
+
+@keyframes preloader-lower {
+  to {
+    transform: translateY(30px);
+  }
+}
+
+@keyframes preloader-cable {
+  to {
+    transform: scaleY(1.556);
+  }
+}
+
+@keyframes preloader-pulse {
+  0%,
+  100% {
+    scale: 1 1;
+  }
+  28% {
+    scale: 0.94 1.06;
+  }
+  56% {
+    scale: 1.045 0.965;
+  }
+  80% {
+    scale: 0.99 1.01;
+  }
+}
+
+@keyframes preloader-halo {
+  0%,
+  100% {
+    scale: 1;
+    opacity: 0.75;
+  }
+  28% {
+    scale: 0.88;
+    opacity: 0.5;
+  }
+  56% {
+    scale: 1.12;
+    opacity: 1;
+  }
+}
+
+@keyframes preloader-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes preloader-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes preloader-swing {
+  from {
+    transform: rotate(-1.6deg);
+  }
+  to {
+    transform: rotate(1.6deg);
+  }
+}
+
+@keyframes preloader-letter {
+  from {
+    opacity: 0;
+    transform: translateY(0.9em);
+    filter: blur(6px);
+  }
+}
+
+@keyframes preloader-block {
+  from {
+    transform: translateY(-7px) scaleY(0.4);
+  }
+  to {
+    transform: none;
+    background: var(--block, var(--color-blue-600));
+  }
+}
+
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ---- Text reveal (components/layout/TextReveal.tsx) ------------------------
+   Each heading line is clipped by a mask while its words rise into it. The
+   display type is set tighter than its own glyphs (line-height < 1), so the
+   mask is padded out and pulled back in to keep descenders from being cut. */
+.rv-line-mask {
+  padding-block: 0.14em;
+  margin-block: -0.14em;
+}
+
+/* ---- Section choreography (components/layout/SectionFx.tsx) ----------------
+   GSAP writes `transform` every frame on cards while they tip in and on photos
+   while they drift; a CSS transition on the same property would smear it. */
+[data-sx-in] {
+  transition: none !important;
+}
+
+[data-sx-media] {
+  transition-property: color, background-color, border-color, opacity, box-shadow, translate, scale, rotate, filter;
+  will-change: transform;
+}
+
+/* ---- Button effects (components/layout/ButtonFx.tsx) -----------------------
+   ButtonFx tags pill buttons with data-fx-btn, feeds the cursor position in
+   as --fx-x/--fx-y, and sets data-fx-on while the pointer is over them. */
+@property --fx-r {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+[data-fx-btn] {
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+  /* everything Tailwind's `transition` covers except `transform`, which GSAP
+     drives every frame for the magnetic pull — a CSS transition would smear it */
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke,
+    opacity, box-shadow, translate, scale, rotate, filter;
+}
+
+/* only where it wouldn't unseat an absolutely placed button */
+[data-fx-btn="static"] {
+  position: relative;
+}
+
+[data-fx-btn]::before,
+[data-fx-btn]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* fill that floods out from where the cursor entered, in the label's colour */
+[data-fx-btn]::before {
+  z-index: -1;
+  background: radial-gradient(
+    circle at var(--fx-x, 50%) var(--fx-y, 50%),
+    color-mix(in srgb, currentColor 26%, transparent) var(--fx-r),
+    transparent calc(var(--fx-r) + 0.5%)
+  );
+  transition: --fx-r 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-fx-btn][data-fx-on]::before {
+  --fx-r: 100%;
+}
+
+/* shine band, parked off the right edge until the sweep runs */
+[data-fx-btn]::after {
+  background: linear-gradient(105deg, transparent 45%, rgba(255, 255, 255, 0.6) 50%, transparent 55%) no-repeat;
+  background-size: 250% 100%;
+  background-position: 0% 0;
+}
+
+[data-fx-btn][data-fx-on] {
+  animation: fx-jelly 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-fx-btn][data-fx-on]::after {
+  animation: fx-shine 0.85s ease-out;
+}
+
+@keyframes fx-jelly {
+  30% {
+    scale: 1.08 0.93;
+  }
+  55% {
+    scale: 0.96 1.05;
+  }
+  78% {
+    scale: 1.02 0.99;
+  }
+}
+
+@keyframes fx-shine {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0% 0;
+  }
+}
+
+/* click burst — appended to <body> by ButtonFx, removed when it lands */
+.fx-spark,
+.fx-ring {
+  position: fixed;
+  z-index: 90;
+  border-radius: 50%;
+  pointer-events: none;
+  translate: -50% -50%;
+}
+
+.fx-ring {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--color-blue-400);
+}
+
+/* ---- Navbar (components/layout/Nav.tsx) -------------------------------------
+   A glass pill inside a slowly turning conic-gradient rim, with a soft
+   spotlight that follows the cursor and a sheen sweeping the active tab. */
+@property --nav-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.nav-glow {
+  background: conic-gradient(
+    from var(--nav-angle),
+    rgba(0, 72, 176, 0.12),
+    var(--color-blue-400),
+    rgba(255, 255, 255, 0.9),
+    #f59e0b,
+    rgba(0, 72, 176, 0.12) 60%,
+    var(--color-blue-600),
+    rgba(0, 72, 176, 0.12)
+  );
+  animation: nav-spin 9s linear infinite;
+}
+
+.nav-spot {
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(0, 72, 176, 0.13), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.nav-bar:hover .nav-spot {
+  opacity: 1;
+}
+
+.nav-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.45) 50%, transparent 60%) no-repeat;
+  background-size: 250% 100%;
+  animation: nav-sheen 3.6s ease-in-out infinite;
+}
+
+.nav-cta {
+  background: linear-gradient(110deg, var(--color-blue-600), var(--color-blue-400) 45%, var(--color-blue-600) 90%);
+  background-size: 220% 100%;
+  animation: nav-flow 5s ease-in-out infinite alternate;
+}
+
+.nav-logo-link:hover img {
+  animation: fx-jelly 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes nav-spin {
+  to {
+    --nav-angle: 360deg;
+  }
+}
+
+@keyframes nav-sheen {
+  0%,
+  35% {
+    background-position: 120% 0;
+  }
+  80%,
+  100% {
+    background-position: -40% 0;
+  }
+}
+
+@keyframes nav-flow {
+  to {
+    background-position: 100% 0;
+  }
 }
 
 /* setting-out grid rule, decorative overlay on hero/photo sections */

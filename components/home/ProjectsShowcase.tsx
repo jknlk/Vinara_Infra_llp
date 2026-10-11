@@ -11,28 +11,37 @@ export default async function ProjectsShowcase() {
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 text-label uppercase tracking-[0.08em] text-grey-500">
-              <span className="h-px w-6 bg-blue-500" />
+            <div className="inline-flex items-center gap-2 text-label font-semibold uppercase tracking-[0.18em] text-blue-600">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-500 opacity-70" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500" />
+              </span>
               Featured Projects
             </div>
-            <h2 className="mt-4 max-w-xl text-display-m font-display leading-[1.1]">
-              <span className="text-ink">Landmarks in </span>
-              <span className="text-blue-600">steel &amp; concrete.</span>
+            <h2 className="mt-3 font-display text-display-l leading-[1.02] text-ink">
+              Landmarks in
+              <span className="join-shine block pb-[0.08em]">steel &amp; concrete.</span>
             </h2>
           </div>
 
-          <div className="max-w-sm lg:text-right">
+          <div className="max-w-md lg:text-right">
             <p className="text-body-l text-grey-500">
               Completed and in-progress builds — each tracked against real area, client
               and delivery status.
             </p>
-            <Link
-              href="/projects"
-              className="mt-4 inline-flex items-center gap-2 rounded-full border border-sky-400/40 bg-sky-50 px-5 py-2.5 text-caption font-semibold text-blue-700"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-              Live Build Experience
-              <ArrowUpRight size={14} />
+            <Link href="/projects" className="group/cta relative mt-5 inline-flex">
+              <span className="pointer-events-none absolute -inset-1 overflow-hidden rounded-full opacity-50 blur-lg transition-opacity duration-300 group-hover/cta:opacity-100">
+                <span className="join-glow absolute inset-[-150%]" />
+              </span>
+              <span className="relative inline-flex overflow-hidden rounded-full p-[2px]">
+                <span className="join-glow absolute inset-[-150%]" />
+                <span className="relative inline-flex items-center gap-3 rounded-full bg-ink py-2 pl-6 pr-2 text-body font-semibold text-white">
+                  Live Build Experience
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-white text-ink transition-transform duration-500 group-hover/cta:rotate-45 group-hover/cta:scale-110">
+                    <ArrowUpRight size={16} />
+                  </span>
+                </span>
+              </span>
             </Link>
           </div>
         </div>

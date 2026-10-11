@@ -79,7 +79,7 @@ export default function ContactPage() {
             </div>
           </div>
           <div className="lg:col-span-7">
-            <LocationMap heightClassName="h-[360px] w-full grayscale lg:h-[540px]" />
+            <LocationMap heightClassName="h-[360px] w-full lg:h-[540px]" />
           </div>
         </Container>
       </section>

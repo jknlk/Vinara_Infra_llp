@@ -13,7 +13,7 @@ export default function SectionHead({
 }) {
   return (
     <div className={`${align === "center" ? "mx-auto text-center" : ""} ${className}`}>
-      <h2 className="text-display-m font-display text-ink">
+      <h2 className="text-display-m font-display join-shine pb-[0.08em]">
         {title}
       </h2>
       {standfirst ? (

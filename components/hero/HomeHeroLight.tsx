@@ -13,7 +13,7 @@ const STORY = [
   { kicker: "01 · The Land", title: "213.06 acres under development.", body: "Three parks across Bengaluru, planned as one connected master-plan.", pos: "br" },
   { kicker: "02 · The Build", title: "12 buildings. 31,33,500 sq.ft built-up.", body: "Warehousing and industrial space engineered for speed and scale.", pos: "tl" },
   { kicker: "03 · The Standard", title: "Quality, Health, Safety & Environment.", body: "QHSE is not a checklist here — it runs through every site, every shift.", pos: "br" },
-  { kicker: "04 · The Legacy", title: "37+ years of engineering.", body: "Building today, empowering tomorrow — grow together with Vinara.", pos: "tl" },
+  { kicker: "04 · The Legacy", title: "37+ years of engineering.", body: "Grow together with Vinara.", pos: "tl" },
 ] as const;
 
 const frameSrc = (i: number) =>
@@ -135,14 +135,14 @@ export default function HomeHeroLight() {
             className="inline-flex items-center gap-2 rounded-full border border-grey-300/60 bg-white/80 px-4 py-2 text-label uppercase tracking-[0.08em] text-grey-500 backdrop-blur"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-            Bengaluru · Grow Together · QHSE-Driven
+            Bengaluru · Warehousing · Infrastructure · QHSE-Driven
           </div>
 
           <h1
             ref={h1Ref}
             className="mt-4 font-display font-bold text-[2rem] leading-[1.05] text-white sm:text-4xl sm:leading-[1] sm:mt-5 [text-shadow:0_2px_4px_rgba(0,0,0,0.7),0_4px_28px_rgba(0,0,0,0.75)] md:text-5xl lg:text-6xl"
           >
-            Building today. Empowering tomorrow.
+            Grow Together.
           </h1>
 
           <p data-hero-copy className="mt-3 max-w-[56ch] text-sm font-medium sm:mt-4 sm:text-body text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.9),0_2px_16px_rgba(0,0,0,0.85)]">

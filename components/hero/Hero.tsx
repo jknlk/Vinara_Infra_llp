@@ -63,7 +63,7 @@ export default function Hero() {
       >
         <div className="max-w-3xl">
           <h1 ref={h1Ref} className="text-display-xl font-display text-white">
-            Building today. Empowering tomorrow.
+            Grow Together.
           </h1>
           <p data-hero-copy className="mt-6 max-w-[58ch] text-body-l text-grey-300">
             Pioneering productivity with technology across warehousing, industrial and infrastructure

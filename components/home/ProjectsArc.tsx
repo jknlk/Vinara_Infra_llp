@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { MapPin } from "lucide-react";
+import ArcCaption from "@/components/ui/ArcCaption";
 import CardArc, { COMPACT_RING, t, u, type ArcGeometry } from "@/components/ui/CardArc";
 import type { HomeData } from "@/data/content/homeAdmin";
 
@@ -30,8 +32,14 @@ const COMPACT: ArcGeometry = {
   stageHeight: "calc(15 * var(--u) + 24vw)",
 };
 
-export default function ProjectsArc({ projects }: { projects: HomeData[] }) {
+type ProjectsArcProps = {
+  projects: HomeData[];
+  caption?: ReactNode; // SVG text content, looped along the curve under the cards
+};
+
+export default function ProjectsArc({ projects, caption }: ProjectsArcProps) {
   return (
+    <div className="relative overflow-hidden">
     <CardArc count={projects.length} geometry={WIDE} compact={COMPACT}>
       {(i, duplicate) => {
         const p = projects[i];
@@ -97,5 +105,17 @@ export default function ProjectsArc({ projects }: { projects: HomeData[] }) {
         );
       }}
     </CardArc>
+      {/* One caption per ring: the phone ring curves differently. */}
+      {caption && (
+        <>
+          <ArcCaption geometry={WIDE} className="hidden md:block">
+            {caption}
+          </ArcCaption>
+          <ArcCaption geometry={COMPACT} size={1.4} gap={0.8} className="md:hidden">
+            {caption}
+          </ArcCaption>
+        </>
+      )}
+    </div>
   );
 }

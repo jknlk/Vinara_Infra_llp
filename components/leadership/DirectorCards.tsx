@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import JellyFrame from "@/components/ui/JellyFrame";
 
 type Director = { name: string; role: string; bio: string; photo: string };
 
@@ -39,14 +40,19 @@ export default function DirectorCards({ directors }: { directors: readonly Direc
           data-director-card
           className="group grid grid-cols-1 overflow-hidden rounded-3xl border border-[#0b2247]/10 bg-[#f4f8fd] sm:grid-cols-5"
         >
-          <div className="relative aspect-[4/5] overflow-hidden sm:col-span-2 sm:aspect-auto sm:min-h-[440px]">
-            <Image
-              src={p.photo}
-              alt={p.name}
-              fill
-              sizes="(min-width: 1280px) 20vw, (min-width: 640px) 40vw, 100vw"
-              className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-            />
+          <div className="relative p-4 sm:col-span-2">
+            <JellyFrame
+              className="aspect-[4/5] sm:aspect-auto sm:h-full sm:min-h-[408px]"
+              echoClassName="stroke-[#2f7fd0]/35"
+            >
+              <Image
+                src={p.photo}
+                alt={p.name}
+                fill
+                sizes="(min-width: 1280px) 20vw, (min-width: 640px) 40vw, 100vw"
+                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              />
+            </JellyFrame>
           </div>
           <div className="flex flex-col p-8 sm:col-span-3 md:p-10">
             <span className="tabular font-display text-6xl font-bold leading-none text-[#0b2247]/10">

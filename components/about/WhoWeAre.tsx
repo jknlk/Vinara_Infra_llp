@@ -15,7 +15,7 @@ export default function WhoWeAre() {
             Who we are
           </p>
           <h2 className="mt-4 font-display text-display-m text-[#0f2b57]">
-            Strong partnerships. Timely delivery. <span className="text-[#0b4fc2]">Lasting impact.</span>
+            Strong partnerships. Timely delivery. <span className="join-shine">Lasting impact.</span>
           </h2>
           <p className="mt-6 text-body-l text-[#5a6b84]">
             Based in Bengaluru, we deliver high-quality construction with a strong focus on safety, efficiency and

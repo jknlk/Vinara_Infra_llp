@@ -292,7 +292,7 @@ export default function QuoteStudio() {
 
             <h1 className="mt-6 text-display-l font-display text-white">
               Let&rsquo;s build{" "}
-              <span className="bg-gradient-to-r from-blue-300 via-blue-200 to-white bg-clip-text text-transparent">together.</span>
+              <span className="join-shine join-shine-dark">together.</span>
             </h1>
             <p className="mt-5 max-w-[46ch] text-body-l text-blue-100/80">
               Three quick steps. Tell us what you&rsquo;re building, where and when — our senior team responds within 24

@@ -2,7 +2,7 @@ import { CONTACT } from "@/data/content/site";
 
 export default function LocationMap({
   light = false,
-  heightClassName = "h-[360px] w-full grayscale md:h-[440px]",
+  heightClassName = "h-[360px] w-full md:h-[440px]",
 }: {
   light?: boolean;
   heightClassName?: string;

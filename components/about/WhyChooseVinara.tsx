@@ -32,7 +32,7 @@ export default function WhyChooseVinara() {
     <section className="relative overflow-hidden bg-white py-6">
       <Container>
         <p className="text-body font-bold uppercase tracking-[0.14em] text-[#3e86d0]">Why Choose Vinara</p>
-        <h2 className="mt-4 max-w-2xl font-display text-display-md text-[#0f2b57]">
+        <h2 className="mt-4 max-w-2xl font-display text-display-md join-shine pb-[0.08em]">
           Six reasons clients build with us again.
         </h2>
       </Container>

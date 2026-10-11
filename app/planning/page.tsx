@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Check } from "lucide-react";
+import { ArrowDown, Check } from "lucide-react";
 import Container from "@/components/ui/Container";
-import SiteImage from "@/components/ui/SiteImage";
+import JellyFrame from "@/components/ui/JellyFrame";
 import ProgressMarquee from "@/components/planning/ProgressMarquee";
+import DataFlowRibbon from "@/components/planning/DataFlowRibbon";
 import { IMAGES } from "@/data/images";
 import {
   CONTROL_DOMAINS,
@@ -28,7 +29,6 @@ export const metadata: Metadata = {
 };
 
 const eyebrow = "text-label uppercase tracking-[0.14em]";
-const noCaption = (img: (typeof IMAGES)[string]) => ({ ...img, caption: undefined });
 
 
 // One card per level of the QC organisation, top of the hierarchy first.
@@ -49,60 +49,82 @@ export default function PlanningPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative h-[100dvh] min-h-[640px] w-full overflow-hidden bg-[#0f2b57]">
+      <section className="relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-[#071a3a] text-white">
         <Image
           src={IMAGES.planningHero.src ?? ""}
           alt={IMAGES.planningHero.alt}
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="hero-zoom object-cover object-[68%_20%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0f2b57]/90 via-[#0f2b57]/70 to-[#0f2b57]/30" />
-        <div className="relative mx-auto flex h-full w-full max-w-[1680px] flex-col justify-center gap-10 px-4 pt-24 sm:px-6 lg:px-8 lg:pt-0">
-          <div className="lg:w-7/12">
-            <p className={`${eyebrow} flex items-center gap-3 text-[#7fb4e8]`}>
-              <span className="h-px w-10 bg-[#7fb4e8]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071a3a] via-[#071a3a]/80 to-[#071a3a]/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#071a3a] via-[#071a3a]/25 to-[#071a3a]/50" />
+
+        {/* pb clears the ribbon fixed to the bottom of the screen */}
+        <div className="relative mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-4 pb-20 pt-32 sm:px-6 lg:px-8 lg:pt-36">
+          <div className="flex flex-1 flex-col justify-center lg:w-9/12">
+            <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
+              <span className="h-px w-10 bg-[#7fb6e8]" />
               Controls &amp; QHSE
             </p>
-            <h1 className="mt-4 font-display text-5xl font-bold leading-[1.05] text-white md:text-6xl">
+            <h1 className="mt-6 font-display text-[clamp(2.75rem,min(6.4vw,11.5vh),6rem)] font-extrabold leading-[0.96] tracking-[-0.03em]">
               One plan. One direction.
-              <span className="block text-[#7fb4e8]">One source of truth.</span>
+              <span className="block join-shine join-shine-dark pb-[0.08em]">
+                One source of truth.
+              </span>
             </h1>
-            <p className="mt-4 max-w-[54ch] text-body-l text-white/80">
+            <p className="mt-6 max-w-[46ch] border-l-2 border-[#4d94ff] pl-5 text-body-l text-white/75">
               People, processes and technology, integrated into a single real-time view of the project.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href="#progress"
-                className="rounded-full border border-white/40 px-7 py-3 text-body font-semibold text-white transition hover:border-white"
+                className="group inline-flex items-center gap-2.5 rounded-full bg-[#1f6fd1] px-7 py-3.5 text-body font-semibold text-white shadow-lg shadow-[#1f6fd1]/30 transition-colors hover:bg-[#4d94ff]"
               >
                 Progress measurement
+                <ArrowDown size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
               </a>
               <a
                 href="#quality"
-                className="rounded-full border border-white/40 px-7 py-3 text-body font-semibold text-white transition hover:border-white"
+                className="rounded-full border border-white/25 bg-white/5 px-7 py-3.5 text-body font-semibold text-white backdrop-blur transition-colors hover:border-white/60 hover:bg-white/10"
               >
                 Quality &amp; safety
               </a>
             </div>
-            <dl className="mt-8 grid grid-cols-3 border-t border-white/20 pt-6">
+          </div>
+
+          <div className="mt-10 flex flex-col gap-7 border-t border-white/15 pt-6 xl:flex-row xl:items-end xl:justify-between">
+            <dl className="grid grid-cols-3 gap-6 sm:flex sm:gap-14">
               {[
-                { v: String(CONTROL_DOMAINS.length), l: "control domains" },
-                { v: String(PLANNING_LEVELS.length), l: "planning levels" },
-                { v: String(PROGRESS_STEPS.length), l: "progress steps" },
-              ].map((s, i) => (
-                <div key={s.l} className={i > 0 ? "border-l border-white/20 pl-8" : "pr-8"}>
-                  <dd className="tabular font-display text-3xl font-bold text-white">{s.v}</dd>
-                  <dt className="mt-1 text-caption text-white/70">{s.l}</dt>
+                { v: CONTROL_DOMAINS.length, l: "Control domains" },
+                { v: PLANNING_LEVELS.length, l: "Planning levels" },
+                { v: PROGRESS_STEPS.length, l: "Progress steps" },
+              ].map((s) => (
+                <div key={s.l}>
+                  <dd className="tabular font-display text-4xl font-extrabold leading-none md:text-5xl">
+                    {String(s.v).padStart(2, "0")}
+                  </dd>
+                  <dt className={`${eyebrow} mt-2 text-white/60`}>{s.l}</dt>
                 </div>
               ))}
             </dl>
+
+            <div>
+              <p className={`${eyebrow} text-[#7fb6e8]`}>Data flow</p>
+              <ol className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                {DATA_FLOW.map((d, i) => (
+                  <li key={d} className="flex items-center gap-3">
+                    <span className="rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-caption font-semibold backdrop-blur">
+                      <span className="tabular mr-2 text-[#7fb6e8]">{String(i + 1).padStart(2, "0")}</span>
+                      {d}
+                    </span>
+                    {i < DATA_FLOW.length - 1 && <span aria-hidden className="hidden h-px w-5 bg-white/30 sm:block" />}
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
-        </div>
-        <div className="absolute bottom-8 right-4 rounded-2xl bg-white p-5 shadow-xl sm:right-6 lg:right-8">
-          <p className={`${eyebrow} text-[#5a6b84]`}>Data flow</p>
-          <p className="mt-1 font-display text-body font-bold text-[#0f2b57]">{DATA_FLOW.slice(0, 3).join(" → ")}</p>
         </div>
       </section>
 
@@ -110,26 +132,14 @@ export default function PlanningPage() {
       <section id="progress" className="bg-white py-6">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <p className={`${eyebrow} text-[#3e86d0]`}>Progress measurement</p>
-          <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">
+          <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold join-shine pb-[0.08em] md:text-5xl">
             From site execution to management decision.
           </h2>
         </div>
         <ProgressMarquee />
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="relative mt-10 overflow-hidden rounded-3xl border border-[#dbe9fa] bg-gradient-to-r from-[#eef5ff] via-white to-[#eef5ff] p-6 shadow-[0_20px_50px_-30px_rgba(0,72,176,0.4)] md:p-8">
-            <p className={`${eyebrow} text-[#3e86d0]`}>Data flow</p>
-            <ol className="relative mt-6 grid grid-cols-2 gap-y-8 md:grid-cols-6">
-              <span aria-hidden className="absolute left-[8%] right-[8%] top-6 hidden h-0.5 bg-gradient-to-r from-[#9fd0ff] via-[#4d94ff] to-[#0048b0] md:block" />
-              {DATA_FLOW.map((d, i) => (
-                <li key={d} className="group relative flex flex-col items-center text-center">
-                  <span className="relative z-10 grid h-12 w-12 place-items-center rounded-full border-4 border-white bg-gradient-to-br from-[#0048b0] to-[#4d94ff] font-display text-sm font-bold text-white shadow-[0_10px_20px_-8px_rgba(0,72,176,0.6)] transition-transform duration-500 group-hover:scale-125">
-                    {i + 1}
-                  </span>
-                  <span className="mt-3 font-display text-body font-bold text-[#0f2b57]">{d}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
+        {/* The ribbon is pulled up into the empty space under the arc's raised middle cards. */}
+        <div className="relative z-10 -mb-4 md:-mb-[1.5%] md:-mt-[6%]">
+          <DataFlowRibbon />
         </div>
       </section>
 
@@ -143,7 +153,7 @@ export default function PlanningPage() {
           </p>
           <h2 className="mt-3 max-w-3xl font-display text-4xl font-extrabold tracking-tight text-[#0f2b57] md:text-5xl">
             Outputs you can act on,{" "}
-            <span className="bg-gradient-to-r from-[#0048b0] to-[#4d94ff] bg-clip-text text-transparent">
+            <span className="join-shine">
               principles you can trust.
             </span>
           </h2>
@@ -151,9 +161,15 @@ export default function PlanningPage() {
           <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
             <div className="relative mb-6 lg:col-span-4">
               <div className="absolute -inset-3 -z-10 -rotate-2 rounded-[28px] bg-gradient-to-br from-[#4d94ff]/40 to-[#9fd0ff]/20 blur-sm" />
-              <div className="overflow-hidden rounded-3xl border-4 border-white shadow-[0_30px_60px_-24px_rgba(0,72,176,0.45)]">
-                <SiteImage slot="planning-outputs" image={noCaption(IMAGES.planningOutputs)} ratio="1/1" className="rounded-none border-0" />
-              </div>
+              <JellyFrame className="aspect-square w-full" echoClassName="stroke-[#0048b0]/30">
+                <Image
+                  src={IMAGES.planningOutputs.src ?? ""}
+                  alt={IMAGES.planningOutputs.alt}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover"
+                />
+              </JellyFrame>
               <div className="absolute -bottom-5 left-5 right-5 rounded-2xl border border-white/60 bg-white/80 p-5 shadow-xl backdrop-blur-md">
                 <p className={`${eyebrow} text-[#3e86d0]`}>Data flow</p>
                 <p className="mt-1 font-display text-body font-bold text-[#0f2b57]">{DATA_FLOW.join(" → ")}</p>
@@ -202,7 +218,7 @@ export default function PlanningPage() {
       <section id="quality" className="bg-white py-6">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <p className={`${eyebrow} text-[#3e86d0]`}>Quality &amp; safety · Right first time, every time</p>
-          <h2 className="mt-3 max-w-3xl font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">
+          <h2 className="mt-3 max-w-3xl font-display text-4xl font-bold join-shine pb-[0.08em] md:text-5xl">
             Controlled throughout the project, not checked at the end.
           </h2>
           <QualityApproach />

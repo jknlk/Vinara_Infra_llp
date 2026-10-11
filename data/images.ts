@@ -136,16 +136,12 @@ export const IMAGES: Record<string, ImageSlot> = {
     caption: "PPE compliance on site",
   },
   careersHero: {
-    src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1400&h=1750&auto=format&fit=crop&crop=focalpoint&fp-x=0.6&fp-y=0.3&fp-z=1",
-    alt: "Site engineers in hard hats and hi-vis working on a reinforcement deck",
-  },
-  careersTeam: {
-    src: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=480&h=600&auto=format&fit=crop&crop=bottom",
-    alt: "Site team in hard hats and hi-vis lined up on a finished slab",
+    src: "https://images.unsplash.com/photo-1694521787193-9293daeddbaa?q=80&w=2000&auto=format&fit=crop",
+    alt: "Three site engineers in hard hats and hi-vis vests measuring a blockwork wall on a building under construction",
   },
   planningHero: {
-    src: "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?q=80&w=2400&auto=format&fit=crop",
-    alt: "Tower cranes and high-rise buildings under construction against a blue sky",
+    src: "https://images.unsplash.com/photo-1742112125567-3e8967bad60f?q=80&w=2400&auto=format&fit=crop",
+    alt: "Two site engineers in hard hats and hi-vis vests reviewing an inspection checklist on site",
   },
   planningSchedule: {
     src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2000&auto=format&fit=crop",

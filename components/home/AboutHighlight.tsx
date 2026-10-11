@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import Container from "@/components/ui/Container";
+import JellyFrame from "@/components/ui/JellyFrame";
 import { IMAGES } from "@/data/images";
 
 const DISCIPLINES = [
@@ -121,7 +122,7 @@ export default function AboutHighlight() {
         </div>
 
         <div data-about-reveal className="relative mx-auto flex w-full max-w-[460px] flex-col gap-4">
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-xl shadow-black/30">
+          <JellyFrame className="aspect-[3/4] w-full" echoClassName="stroke-blue-300/40">
             {PEOPLE.map((person, index) => (
               <div
                 key={`${person.alt}-${index}`}
@@ -141,7 +142,7 @@ export default function AboutHighlight() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#041423]/45 via-transparent to-white/5" />
               </div>
             ))}
-          </div>
+          </JellyFrame>
 
           <div className="flex items-center justify-center gap-2 self-center">
             {PEOPLE.map((person, index) => (

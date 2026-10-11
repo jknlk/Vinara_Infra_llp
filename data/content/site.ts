@@ -23,6 +23,13 @@ export const FOOTER_COLUMNS = [
       { href: "/contact", label: "Contact" },
     ],
   },
+  {
+    heading: "Legal",
+    links: [
+      { href: "/terms", label: "Terms & Conditions" },
+      { href: "/privacy", label: "Privacy Policy" },
+    ],
+  },
 ] as const;
 
 export const CONTACT = {
@@ -33,7 +40,7 @@ export const CONTACT = {
     "Bangalore 562157",
   ],
   mapQuery: "Kuvempu Nagar, Yelahanka, Chikkajala Post, Bengaluru 562157",
-  mapCenter: { lat: 13.1358, lng: 77.5946 },
+  mapCenter: { lat: 13.1709, lng: 77.6347 },
   departments: [
     { department: "Managing Director", contact: "Rajat Panchal · 8971500945" },
     { department: "AGM", contact: "agm@vinara.co.in" },

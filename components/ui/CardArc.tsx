@@ -99,8 +99,8 @@ type CardArcProps = {
 };
 
 /**
- * A ring of cards seen from inside. It drifts on its own, pauses under the
- * pointer, and can be dragged or flicked sideways with mouse or touch. The
+ * A ring of cards seen from inside. It drifts on its own, pauses while the
+ * pointer is on a card, and can be dragged or flicked sideways with mouse or touch. The
  * stage is meant to span the viewport, and cards size their contents with
  * `u()` and `t()`.
  */
@@ -178,7 +178,7 @@ export default function CardArc({ count, geometry, compact, className = "", chil
         // Hover is re-checked against the browser each frame, so a missed
         // pointerleave (page scrolled from under a resting cursor, say) can
         // never leave the ring stopped.
-        if (hovered && !stage.matches(":hover")) hovered = false;
+        if (hovered && !ring.matches(":hover")) hovered = false;
         const target =
           hovered || focused || pressed || reducedMotion.matches ? 0 : 1 / SECONDS_PER_CARD;
         velocity += (target - velocity) * (1 - Math.exp(-dt * 3));
@@ -247,8 +247,9 @@ export default function CardArc({ count, geometry, compact, className = "", chil
       e.stopPropagation();
     };
 
-    const onEnter = (e: PointerEvent) => {
-      if (e.pointerType === "mouse") hovered = true;
+    // Only a card pauses the ring, not the empty stage around the cards.
+    const onOver = (e: PointerEvent) => {
+      if (e.pointerType === "mouse") hovered = ring.contains(e.target as Node);
     };
     const onLeave = () => {
       hovered = false;
@@ -283,7 +284,7 @@ export default function CardArc({ count, geometry, compact, className = "", chil
     // On the window, so a press released outside the stage still ends.
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
-    stage.addEventListener("pointerenter", onEnter);
+    stage.addEventListener("pointerover", onOver);
     stage.addEventListener("pointerleave", onLeave);
     stage.addEventListener("click", onClick, true);
     stage.addEventListener("focusin", onFocusIn);
@@ -297,7 +298,7 @@ export default function CardArc({ count, geometry, compact, className = "", chil
       stage.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
-      stage.removeEventListener("pointerenter", onEnter);
+      stage.removeEventListener("pointerover", onOver);
       stage.removeEventListener("pointerleave", onLeave);
       stage.removeEventListener("click", onClick, true);
       stage.removeEventListener("focusin", onFocusIn);

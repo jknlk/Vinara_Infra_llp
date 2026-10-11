@@ -37,7 +37,7 @@ export default function ExecutionApproach() {
               <span className="h-px w-12 bg-[#7fb6e8]" />
               Execution approach
             </p>
-            <h2 className="mt-4 max-w-2xl font-display text-display-m">From first plan to final handover.</h2>
+            <h2 className="mt-4 max-w-2xl font-display text-display-m join-shine join-shine-dark pb-[0.08em]">From first plan to final handover.</h2>
           </div>
           <p className="max-w-sm text-body text-white/65">
             Six disciplined stages, one accountable team — every project follows the same proven path.

@@ -43,7 +43,7 @@ export default function SafetySection() {
         </p>
         <h2 className="mt-4 font-display text-5xl font-bold leading-[1.05] md:text-7xl">
           Think safe. Work safe.
-          <span className="block bg-gradient-to-r from-[#e8833a] to-[#f2b45c] bg-clip-text text-transparent">
+          <span className="block join-shine pb-[0.08em]">
             Go home safe.
           </span>
         </h2>

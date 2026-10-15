@@ -159,13 +159,36 @@ export default function QuoteStudio() {
     revealCard();
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const found = validateStep(step, brief);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
     if (step < STEPS.length - 1) go(step + 1);
     else {
+      const res = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "quote",
+          fields: {
+            name: brief.name,
+            email: brief.email,
+            phone: brief.phone,
+            company: brief.company,
+            projectType: serviceLabels(brief.services).join(", "),
+            area: brief.area,
+            location: brief.location,
+            start: brief.timeline,
+            stage: brief.stage,
+            notes: brief.notes,
+          },
+        }),
+      }).catch(() => null);
+      if (!res?.ok) {
+        setErrors({ notes: "Could not send your brief. Please try again or use the email button." });
+        return;
+      }
       setSubmitted(true);
       revealCard();
     }

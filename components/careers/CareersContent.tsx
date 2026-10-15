@@ -22,6 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Container from "@/components/ui/Container";
+import ApplyForm from "@/components/careers/ApplyForm";
 import { CAREERS_VALUES, DEPARTMENT_ICONS, HIRING_STEPS, type JobRole } from "@/data/content/careers";
 import { IMAGES } from "@/data/images";
 
@@ -303,18 +304,7 @@ export default function CareersContent({ roles: allRoles }: { roles: JobRole[] }
                             <div>
                               <p className="text-label uppercase tracking-[0.1em] text-ink/40">The role</p>
                               <p className="mt-3 text-body text-grey-500">{role.summary}</p>
-                              <a
-                                href={`mailto:careers@vinarainfra.com?subject=${encodeURIComponent(
-                                  `Application — ${role.title}`
-                                )}`}
-                                className="group/apply mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-caption font-semibold text-white transition-colors hover:bg-blue-600"
-                              >
-                                Apply for this role
-                                <ArrowUpRight
-                                  size={15}
-                                  className="transition-transform duration-300 group-hover/apply:-translate-y-0.5 group-hover/apply:translate-x-0.5"
-                                />
-                              </a>
+                              <ApplyForm role={role.title} />
                             </div>
                             <div>
                               <p className="text-label uppercase tracking-[0.1em] text-ink/40">What you&rsquo;ll do</p>

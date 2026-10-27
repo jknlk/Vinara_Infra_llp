@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { ImageOff, Pencil, Plus, Trash2 } from "lucide-react";
 import type { PartnerCategory, PartnerRow } from "@/lib/db";
+import { partnerLogo } from "@/lib/partnerLogos";
 import { Modal, PreviewFrame, ViewTabs, dangerBtn, field, label, outlineBtn, primaryBtn, request, type View } from "./parts";
 
 const GROUPS: { category: PartnerCategory; label: string }[] = [
@@ -10,6 +11,9 @@ const GROUPS: { category: PartnerCategory; label: string }[] = [
   { category: "pmc", label: "PMC partners" },
   { category: "tenant", label: "Tenants" },
 ];
+
+// The logo the site actually shows: an uploaded one, else a bundled file in public/logos.
+const logoOf = (p: PartnerRow) => p.logoSrc ?? partnerLogo(p.name)?.src ?? null;
 
 type Editing = { item: PartnerRow | null; category: PartnerCategory };
 
@@ -23,6 +27,7 @@ function PartnerForm({
   onCancel: () => void;
 }) {
   const { item } = editing;
+  const current = item ? logoOf(item) : null;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,11 +35,9 @@ function PartnerForm({
     e.preventDefault();
     setBusy(true);
     setError("");
-    const f = new FormData(e.currentTarget);
-    const body = { name: f.get("name"), category: f.get("category") };
     const { data, error } = await request<{ item: PartnerRow }>(
       item ? `/api/admin/partners/${item.id}` : "/api/admin/partners",
-      { method: item ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
+      { method: item ? "PATCH" : "POST", body: new FormData(e.currentTarget) }
     );
     if (error || !data) {
       setError(error ?? "Something went wrong.");
@@ -61,6 +64,38 @@ function PartnerForm({
             ))}
           </select>
         </label>
+        <div className={`${label} mt-3`}>
+          Logo
+          {current ? (
+            <div className="mt-1.5 flex items-center gap-3 rounded-lg border border-[#0f2b57]/20 p-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={current} alt="" className="h-10 max-w-[160px] object-contain" />
+              {item?.logoSrc ? (
+                <label className="ml-auto flex items-center gap-2 normal-case tracking-normal text-body text-red-600">
+                  <input type="checkbox" name="removeLogo" /> Delete uploaded logo
+                </label>
+              ) : (
+                <span className="ml-auto normal-case tracking-normal text-caption">Built-in logo</span>
+              )}
+            </div>
+          ) : null}
+          <input type="file" name="logo" accept="image/*" className={field} />
+          <input name="logoUrl" placeholder="…or paste an https image URL" className={field} />
+          <span className="mt-1 block normal-case tracking-normal text-caption">
+            A transparent PNG or SVG looks best. Uploading replaces the current logo.
+          </span>
+        </div>
+        <fieldset className="mt-4 flex flex-wrap gap-5">
+          <label className="flex items-center gap-2 text-body">
+            <input type="checkbox" name="showLogo" defaultChecked={item?.showLogo ?? true} /> Show logo
+          </label>
+          <label className="flex items-center gap-2 text-body">
+            <input type="checkbox" name="showName" defaultChecked={item?.showName ?? true} /> Show name
+          </label>
+        </fieldset>
+        <p className="mt-1 text-caption text-[#5a6b84]">
+          Untick both to hide this entry from the home page marquee. It still shows in the Projects page list.
+        </p>
         {error ? <p className="mt-3 text-caption text-red-600">{error}</p> : null}
         <div className="mt-5 flex justify-end gap-3">
           <button type="button" onClick={onCancel} className="rounded-lg px-4 py-2 text-body hover:bg-slate-100">
@@ -121,7 +156,15 @@ export default function AdminPartners({ initialItems }: { initialItems: PartnerR
                 <ul className="divide-y divide-[#0f2b57]/10">
                   {rows.map((p) => (
                     <li key={p.id} className="flex items-center gap-3 p-3">
-                      <span className="min-w-0 flex-1 truncate">{p.name}</span>
+                      <span className="flex h-8 w-16 shrink-0 items-center justify-center">
+                        {logoOf(p) ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={logoOf(p)!} alt="" className={`max-h-8 max-w-16 object-contain ${p.showLogo ? "" : "opacity-30 grayscale"}`} />
+                        ) : (
+                          <ImageOff size={16} className="text-[#5a6b84]/50" />
+                        )}
+                      </span>
+                      <span className={`min-w-0 flex-1 truncate ${p.showName ? "" : "text-[#5a6b84] line-through"}`}>{p.name}</span>
                       <button onClick={() => setEditing({ item: p, category: p.category })} className={outlineBtn}>
                         <Pencil size={14} /> Edit
                       </button>
@@ -137,7 +180,7 @@ export default function AdminPartners({ initialItems }: { initialItems: PartnerR
           })}
         </div>
       ) : (
-        <PreviewFrame src="/projects#clients" version={version} />
+        <PreviewFrame src="/#trusted-by" version={version} />
       )}
 
       {editing ? <PartnerForm editing={editing} onDone={saved} onCancel={() => setEditing(null)} /> : null}

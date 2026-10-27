@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { withRevalidate } from "@/lib/revalidate";
 import { isAdmin } from "@/lib/auth";
 import { deleteJob, updateJob } from "@/lib/db";
 import { parseJob } from "../fields";
 
 type Ctx = { params: Promise<{ id: string }> };
 
-export async function PATCH(req: Request, { params }: Ctx) {
+async function patchHandler(req: Request, { params }: Ctx) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const id = Number((await params).id);
   try {
@@ -17,8 +18,12 @@ export async function PATCH(req: Request, { params }: Ctx) {
   }
 }
 
-export async function DELETE(_req: Request, { params }: Ctx) {
+async function deleteHandler(_req: Request, { params }: Ctx) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await deleteJob(Number((await params).id));
   return NextResponse.json({ ok: true });
 }
+
+export const PATCH = withRevalidate(patchHandler);
+
+export const DELETE = withRevalidate(deleteHandler);

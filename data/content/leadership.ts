@@ -18,7 +18,7 @@ const RAW_TEAM = [
   {
     name: "Mr. Neelakantappa",
     initials: "MN",
-    role: "AGM",
+    role: "General Manager",
     bio: "Overall leadership and business management. Ensures strategy, delivery and client satisfaction stay aligned.",
     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
   },

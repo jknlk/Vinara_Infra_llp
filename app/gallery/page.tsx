@@ -10,7 +10,8 @@ export const metadata: Metadata = {
   description: "Drone captures, in-progress shots and completed builds from live Vinara sites.",
 };
 
-export const dynamic = "force-dynamic";
+// cached; admin saves purge it (lib/revalidate.ts), and it refreshes every 5 minutes regardless
+export const revalidate = 300;
 
 async function loadItems(): Promise<GalleryDisplayItem[]> {
   try {

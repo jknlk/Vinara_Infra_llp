@@ -5,6 +5,9 @@ export function parseFields(form: FormData) {
   const categories = String(form.get("categories") ?? "")
     .split(",")
     .map((c) => c.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .slice(0, 1);
+  const activity = String(form.get("activity") ?? "").trim();
+  if (activity) categories.push(activity);
   return { title, description, categories, alt: String(form.get("alt") ?? "").trim() || title };
 }

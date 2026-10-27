@@ -41,6 +41,45 @@ export const SERVICE_SECTIONS = [
     imageKey: "serviceInfra",
     reference: "NELA 1 · Internal road network and storm water drainage",
   },
+  {
+    slug: "mep",
+    title: "MEP Works",
+    body: "Mechanical, electrical and plumbing services planned with the structure, so buildings are handed over ready to operate.",
+    items: [
+      "Electrical HT / LT distribution & lighting",
+      "Fire fighting & fire alarm systems",
+      "Plumbing, drainage & water supply",
+      "HVAC & ventilation",
+    ],
+    imageKey: "serviceIndustrial",
+    reference: "Coordinated MEP across NELA warehouse buildings",
+  },
+  {
+    slug: "peb",
+    title: "PEB & Fabrication",
+    body: "Pre-engineered steel buildings and structural fabrication, erected fast and to tight tolerances.",
+    items: [
+      "Pre-engineered building (PEB) erection",
+      "Structural steel fabrication",
+      "Roofing & cladding",
+      "Mezzanines, canopies & dock structures",
+    ],
+    imageKey: "galleryPrecastLift",
+    reference: "Steel superstructure on large-span warehouses",
+  },
+  {
+    slug: "interiors",
+    title: "Interior Works",
+    body: "Office blocks, amenity areas and fit-outs finished to the same standard as the main structure.",
+    items: [
+      "Office & admin block fit-outs",
+      "False ceilings & partitions",
+      "Flooring, tiling & finishes",
+      "Toilet blocks & amenity areas",
+    ],
+    imageKey: "serviceWarehouse",
+    reference: "Admin and amenity blocks within logistics parks",
+  },
 ] as const;
 
 export const RMC_PLANT_FACILITY = [

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { withRevalidate } from "@/lib/revalidate";
 import { isAdmin } from "@/lib/auth";
 import { getBuildingPhoto, updateBuildingPhoto } from "@/lib/db";
 import { destroyImage, uploadImage } from "@/lib/cloudinary";
 
 type Ctx = { params: Promise<{ id: string }> };
 
-export async function PATCH(req: Request, { params }: Ctx) {
+async function patchHandler(req: Request, { params }: Ctx) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const id = Number((await params).id);
   try {
@@ -25,3 +26,5 @@ export async function PATCH(req: Request, { params }: Ctx) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Update failed" }, { status: 400 });
   }
 }
+
+export const PATCH = withRevalidate(patchHandler);

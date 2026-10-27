@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Check, Clock, Hammer, Warehouse } from "lucide-react";
 import type { Building, BuildingStatus } from "@/data/buildings";
+import type { BuildingPhoto } from "@/lib/buildingPhotos";
+import BuildingDetail from "./BuildingDetail";
 
 // same status colours as the eave band on the 3D site plan
 export const STATUS: Record<BuildingStatus, { hex: string; tint: string; group: string; Icon: typeof Check }> = {
@@ -24,7 +27,20 @@ function trackPointer(e: React.MouseEvent<HTMLElement>) {
   e.currentTarget.style.setProperty("--my", `${e.clientY - box.top}px`);
 }
 
-export default function BuildingCards({ buildings, totalSqft }: { buildings: Building[]; totalSqft: number }) {
+export default function BuildingCards({
+  buildings,
+  totalSqft,
+  projectName,
+  photos,
+  sitePhotos,
+}: {
+  buildings: Building[];
+  totalSqft: number;
+  projectName: string;
+  photos: Record<string, BuildingPhoto | undefined>;
+  sitePhotos: BuildingPhoto[];
+}) {
+  const [open, setOpen] = useState<Building | null>(null);
   const sum = buildings.reduce((a, b) => a + b.builtUpSqft, 0) || 1;
   const bySize = [...buildings].sort((a, b) => b.builtUpSqft - a.builtUpSqft).map((b) => b.id);
   const many = buildings.length >= 5;
@@ -113,10 +129,13 @@ export default function BuildingCards({ buildings, totalSqft }: { buildings: Bui
                 ? "xl:col-span-3"
                 : "xl:col-span-2";
           return (
-            <article
+            <button
+              type="button"
               key={b.id}
+              onClick={() => setOpen(b)}
+              aria-label={`View photos and specs for ${b.name}`}
               onMouseMove={trackPointer}
-              className={`group relative z-0 overflow-hidden rounded-2xl border border-[#0f2b57]/10 bg-white px-4 py-3.5 pl-5 shadow-[0_1px_2px_rgba(15,43,87,0.06)] transition duration-300 ease-out hover:z-10 hover:scale-[1.035] hover:border-[var(--accent)] hover:shadow-[0_22px_44px_-18px_var(--accent)] active:scale-[1.01] ${
+              className={`group relative z-0 cursor-pointer overflow-hidden text-left rounded-2xl border border-[#0f2b57]/10 bg-white px-4 py-3.5 pl-5 shadow-[0_1px_2px_rgba(15,43,87,0.06)] transition duration-300 ease-out hover:z-10 hover:scale-[1.035] hover:border-[var(--accent)] hover:shadow-[0_22px_44px_-18px_var(--accent)] active:scale-[1.01] ${
                 wide ? "sm:col-span-2" : ""
               } ${xlSpan}`}
               style={{ "--accent": s.hex } as React.CSSProperties}
@@ -186,10 +205,21 @@ export default function BuildingCards({ buildings, totalSqft }: { buildings: Bui
                   <span>{rank === 1 ? "Largest on site" : `#${rank} by area`}</span>
                 </div>
               </div>
-            </article>
+              <p className="relative mt-2.5 text-caption font-semibold text-[var(--accent)]">View photos &amp; specs →</p>
+            </button>
           );
         })}
       </div>
+
+      {open ? (
+        <BuildingDetail
+          building={open}
+          projectName={projectName}
+          share={(open.builtUpSqft / sum) * 100}
+          photos={[photos[open.id], ...sitePhotos].filter((p): p is BuildingPhoto => !!p?.src)}
+          onClose={() => setOpen(null)}
+        />
+      ) : null}
     </div>
   );
 }

@@ -7,7 +7,8 @@ import TrustedByMarquee from "@/components/home/TrustedByMarquee";
 import Live3DShowcase from "@/components/home/Live3DShowcase";
 import GalleryPreview from "@/components/home/GalleryPreview";
 
-export const dynamic = "force-dynamic";
+// cached; admin saves purge it (lib/revalidate.ts), and it refreshes every 5 minutes regardless
+export const revalidate = 300;
 
 export default async function HomePage() {
   return (

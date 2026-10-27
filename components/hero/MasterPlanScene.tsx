@@ -619,7 +619,9 @@ function VisibilityGate({
   containerProps,
 }: {
   containerProps?: React.HTMLAttributes<HTMLDivElement>;
-  children: (isFullscreen: boolean) => React.ReactNode;
+  // `active` is false while scrolled away: the canvas stays mounted but stops rendering,
+  // so coming back doesn't rebuild the WebGL context, shaders and shadow maps
+  children: (isFullscreen: boolean, active: boolean) => React.ReactNode;
   overlay: (toggleFullscreen: () => void, isFullscreen: boolean) => React.ReactNode;
   // false lets the page keep scrolling when the wheel is over the scene
   capturesWheel: boolean;
@@ -631,7 +633,7 @@ function VisibilityGate({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setActive(entry.isIntersecting), { threshold: 0.1 });
+    const io = new IntersectionObserver(([entry]) => setActive(entry.isIntersecting), { rootMargin: "200px" });
     io.observe(el);
     const onChange = () => setIsFullscreen(document.fullscreenElement === el);
     document.addEventListener("fullscreenchange", onChange);
@@ -654,7 +656,7 @@ function VisibilityGate({
       {...containerProps}
       {...(capturesWheel || isFullscreen ? { "data-lenis-prevent": true } : {})}
     >
-      {active ? children(isFullscreen) : <div className="h-full w-full" />}
+      {children(isFullscreen, active)}
       {overlay(toggleFullscreen, isFullscreen)}
     </div>
   );
@@ -803,8 +805,9 @@ export default function MasterPlanScene({
         );
       }}
     >
-      {(isFullscreen) => (
+      {(isFullscreen, active) => (
       <Canvas
+        frameloop={active ? "always" : "never"}
         shadows="soft"
         camera={{ position: ORBIT_HOME, fov: 38, near: 0.5, far: 300 }}
         dpr={mobile ? [1, 1.5] : [1, 2]}

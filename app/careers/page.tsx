@@ -9,7 +9,8 @@ export const metadata: Metadata = {
   description: "Open engineering, planning, quality and commercial roles across Vinara's live warehousing and industrial sites.",
 };
 
-export const dynamic = "force-dynamic";
+// cached; admin saves purge it (lib/revalidate.ts), and it refreshes every 5 minutes regardless
+export const revalidate = 300;
 
 async function loadRoles(): Promise<JobRole[]> {
   try {

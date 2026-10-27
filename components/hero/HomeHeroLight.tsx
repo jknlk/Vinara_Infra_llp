@@ -16,8 +16,31 @@ const STORY = [
   { kicker: "04 · The Legacy", title: "37+ years of engineering.", body: "Grow together with Vinara.", pos: "tl" },
 ] as const;
 
-const frameSrc = (i: number) =>
-  encodeURI(`${FRAME_DIR}/ezgif-frame-${String(i + 1).padStart(3, "0")}.jpg`);
+const FRAME_DIR_SM = "/hero-frames-sm";
+const MAX_IN_FLIGHT = 6;
+
+// Phones get 768px WebP frames (~28 KB) instead of the 1916px JPGs (~64 KB).
+const frameSrc = (i: number, small: boolean) => {
+  const n = String(i + 1).padStart(3, "0");
+  return small ? `${FRAME_DIR_SM}/${n}.webp` : encodeURI(`${FRAME_DIR}/ezgif-frame-${n}.jpg`);
+};
+
+// Coarse-to-fine: every 32nd frame first, then 16th, 8th… so a fast scroll
+// always lands near a frame that has already loaded.
+function loadOrder() {
+  const order: number[] = [];
+  const seen = new Set<number>();
+  for (const stride of [32, 16, 8, 4, 2, 1]) {
+    for (let i = 0; i < FRAME_COUNT; i += stride) {
+      if (!seen.has(i)) {
+        seen.add(i);
+        order.push(i);
+      }
+    }
+  }
+  if (!seen.has(FRAME_COUNT - 1)) order.splice(1, 0, FRAME_COUNT - 1);
+  return order;
+}
 
 export default function HomeHeroLight() {
   const scopeRef = useRef<HTMLDivElement>(null);
@@ -31,9 +54,12 @@ export default function HomeHeroLight() {
       if (!canvas || !ctx || !h1Ref.current) return;
 
       // ---- frame sequence -------------------------------------------------
+      const small = Math.min(window.innerWidth, window.innerHeight) * Math.min(window.devicePixelRatio || 1, 2) <= 1100;
       const images: (HTMLImageElement | undefined)[] = new Array(FRAME_COUNT);
+      const ready: boolean[] = new Array(FRAME_COUNT).fill(false);
       const state = { frame: 0 };
       let lastDrawn = -1;
+      let disposed = false;
 
       const resize = () => {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -44,11 +70,15 @@ export default function HomeHeroLight() {
       };
 
       const render = () => {
-        // draw nearest loaded frame at or before the requested one
-        let i = Math.round(state.frame);
-        while (i > 0 && !images[i]?.complete) i--;
+        // draw the nearest decoded frame, looking both ways from the requested one
+        const want = Math.round(state.frame);
+        let i = -1;
+        for (let d = 0; d < FRAME_COUNT; d++) {
+          if (ready[want - d]) { i = want - d; break; }
+          if (ready[want + d]) { i = want + d; break; }
+        }
         const img = images[i];
-        if (!img || !img.complete || !img.naturalWidth || i === lastDrawn) return;
+        if (!img || !img.naturalWidth || i === lastDrawn) return;
         lastDrawn = i;
         const cw = canvas.width;
         const ch = canvas.height;
@@ -58,21 +88,46 @@ export default function HomeHeroLight() {
         ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
       };
 
-      const load = (i: number) => {
-        const img = new Image();
-        img.decoding = "async";
-        img.onload = () => {
-          if (i === 0 || Math.abs(i - state.frame) < 2) render();
-        };
-        img.src = frameSrc(i);
-        images[i] = img;
-      };
-      load(0);
-      // stream the rest in order after the first frame so the hero paints fast
-      let next = 1;
+      // Bounded queue: a few requests at a time, so the frames never starve
+      // the rest of the page. Frames near the scroll position jump the queue.
+      const queue = loadOrder();
+      let inFlight = 0;
       const pump = () => {
-        for (let n = 0; n < 6 && next < FRAME_COUNT; n++) load(next++);
-        if (next < FRAME_COUNT) setTimeout(pump, 40);
+        while (!disposed && inFlight < MAX_IN_FLIGHT && queue.length) {
+          const i = queue.shift()!;
+          if (images[i]) continue;
+          const img = new Image();
+          if (i === 0) img.fetchPriority = "high";
+          images[i] = img;
+          inFlight++;
+          img.src = frameSrc(i, small);
+          img
+            .decode()
+            .then(() => {
+              ready[i] = true;
+              lastDrawn = -1;
+              render();
+            })
+            .catch(() => {
+              images[i] = undefined;
+            })
+            .finally(() => {
+              inFlight--;
+              pump();
+            });
+        }
+      };
+      const prioritise = () => {
+        const at = Math.round(state.frame);
+        const near: number[] = [];
+        for (let d = 0; d <= 12; d++) {
+          for (const i of [at + d, at - d]) {
+            if (i >= 0 && i < FRAME_COUNT && !images[i] && !near.includes(i)) near.push(i);
+          }
+        }
+        if (!near.length) return;
+        queue.unshift(...near);
+        pump();
       };
       pump();
 
@@ -99,7 +154,19 @@ export default function HomeHeroLight() {
         },
       });
       scrub
-        .to(state, { frame: FRAME_COUNT - 1, ease: "none", duration: 1, onUpdate: render }, 0)
+        .to(
+          state,
+          {
+            frame: FRAME_COUNT - 1,
+            ease: "none",
+            duration: 1,
+            onUpdate: () => {
+              if (!ready[Math.round(state.frame)]) prioritise();
+              render();
+            },
+          },
+          0
+        )
         // copy lifts away early so the building takes the stage
         .to("[data-hero-fade]", { opacity: 0, y: -40, ease: "power1.in", duration: 0.03 }, 0);
       // hold the finished frame for the last stretch while the next section slides up over the hero
@@ -112,7 +179,14 @@ export default function HomeHeroLight() {
           .to(`[data-story="${i}"]`, { opacity: 0, x: -from.x * 0.5, y: -from.y * 0.5, ease: "power2.in", duration: 0.05 }, t + 0.13);
       });
 
+      // fonts and the preloader shift layout after mount; re-measure the pin once settled
+      const refresh = () => ScrollTrigger.refresh();
+      document.fonts?.ready.then(refresh);
+      window.addEventListener("load", refresh, { once: true });
+
       return () => {
+        disposed = true;
+        window.removeEventListener("load", refresh);
         ro.disconnect();
         split.revert();
         ScrollTrigger.refresh();

@@ -7,21 +7,22 @@ import RmcCapabilityGrid from "@/components/services/RmcCapabilityGrid";
 import RmcOperations from "@/components/services/RmcOperations";
 import WorkflowTrack from "@/components/services/WorkflowTrack";
 import { IMAGES } from "@/data/images";
-import { SERVICE_SECTIONS } from "@/data/content/services";
+import { loadServices } from "@/lib/services";
 
 export const metadata: Metadata = {
   title: "Services — Vinara Infra LLP",
-  description: "Warehousing, industrial, precast and infrastructure construction, plus our in-house RMC plant.",
+  description: "Warehousing, industrial, precast, infrastructure, MEP, PEB and interior works, plus our in-house RMC plant.",
 };
 
 const eyebrow = "text-label uppercase tracking-[0.14em]";
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await loadServices();
   return (
     <>
-      <ServicesHero />
+      <ServicesHero services={services} />
 
-      <ServiceChapters />
+      <ServiceChapters services={services} />
 
       {/* RMC */}
       <section id="rmc" className="bg-white py-14 text-ink md:py-20">
@@ -30,7 +31,7 @@ export default function ServicesPage() {
             <div className="lg:col-span-7">
               <p className={`${eyebrow} tabular flex items-center gap-3 text-blue-600`}>
                 <span className="h-px w-10 bg-blue-600" />
-                {String(SERVICE_SECTIONS.length + 1).padStart(2, "0")}
+                {String(services.length + 1).padStart(2, "0")}
                 <span className="text-grey-300">—</span>
                 In-house
               </p>

@@ -19,9 +19,8 @@ const eyebrow = "text-label uppercase tracking-[0.14em]";
 const LEAD = 0.15;
 const HOLD = 0.4;
 const TAIL = 0.3;
-const FULL = "inset(0px 0px 0px 0px round 0px)";
-
-type Rect = { x: number; y: number; w: number; h: number };
+const FULL = "inset(0% 0% 0% 0%)";
+const SHUT = "inset(100% 0% 0% 0%)";
 
 function num(v: number, d = 0) {
   return new Intl.NumberFormat("en-IN", { minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
@@ -49,30 +48,7 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
         const root = rootRef.current;
         const stage = stageRef.current;
         if (!root || !stage) return;
-        const vw = () => stage.clientWidth;
         const vh = () => stage.clientHeight;
-
-        // where a photo sits before it opens: the card beside the text, the
-        // next-up card peeking in at the right edge, or parked just off screen
-        const card = (): Rect => {
-          if (vw() < 1024) {
-            const w = vw() * 0.9;
-            return { x: vw() * 0.05, y: 96, w, h: (w * 9) / 16 };
-          }
-          const w = Math.min(vw() * 0.37, (vh() * 0.58 * 16) / 9);
-          const h = (w * 9) / 16;
-          return { x: vw() * 0.055, y: (vh() - h) / 2 - 12, w, h };
-        };
-        const hidden = (): Rect => ({ ...card(), x: vw() });
-        const peek = (): Rect => (vw() < 1024 ? hidden() : { ...card(), x: vw() * 0.8 });
-
-        const inset = (r: Rect) => `inset(${r.y}px ${vw() - r.x - r.w}px ${vh() - r.y - r.h}px ${r.x}px round 24px)`;
-        // shrink the full-screen photo so it covers the card it is clipped to
-        const fit = (rect: () => Rect) => ({
-          x: () => rect().x + rect().w / 2 - vw() / 2,
-          y: () => rect().y + rect().h / 2 - vh() / 2,
-          scale: () => Math.max(rect().w / vw(), rect().h / vh()),
-        });
 
         const reveals: { show: () => void; hide: () => void }[] = [];
         const shown: boolean[] = [];
@@ -111,22 +87,25 @@ export default function BuildingShowcase({ projectName, slides }: { projectName:
 
         gsap.utils.toArray<HTMLElement>("[data-slide]", root).forEach((slide, i) => {
           const q = gsap.utils.selector(slide);
-          const from = i === 0 ? card : peek;
-          const open = { duration: 1, ease: "power2.inOut", immediateRender: i < 2 };
+          const open = { duration: 1, ease: "power3.inOut" };
 
-          // from the third building on, the card first slides in to wait at the right edge
-          if (i >= 2) {
-            const enter = { duration: 0.5, ease: "power2.out" };
+          if (i === 0) {
+            // the first photo is already full-bleed; it just settles as the pin starts
+            master.fromTo(q("[data-photo]"), { scale: 1.12 }, { scale: 1, duration: starts[1] ?? 1, ease: "power2.out" }, 0);
+          } else {
+            // each next photo wipes up from the bottom edge and settles into place
             master
-              .fromTo(q("[data-clip]"), { clipPath: () => inset(hidden()) }, { clipPath: () => inset(peek()), ...enter }, starts[i - 1] + 0.7)
-              .fromTo(q("[data-photo]"), fit(hidden), { ...fit(peek), ...enter }, starts[i - 1] + 0.7);
+              .fromTo(q("[data-clip]"), { clipPath: SHUT }, { clipPath: FULL, ...open }, starts[i])
+              .fromTo(q("[data-photo]"), { yPercent: 18, scale: 1.18 }, { yPercent: 0, scale: 1, ...open }, starts[i]);
           }
-          master
-            .fromTo(q("[data-clip]"), { clipPath: () => inset(from()) }, { clipPath: FULL, ...open }, starts[i])
-            .fromTo(q("[data-photo]"), fit(from), { x: 0, y: 0, scale: 1, ...open }, starts[i])
-            .fromTo(q("[data-scrim]"), { opacity: 0 }, { opacity: 1, duration: 1 }, starts[i]);
-          // the open photo keeps pushing in while the next one covers it
-          if (i < slides.length - 1) master.fromTo(q("[data-zoom]"), { scale: 1 }, { scale: 1.08, duration: 1 }, starts[i + 1]);
+          // the photo underneath drifts up and recedes while the next one covers it
+          if (i < slides.length - 1)
+            master.fromTo(
+              q("[data-zoom]"),
+              { yPercent: 0, scale: 1, filter: "brightness(1)" },
+              { yPercent: -10, scale: 1.04, filter: "brightness(0.45)", ...open },
+              starts[i + 1]
+            );
 
           // clean reveal: everything fades up in order
           const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });

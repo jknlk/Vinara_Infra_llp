@@ -5,26 +5,22 @@ import Image from "next/image";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { IMAGES } from "@/data/images";
-import { SERVICE_SECTIONS } from "@/data/content/services";
+import type { Service } from "@/lib/services";
 
 const eyebrow = "text-label uppercase tracking-[0.14em]";
 
-const PANELS = [
-  ...SERVICE_SECTIONS.map((s) => ({
-    id: s.slug,
-    title: s.title,
-    blurb: s.items.slice(0, 3).join(" · "),
-    image: IMAGES[s.imageKey as keyof typeof IMAGES],
-  })),
-  {
-    id: "rmc",
-    title: "RMC Plant",
-    blurb: "M10–M50 grades · Design mixes · In-house lab",
-    image: IMAGES.serviceRmc,
-  },
-];
+const RMC_PANEL = {
+  id: "rmc",
+  title: "RMC Plant",
+  blurb: "M10–M50 grades · Design mixes · In-house lab",
+  image: { src: IMAGES.serviceRmc.src ?? "", alt: IMAGES.serviceRmc.alt },
+};
 
-export default function ServicesHero() {
+export default function ServicesHero({ services }: { services: Service[] }) {
+  const PANELS = [
+    ...services.map((s) => ({ id: s.slug, title: s.title, blurb: s.items.slice(0, 3).join(" · "), image: s.image })),
+    RMC_PANEL,
+  ];
   const [active, setActive] = useState(0);
 
   return (
@@ -100,6 +96,8 @@ export default function ServicesHero() {
                   <Image
                     src={p.image.src}
                     alt={p.image.alt}
+                    // pasted links from other hosts skip the optimiser, which only allows the configured hosts
+                    unoptimized={!/^(\/|https:\/\/(images\.unsplash\.com|res\.cloudinary\.com)\/)/.test(p.image.src)}
                     fill
                     sizes="(min-width:1024px) 40vw, 100vw"
                     priority={i === 0}

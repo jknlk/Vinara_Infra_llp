@@ -1,21 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { ArrowDown, BadgeCheck } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import Container from "@/components/ui/Container";
 import JellyFrame from "@/components/ui/JellyFrame";
 import { useLenis } from "@/components/providers/SmoothScroll";
-import { IMAGES } from "@/data/images";
-import { SERVICE_SECTIONS } from "@/data/content/services";
+import type { Service } from "@/lib/services";
 
 const eyebrow = "text-label uppercase tracking-[0.14em]";
 const pad = (n: number) => String(n).padStart(2, "0");
-const COUNT = SERVICE_SECTIONS.length;
-const TOTAL = pad(COUNT);
-const SLUGS: string[] = SERVICE_SECTIONS.map((s) => s.slug);
 // where the pinned frame rests: just under the floating nav
 const PIN_TOP = 104;
 
@@ -24,7 +19,10 @@ const PIN_TOP = 104;
 // the left tracks the one in view and each scroll settles on the next chapter.
 // Short or reduced-motion screens get the same row as a plain sideways
 // scroller; below desktop the chapters stack.
-export default function ServiceChapters() {
+export default function ServiceChapters({ services }: { services: Service[] }) {
+  const COUNT = services.length;
+  const TOTAL = pad(COUNT);
+  const SLUGS = services.map((s) => s.slug);
   const rootRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -214,7 +212,7 @@ export default function ServiceChapters() {
                     className="block transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]"
                     style={{ transform: `translateY(-${active}em)` }}
                   >
-                    {SERVICE_SECTIONS.map((s, i) => (
+                    {services.map((s, i) => (
                       <span key={s.slug} className="block h-[1em]">
                         {pad(i + 1)}
                       </span>
@@ -230,7 +228,7 @@ export default function ServiceChapters() {
                   data-chapter-progress
                   className="absolute -left-px top-0 h-full w-0.5 origin-top bg-blue-600"
                 />
-                {SERVICE_SECTIONS.map((s, i) => (
+                {services.map((s, i) => (
                   <li key={s.slug}>
                     <a
                       href={`#${s.slug}`}
@@ -264,8 +262,8 @@ export default function ServiceChapters() {
           {/* chapters */}
           <div ref={viewportRef} className="min-w-0 xl:snap-x xl:snap-mandatory xl:overflow-x-auto">
             <div ref={trackRef} className="xl:flex xl:gap-12 xl:will-change-transform">
-              {SERVICE_SECTIONS.map((s, i) => {
-                const image = IMAGES[s.imageKey as keyof typeof IMAGES];
+              {services.map((s, i) => {
+                const image = s.image;
                 return (
                   <article
                     key={s.slug}
@@ -290,14 +288,8 @@ export default function ServiceChapters() {
                     >
                       <div aria-hidden className="absolute inset-0 bg-blue-100" />
                       {image?.src ? (
-                        <Image
-                          src={image.src}
-                          alt={image.alt}
-                          fill
-                          sizes="(min-width:1280px) 30vw, 100vw"
-                          data-chapter-img
-                          className="object-cover"
-                        />
+                        // eslint-disable-next-line @next/next/no-img-element -- images come from admin uploads
+                        <img src={image.src} alt={image.alt} data-chapter-img className="absolute inset-0 h-full w-full object-cover" />
                       ) : null}
                       <div
                         aria-hidden
@@ -315,6 +307,7 @@ export default function ServiceChapters() {
                       <p className="font-display text-2xl font-medium leading-[1.25] tracking-tight text-ink md:text-[1.75rem] xl:text-lg xl:leading-[1.35]">
                         {s.body}
                       </p>
+                      {s.reference ? (
                       <div className="mt-7 flex items-start gap-3 rounded-2xl bg-blue-50 p-4 xl:mt-5">
                         <BadgeCheck size={20} className="mt-0.5 shrink-0 text-blue-600" />
                         <p className="text-caption text-grey-500">
@@ -322,6 +315,7 @@ export default function ServiceChapters() {
                           {s.reference}
                         </p>
                       </div>
+                      ) : null}
                     </div>
 
                     <div className="mt-10 xl:col-start-3 xl:row-span-2 xl:row-start-1 xl:mt-0">

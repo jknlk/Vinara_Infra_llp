@@ -27,7 +27,7 @@ const SITES = [
 const CONTACT_POINTS = [
   { icon: MapPin, label: "Head office", value: CONTACT.addressLines.join(", ") },
   { icon: Phone, label: "Managing Director", value: CONTACT.departments[0].contact },
-  { icon: Mail, label: "General enquiries", value: CONTACT.departments[1].contact },
+  { icon: Mail, label: "General enquiries", value: CONTACT.email },
   { icon: Clock, label: "Office hours", value: "Mon – Sat · 9:00 AM – 6:00 PM IST" },
 ];
 

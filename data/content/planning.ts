@@ -76,3 +76,85 @@ export const REPORTING_PRINCIPLES = [
   { title: "Accountability", body: "Ownership for performance and commitments" },
   { title: "Continuous improvement", body: "Learn, adapt, improve every week" },
 ];
+
+// The Controls & QHSE page walks through these in order, from award to handover.
+export const DELIVERY_STAGES = [
+  {
+    id: "preconstruction",
+    title: "Preconstruction",
+    lead: "Before mobilising, we study the job in detail, so problems are solved on paper rather than on site.",
+    actions: [
+      "Review drawings, specifications and BOQ; raise queries before work starts",
+      "Site survey, levels and soil data checked against the design",
+      "Method statements prepared for every major activity",
+      "Approved sources fixed for steel, cement, aggregates and precast elements",
+    ],
+    records: ["Drawing query log", "Method statements", "Material approval register"],
+    image: "cyclePlan",
+  },
+  {
+    id: "planning",
+    title: "Planning",
+    lead: "One master programme, broken down until every crew knows what it must finish this week and today.",
+    actions: [
+      "Master programme with key milestones and S-curve as the baseline",
+      "Building-by-building schedules with activity logic and resource plans",
+      "2–8 week look-ahead plans to clear constraints before work fronts open",
+      "Weekly targets committed with the site team; daily execution plans",
+    ],
+    records: ["Master schedule", "Look-ahead plan", "Constraint log"],
+    image: "planningSchedule",
+  },
+  {
+    id: "quality",
+    title: "Quality",
+    lead: "Quality is built in at every stage of the work, not checked once at the end.",
+    actions: [
+      "Inspection & Test Plans (ITP) and checklists for every activity",
+      "Incoming materials inspected and tested in the site lab before use",
+      "Hold points: reinforcement, formwork and concreting released only after QC sign-off",
+      "Non-conformances raised as NCRs and tracked until closed",
+    ],
+    records: ["Inspection requests on Aconex", "Cube and material test reports", "NCR register"],
+    image: "qualityInspection",
+  },
+  {
+    id: "safety",
+    title: "Safety",
+    lead: "No one starts work on our sites until they have been screened, inducted and equipped.",
+    actions: [
+      "Pre-deployment screening and medical check for every worker",
+      "Site EHS induction covering the client’s Core Five Safety Risks",
+      "Required PPE issued; gate pass only after induction",
+      "Daily toolbox talks, work permits and safety inspections",
+    ],
+    records: ["Induction register", "Permit-to-work log", "Safety inspection reports"],
+    image: "safetyInduction",
+  },
+  {
+    id: "monitoring",
+    title: "Progress monitoring",
+    lead: "Progress is measured from what is built on site, not from what was planned.",
+    actions: [
+      "Daily progress captured on site and verified by the planning team",
+      "Schedule updated weekly; actuals compared against the baseline",
+      "Variances and root causes identified, with corrective actions agreed",
+      "Management dashboard and S-curves shared with the client",
+    ],
+    records: ["Daily progress report", "Weekly progress report", "S-curve & trend analysis"],
+    image: "cycleMeasure",
+  },
+  {
+    id: "handover",
+    title: "Handover",
+    lead: "We hand over buildings that are complete, documented and ready for the tenant.",
+    actions: [
+      "Final inspection with the client and PMC; punch list raised",
+      "Snags closed and verified before handover",
+      "Test certificates, approvals and as-built records compiled",
+      "Full quality record available to the client on Aconex",
+    ],
+    records: ["Punch list closure", "As-built documentation", "Handover dossier"],
+    image: "gallery7",
+  },
+] as const;

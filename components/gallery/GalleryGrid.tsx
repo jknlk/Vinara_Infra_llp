@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
 import { useLenis } from "@/components/providers/SmoothScroll";
+import { GALLERY_ACTIVITIES } from "@/data/content/gallery";
 
 export type GalleryDisplayItem = {
   id: string | number;
@@ -33,10 +34,17 @@ export default function GalleryGrid({ items: all, projectNames }: { items: Galle
     [projectNames, all]
   );
 
-  const items = useMemo(
-    () => all.filter((i) => active === "All" || i.categories.includes(active)),
-    [active, all]
-  );
+  // Finished warehouses first, then one section per activity, then anything untagged.
+  const sections = useMemo(() => {
+    const shown = all.filter((i) => active === "All" || i.categories.includes(active));
+    const known: string[] = [...GALLERY_ACTIVITIES];
+    return [
+      ...known.map((name) => ({ name, list: shown.filter((i) => i.categories[1] === name) })),
+      { name: "More from site", list: shown.filter((i) => !known.includes(i.categories[1] ?? "")) },
+    ].filter((s) => s.list.length > 0);
+  }, [active, all]);
+  // the lightbox steps through photos in the order the sections show them
+  const items = useMemo(() => sections.flatMap((s) => s.list), [sections]);
 
   useEffect(() => {
     if (lightboxIndex !== null) lenis?.stop();
@@ -84,10 +92,66 @@ export default function GalleryGrid({ items: all, projectNames }: { items: Galle
         </div>
       </div>
 
-      {/* full-bleed masonry */}
-      <div key={active} className="columns-2 gap-1.5 px-1.5 md:columns-3 md:gap-2 md:px-2 xl:columns-4">
-        {items.map((item, i) => {
-          return (
+      {sections.map((section, si) => {
+        const offset = sections.slice(0, si).reduce((n, s) => n + s.list.length, 0);
+        const collage = si === 0 && section.name === GALLERY_ACTIVITIES[0];
+        return (
+          <section key={active + section.name} className="px-1.5 pb-8 md:px-2 md:pb-12">
+            <div className="flex items-baseline gap-3 px-2.5 pb-3 pt-4 md:px-4">
+              <h2 className="font-display text-2xl font-bold text-[#0f2b57] md:text-3xl">{section.name}</h2>
+              <span className="tabular text-caption text-[#5a6b84]">{section.list.length} photos</span>
+            </div>
+            {collage ? (
+              // finished warehouses: a collage with the first photo large
+              <div className="grid auto-rows-[160px] grid-cols-2 gap-1.5 md:auto-rows-[220px] md:grid-cols-4 md:gap-2">
+                {section.list.map((item, k) => {
+                  const i = offset + k;
+                  const span = k === 0 ? "col-span-2 row-span-2" : k % 5 === 3 ? "md:col-span-2" : "";
+                  return (
+                    <div key={item.id} className={span}>
+                      <button
+              key={item.id}
+              onClick={() => setLightboxIndex(i)}
+              style={{ animationDelay: `${Math.min(i, 11) * 50}ms` }}
+              className={`gallery-tile group relative block h-full w-full overflow-hidden rounded-xl bg-[#dceaf9] text-left md:mb-2 md:rounded-2xl ${
+                ""
+              }`}
+            >
+              {item.src ? (
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  fill
+                  sizes={SIZES}
+                  className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                />
+              ) : null}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0b2247]/85 via-[#0b2247]/10 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
+              <span className="tabular absolute left-4 top-4 text-caption font-medium text-white/80 md:left-5 md:top-5">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="absolute right-4 top-4 grid h-10 w-10 -translate-y-2 place-items-center rounded-full bg-white text-[#0f2b57] opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 md:right-5 md:top-5">
+                <ArrowUpRight size={17} />
+              </span>
+              <div className="absolute inset-x-0 bottom-0 p-4 text-white md:p-6">
+                <p className="text-label uppercase tracking-[0.12em] text-[#7fb6e8]">{item.categories[0]}</p>
+                <h3 className="mt-1 font-display text-body-l font-bold md:text-2xl">{item.title}</h3>
+                <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 group-hover:grid-rows-[1fr]">
+                  <p className="line-clamp-2 max-w-[52ch] overflow-hidden text-caption text-white/75">
+                    <span className="block pt-2">{item.description}</span>
+                  </p>
+                </div>
+              </div>
+            </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="columns-2 gap-1.5 md:columns-3 md:gap-2 xl:columns-4">
+                {section.list.map((item, k) => {
+                  const i = offset + k;
+                  return (
             <button
               key={item.id}
               onClick={() => setLightboxIndex(i)}
@@ -122,9 +186,13 @@ export default function GalleryGrid({ items: all, projectNames }: { items: Galle
                 </div>
               </div>
             </button>
-          );
-        })}
-      </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        );
+      })}
 
       {/* lightbox */}
       {current ? (

@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { PROJECTS } from "@/data/buildings";
 
-const MasterPlanScene = dynamic(() => import("@/components/hero/MasterPlanScene"), { ssr: false });
+const loadScene = () => import("@/components/hero/MasterPlanScene");
+const MasterPlanScene = dynamic(loadScene, { ssr: false });
 
 export default function Live3DShowcase() {
   const [can3D, setCan3D] = useState<boolean | null>(null);
@@ -26,6 +27,18 @@ export default function Live3DShowcase() {
     }
   }, []);
 
+  // fetch the scene's code while the browser is idle, so it is parsed before the visitor arrives
+  useEffect(() => {
+    if (!can3D) return;
+    // Safari has no requestIdleCallback
+    if (typeof window.requestIdleCallback !== "function") {
+      const id = setTimeout(() => void loadScene(), 2000);
+      return () => clearTimeout(id);
+    }
+    const id = window.requestIdleCallback(() => void loadScene(), { timeout: 6000 });
+    return () => window.cancelIdleCallback(id);
+  }, [can3D]);
+
   // the heavy scene only loads once the section is about to scroll into view
   useEffect(() => {
     const el = ref.current;
@@ -37,7 +50,7 @@ export default function Live3DShowcase() {
           io.disconnect();
         }
       },
-      { rootMargin: "300px" },
+      { rootMargin: "800px" },
     );
     io.observe(el);
     return () => io.disconnect();

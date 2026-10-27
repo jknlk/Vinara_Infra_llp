@@ -1,49 +1,17 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ArrowDown, Check } from "lucide-react";
-import Container from "@/components/ui/Container";
-import JellyFrame from "@/components/ui/JellyFrame";
-import ProgressMarquee from "@/components/planning/ProgressMarquee";
-import DataFlowRibbon from "@/components/planning/DataFlowRibbon";
+import { ArrowDown, Check, FileCheck2 } from "lucide-react";
 import { IMAGES } from "@/data/images";
-import {
-  CONTROL_DOMAINS,
-  PLANNING_LEVELS,
-  PROGRESS_STEPS,
-  DATA_FLOW,
-  OUTPUTS_REPORTS,
-  REPORTING_PRINCIPLES,
-} from "@/data/content/planning";
-import {
-  QC_ORG_CHART,
-} from "@/data/content/qualitySafety";
-import QualityApproach from "@/components/planning/QualityApproach";
-import SafetySection from "@/components/planning/SafetySection";
-import QcOrgArc from "@/components/planning/QcOrgArc";
-import type { SparkItem } from "@/components/ui/sparks-carousel";
+import { CONTROLS_COMMITMENT, DELIVERY_STAGES } from "@/data/content/planning";
 
 export const metadata: Metadata = {
   title: "Controls & QHSE — Vinara Infra LLP",
   description:
-    "Planning, progress control, quality assurance and safety systems — one integrated delivery-control framework from master programme to handover.",
+    "How Vinara controls every project, step by step: preconstruction, planning, quality, safety, progress monitoring and handover.",
 };
 
 const eyebrow = "text-label uppercase tracking-[0.14em]";
-
-
-// One card per level of the QC organisation, top of the hierarchy first.
-const QC_ORG_CARDS: SparkItem[] = QC_ORG_CHART.map((title, i) => {
-  const img = [IMAGES.planningSchedule, IMAGES.cycleAnalyze, IMAGES.cycleMeasure, IMAGES.gallery5, IMAGES.cycleExecute][i];
-  const count = [1, 1, 3, 3, "All"][i];
-  return {
-    id: title,
-    imageSrc: img.src ?? "",
-    imageAlt: img.alt,
-    title: title.replace(/ × \d+$/, ""),
-    count,
-    countLabel: ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"][i] + (typeof count === "number" && i > 1 ? " · headcount" : ""),
-  };
-});
+const num = (i: number) => String(i + 1).padStart(2, "0");
 
 export default function PlanningPage() {
   return (
@@ -61,181 +29,127 @@ export default function PlanningPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#071a3a] via-[#071a3a]/80 to-[#071a3a]/25" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#071a3a] via-[#071a3a]/25 to-[#071a3a]/50" />
 
-        {/* pb clears the ribbon fixed to the bottom of the screen */}
-        <div className="relative mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-4 pb-20 pt-32 sm:px-6 lg:px-8 lg:pt-36">
+        <div className="relative mx-auto flex w-full max-w-[1680px] flex-1 flex-col px-4 pb-12 pt-32 sm:px-6 lg:px-8 lg:pt-36">
           <div className="flex flex-1 flex-col justify-center lg:w-9/12">
             <p className={`${eyebrow} flex items-center gap-3 text-[#7fb6e8]`}>
               <span className="h-px w-10 bg-[#7fb6e8]" />
               Controls &amp; QHSE
             </p>
             <h1 className="mt-6 font-display text-[clamp(2.75rem,min(6.4vw,11.5vh),6rem)] font-extrabold leading-[0.96] tracking-[-0.03em]">
-              One plan. One direction.
-              <span className="block join-shine join-shine-dark pb-[0.08em]">
-                One source of truth.
-              </span>
+              Planned before we build.
+              <span className="block join-shine join-shine-dark pb-[0.08em]">Controlled until handover.</span>
             </h1>
-            <p className="mt-6 max-w-[46ch] border-l-2 border-[#4d94ff] pl-5 text-body-l text-white/75">
-              People, processes and technology, integrated into a single real-time view of the project.
+            <p className="mt-6 max-w-[52ch] border-l-2 border-[#4d94ff] pl-5 text-body-l text-white/75">
+              Every Vinara project follows the same six controlled stages. Here is what we do at each one, and the
+              records you receive as proof.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href="#progress"
+                href="#stages"
                 className="group inline-flex items-center gap-2.5 rounded-full bg-[#1f6fd1] px-7 py-3.5 text-body font-semibold text-white shadow-lg shadow-[#1f6fd1]/30 transition-colors hover:bg-[#4d94ff]"
               >
-                Progress measurement
+                See how we work
                 <ArrowDown size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
               </a>
-              <a
-                href="#quality"
-                className="rounded-full border border-white/25 bg-white/5 px-7 py-3.5 text-body font-semibold text-white backdrop-blur transition-colors hover:border-white/60 hover:bg-white/10"
-              >
-                Quality &amp; safety
-              </a>
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col gap-7 border-t border-white/15 pt-6 xl:flex-row xl:items-end xl:justify-between">
-            <dl className="grid grid-cols-3 gap-6 sm:flex sm:gap-14">
-              {[
-                { v: CONTROL_DOMAINS.length, l: "Control domains" },
-                { v: PLANNING_LEVELS.length, l: "Planning levels" },
-                { v: PROGRESS_STEPS.length, l: "Progress steps" },
-              ].map((s) => (
-                <div key={s.l}>
-                  <dd className="tabular font-display text-4xl font-extrabold leading-none md:text-5xl">
-                    {String(s.v).padStart(2, "0")}
-                  </dd>
-                  <dt className={`${eyebrow} mt-2 text-white/60`}>{s.l}</dt>
-                </div>
-              ))}
-            </dl>
-
-            <div>
-              <p className={`${eyebrow} text-[#7fb6e8]`}>Data flow</p>
-              <ol className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-                {DATA_FLOW.map((d, i) => (
-                  <li key={d} className="flex items-center gap-3">
-                    <span className="rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-caption font-semibold backdrop-blur">
-                      <span className="tabular mr-2 text-[#7fb6e8]">{String(i + 1).padStart(2, "0")}</span>
-                      {d}
-                    </span>
-                    {i < DATA_FLOW.length - 1 && <span aria-hidden className="hidden h-px w-5 bg-white/30 sm:block" />}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
+          <ol className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-white/15 pt-6 sm:grid-cols-3 xl:grid-cols-6">
+            {DELIVERY_STAGES.map((s, i) => (
+              <li key={s.id}>
+                <a href={`#${s.id}`} className="group block">
+                  <span className="tabular font-display text-3xl font-extrabold leading-none text-[#7fb6e8] md:text-4xl">
+                    {num(i)}
+                  </span>
+                  <span className="mt-2 block text-body font-semibold text-white/85 group-hover:text-white">{s.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* Progress measurement */}
-      <section id="progress" className="bg-white py-6">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <p className={`${eyebrow} text-[#3e86d0]`}>Progress measurement</p>
-          <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold join-shine pb-[0.08em] md:text-5xl">
-            From site execution to management decision.
-          </h2>
-        </div>
-        <ProgressMarquee />
-        {/* The ribbon is pulled up into the empty space under the arc's raised middle cards. */}
-        <div className="relative z-10 -mb-4 md:-mb-[1.5%] md:-mt-[6%]">
-          <DataFlowRibbon />
-        </div>
-      </section>
-
-      {/* Outputs & principles */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-[#f3f8ff] to-white py-6">
-        <div className="pointer-events-none absolute -left-40 top-10 h-[30rem] w-[30rem] rounded-full bg-[#4d94ff]/15 blur-[120px]" />
-        <div className="relative w-full px-4 sm:px-6 lg:px-8">
+      {/* The six stages, in delivery order */}
+      <section id="stages" className="bg-white py-12 md:py-16">
+        <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
           <p className={`${eyebrow} flex items-center gap-3 text-[#3e86d0]`}>
             <span className="h-px w-10 bg-[#3e86d0]" />
-            Reporting
+            How we deliver
           </p>
-          <h2 className="mt-3 max-w-3xl font-display text-4xl font-extrabold tracking-tight text-[#0f2b57] md:text-5xl">
-            Outputs you can act on,{" "}
-            <span className="join-shine">
-              principles you can trust.
-            </span>
+          <h2 className="mt-3 max-w-3xl font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">
+            Six stages, <span className="join-shine">one controlled process.</span>
           </h2>
 
-          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
-            <div className="relative mb-6 lg:col-span-4">
-              <div className="absolute -inset-3 -z-10 -rotate-2 rounded-[28px] bg-gradient-to-br from-[#4d94ff]/40 to-[#9fd0ff]/20 blur-sm" />
-              <JellyFrame className="aspect-square w-full" echoClassName="stroke-[#0048b0]/30">
-                <Image
-                  src={IMAGES.planningOutputs.src ?? ""}
-                  alt={IMAGES.planningOutputs.alt}
-                  fill
-                  sizes="(min-width: 1024px) 33vw, 100vw"
-                  className="object-cover"
-                />
-              </JellyFrame>
-              <div className="absolute -bottom-5 left-5 right-5 rounded-2xl border border-white/60 bg-white/80 p-5 shadow-xl backdrop-blur-md">
-                <p className={`${eyebrow} text-[#3e86d0]`}>Data flow</p>
-                <p className="mt-1 font-display text-body font-bold text-[#0f2b57]">{DATA_FLOW.join(" → ")}</p>
-              </div>
-            </div>
-
-            <div className="lg:col-span-8">
-              <p className={`${eyebrow} text-[#3e86d0]`}>Outputs &amp; reports</p>
-              <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {OUTPUTS_REPORTS.map((o, i) => (
-                  <li
-                    key={o}
-                    className="group flex items-center gap-3 rounded-2xl border border-[#dbe9fa] bg-white p-4 shadow-[0_8px_24px_-16px_rgba(0,72,176,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-[#4d94ff]/60 hover:shadow-[0_20px_36px_-20px_rgba(0,72,176,0.5)]"
-                  >
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#0048b0] to-[#4d94ff] text-white transition-transform duration-300 group-hover:rotate-6">
-                      <Check size={18} strokeWidth={2.5} />
+          <ol className="mt-10 space-y-6 md:mt-14 md:space-y-8">
+            {DELIVERY_STAGES.map((s, i) => {
+              const img = IMAGES[s.image];
+              return (
+                <li
+                  key={s.id}
+                  id={s.id}
+                  className="grid scroll-mt-28 grid-cols-1 overflow-hidden rounded-3xl border border-[#dbe9fa] bg-gradient-to-br from-white to-[#f3f8ff] lg:grid-cols-12"
+                >
+                  <div className={`relative min-h-[220px] lg:col-span-4 ${i % 2 ? "lg:order-last" : ""}`}>
+                    <Image src={img.src ?? ""} alt={img.alt} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
+                    <span className="tabular absolute left-5 top-4 font-display text-6xl font-extrabold text-white drop-shadow-lg">
+                      {num(i)}
                     </span>
-                    <span className="text-body font-medium text-[#0f2b57]">{o}</span>
-                    <span className="tabular ml-auto font-display text-sm font-bold text-[#0048b0]/25">{String(i + 1).padStart(2, "0")}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <p className={`${eyebrow} mt-7 text-[#3e86d0]`}>Principles</p>
-              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {REPORTING_PRINCIPLES.map((p, i) => (
-                  <div
-                    key={p.title}
-                    className="group relative overflow-hidden rounded-2xl border border-[#dbe9fa] bg-white p-4 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_24px_44px_-24px_rgba(0,72,176,0.5)]"
-                  >
-                    <span className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-[#0048b0] to-[#9fd0ff]" />
-                    <span className="tabular pointer-events-none absolute -right-1 -top-3 font-display text-6xl font-extrabold text-[#0048b0]/[0.06] transition-colors group-hover:text-[#0048b0]/[0.12]">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="relative font-display text-body-l font-bold text-[#0f2b57]">{p.title}</h3>
-                    <p className="relative mt-1.5 text-caption leading-relaxed text-[#5a6b84]">{p.body}</p>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+
+                  <div className="p-6 sm:p-8 lg:col-span-8">
+                    <p className={`${eyebrow} text-[#3e86d0]`}>
+                      Stage {num(i)} of {String(DELIVERY_STAGES.length).padStart(2, "0")}
+                    </p>
+                    <h3 className="mt-2 font-display text-3xl font-bold text-[#0f2b57]">{s.title}</h3>
+                    <p className="mt-3 max-w-[60ch] text-body-l text-[#0f2b57]/80">{s.lead}</p>
+
+                    <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-5">
+                      <ul className="space-y-2.5 md:col-span-3">
+                        {s.actions.map((a) => (
+                          <li key={a} className="flex gap-3 text-body text-[#0f2b57]">
+                            <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#0048b0] text-white">
+                              <Check size={12} strokeWidth={3} />
+                            </span>
+                            {a}
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="rounded-2xl border border-[#dbe9fa] bg-white p-4 md:col-span-2">
+                        <p className={`${eyebrow} text-[#5a6b84]`}>What you receive</p>
+                        <ul className="mt-3 space-y-2">
+                          {s.records.map((r) => (
+                            <li key={r} className="flex items-center gap-2 text-caption font-medium text-[#0f2b57]">
+                              <FileCheck2 size={16} className="shrink-0 text-[#3e86d0]" />
+                              {r}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </section>
 
-      {/* Quality approach */}
-      <section id="quality" className="bg-white py-6">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <p className={`${eyebrow} text-[#3e86d0]`}>Quality &amp; safety · Right first time, every time</p>
-          <h2 className="mt-3 max-w-3xl font-display text-4xl font-bold join-shine pb-[0.08em] md:text-5xl">
-            Controlled throughout the project, not checked at the end.
-          </h2>
-          <QualityApproach />
+      {/* Closing commitment */}
+      <section className="bg-[#071a3a] py-12 text-white">
+        <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
+          <p className={`${eyebrow} text-[#7fb6e8]`}>Our commitment</p>
+          <ul className="mt-5 flex flex-wrap gap-3">
+            {CONTROLS_COMMITMENT.map((c) => (
+              <li
+                key={c}
+                className="rounded-full border border-white/20 bg-white/[0.06] px-5 py-2.5 font-display text-body-l font-semibold"
+              >
+                {c}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
-
-      {/* QC organisation */}
-      <section className="bg-white py-6">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <p className={`${eyebrow} text-[#3e86d0]`}>QC organisation</p>
-          <div className="mt-5">
-            <QcOrgArc items={QC_ORG_CARDS} />
-          </div>
-        </div>
-      </section>
-
-      <SafetySection />
     </>
   );
 }

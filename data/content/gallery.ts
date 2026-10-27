@@ -231,3 +231,15 @@ export const WAREHOUSE_GALLERY_ITEMS: GalleryItem[] = [
       "A material handling bay with charging and parking space set aside for the forklift fleet.",
   },
 ];
+
+// What a photo shows, stored as a gallery item's second category. The gallery page opens with
+// the first (finished warehouses) as a collage, then a section for each activity in this order.
+export const GALLERY_ACTIVITIES = [
+  "Finished warehouses",
+  "Ancillary buildings",
+  "Retaining walls",
+  "Roads",
+  "Pavers & landscaping",
+  "Hume pipes & drainage",
+  "Work in progress",
+] as const;

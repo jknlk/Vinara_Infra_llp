@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { withRevalidate } from "@/lib/revalidate";
 import { isAdmin } from "@/lib/auth";
 import { insertHome } from "@/lib/db";
 import { uploadImage } from "@/lib/cloudinary";
@@ -7,7 +8,7 @@ import { parseHomeForm } from "../fields";
 
 type Ctx = { params: Promise<{ kind: string }> };
 
-export async function POST(req: Request, { params }: Ctx) {
+async function postHandler(req: Request, { params }: Ctx) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const kind = (await params).kind as HomeKind;
   if (!HOME_KINDS[kind]) return NextResponse.json({ error: "Unknown section" }, { status: 404 });
@@ -24,3 +25,5 @@ export async function POST(req: Request, { params }: Ctx) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Save failed" }, { status: 500 });
   }
 }
+
+export const POST = withRevalidate(postHandler);

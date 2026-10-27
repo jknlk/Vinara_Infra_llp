@@ -43,10 +43,14 @@ export const CONTACT = {
   mapCenter: { lat: 13.1709, lng: 77.6347 },
   departments: [
     { department: "Managing Director", contact: "Rajat Panchal · 8971500945" },
-    { department: "AGM", contact: "agm@vinara.co.in" },
+    { department: "Business Development", contact: "bd@vinara.co.in" },
+    { department: "Accounts", contact: "accounts@vinara.co.in" },
     { department: "Planning", contact: "planning.nela1@vinara.co.in" },
     { department: "Quality", contact: "quality.nela1@vinara.co.in" },
+    { department: "HSE", contact: "hse@vinara.co.in" },
+    { department: "HR", contact: "hr@vinara.co.in" },
   ],
+  email: "info@vinara.co.in",
 } as const;
 
 export const CLIENTS = [

@@ -19,9 +19,7 @@ function clean(raw: unknown): Fields {
 
 export async function POST(req: Request) {
   const key = process.env.RESEND_API_KEY;
-  const to = process.env.RESEND_TO_EMAIL;
   const from = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
-  if (!key || !to) return NextResponse.json({ error: "Email is not configured." }, { status: 500 });
 
   const body = (await req.json().catch(() => null)) as { type?: string; fields?: unknown } | null;
   const fields = clean(body?.fields);
@@ -29,6 +27,10 @@ export async function POST(req: Request) {
   if (type !== "quote" && type !== "application" && type !== "contact") {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
+  // Applications go to HR, quotes to BD, everything else to info@; each falls back to RESEND_TO_EMAIL.
+  const inbox = { application: process.env.RESEND_HR_EMAIL, quote: process.env.RESEND_BD_EMAIL, contact: process.env.RESEND_INFO_EMAIL };
+  const to = inbox[type] || process.env.RESEND_TO_EMAIL;
+  if (!key || !to) return NextResponse.json({ error: "Email is not configured." }, { status: 500 });
   if (!fields.name || !EMAIL_RE.test(fields.email ?? "")) {
     return NextResponse.json({ error: "Name and a valid email are required." }, { status: 400 });
   }

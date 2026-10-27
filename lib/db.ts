@@ -61,7 +61,17 @@ export type JobRow = {
 
 export type PartnerCategory = "client" | "pmc" | "tenant";
 
-export type PartnerRow = { id: number; category: PartnerCategory; name: string; position: number };
+export type PartnerRow = {
+  id: number;
+  category: PartnerCategory;
+  name: string;
+  position: number;
+  logoSrc: string | null;
+  logoPublicId: string | null;
+  showName: boolean;
+  showLogo: boolean;
+};
+export type PartnerInput = { category: PartnerCategory; name: string; showName: boolean; showLogo: boolean };
 
 export type BuildingPhotoRow = {
   id: number;
@@ -140,6 +150,11 @@ export function ensureSchema() {
       name TEXT NOT NULL,
       position INT NOT NULL DEFAULT 0
     )`;
+    await q`ALTER TABLE partners
+      ADD COLUMN IF NOT EXISTS logo_src TEXT,
+      ADD COLUMN IF NOT EXISTS logo_public_id TEXT,
+      ADD COLUMN IF NOT EXISTS show_name BOOLEAN NOT NULL DEFAULT true,
+      ADD COLUMN IF NOT EXISTS show_logo BOOLEAN NOT NULL DEFAULT true`;
 
     await q`CREATE TABLE IF NOT EXISTS building_photos (
       id SERIAL PRIMARY KEY,
@@ -191,6 +206,22 @@ export function ensureSchema() {
         for (const data of seed[kind]) {
           await q`INSERT INTO home_items (kind, position, data) VALUES (${kind}, ${i++}, ${JSON.stringify(data)}::jsonb)`;
         }
+      }
+    }
+    // Services became admin-editable after the first home seed.
+    if (await claim("services_seeded")) {
+      let i = 0;
+      for (const data of homeSeed().service) {
+        await q`INSERT INTO home_items (kind, position, data) VALUES ('service', ${i++}, ${JSON.stringify(data)}::jsonb)`;
+      }
+    }
+    // Directors get their own group on the leadership page; the new department heads are added for the client to fill in.
+    if (await claim("leaders_v2")) {
+      await q`UPDATE home_items SET data = data || '{"group":"Directors"}'::jsonb WHERE kind = 'leader' AND data->>'role' ILIKE '%director%'`;
+      for (const role of ["Billing Head", "Quality Head", "QHSE Head"]) {
+        const data = { name: "Name to be added", role, group: "Leadership team", bio: "", image: "" };
+        await q`INSERT INTO home_items (kind, position, data)
+          VALUES ('leader', COALESCE((SELECT MAX(position) + 1 FROM home_items WHERE kind = 'leader'), 0), ${JSON.stringify(data)}::jsonb)`;
       }
     }
     if (await claim("projects_seeded")) {
@@ -398,23 +429,40 @@ export async function deleteJob(id: number) {
 
 /* --------------------------------------------------------------- partners */
 
+const PARTNER_COLS = "id, category, name, position, logo_src AS \"logoSrc\", logo_public_id AS \"logoPublicId\", show_name AS \"showName\", show_logo AS \"showLogo\"";
+
 export async function listPartners() {
-  return run<PartnerRow>((q) => q`SELECT id, category, name, position FROM partners ORDER BY position, id`);
+  return run<PartnerRow>((q) => q.query(`SELECT ${PARTNER_COLS} FROM partners ORDER BY position, id`));
 }
 
-export async function insertPartner(category: PartnerCategory, name: string) {
-  const rows = await run<PartnerRow>(
-    (q) => q`INSERT INTO partners (category, name, position)
-      VALUES (${category}, ${name}, COALESCE((SELECT MAX(position) + 1 FROM partners WHERE category = ${category}), 0))
-      RETURNING id, category, name, position`
+export async function getPartner(id: number) {
+  const rows = await run<PartnerRow>((q) => q.query(`SELECT ${PARTNER_COLS} FROM partners WHERE id = $1`, [id]));
+  return rows[0] ?? null;
+}
+
+export async function insertPartner(p: PartnerInput, logo: { src: string; publicId: string | null } | null) {
+  const rows = await run<PartnerRow>((q) =>
+    q.query(
+      `INSERT INTO partners (category, name, show_name, show_logo, logo_src, logo_public_id, position)
+       VALUES ($1, $2, $3, $4, $5, $6, COALESCE((SELECT MAX(position) + 1 FROM partners WHERE category = $1), 0))
+       RETURNING ${PARTNER_COLS}`,
+      [p.category, p.name, p.showName, p.showLogo, logo?.src ?? null, logo?.publicId ?? null]
+    )
   );
   return rows[0];
 }
 
-export async function updatePartner(id: number, category: PartnerCategory, name: string) {
-  const rows = await run<PartnerRow>(
-    (q) => q`UPDATE partners SET category = ${category}, name = ${name} WHERE id = ${id}
-      RETURNING id, category, name, position`
+// `logo` undefined keeps the current logo, null clears it.
+export async function updatePartner(id: number, p: PartnerInput, logo?: { src: string; publicId: string | null } | null) {
+  const keep = logo === undefined;
+  const rows = await run<PartnerRow>((q) =>
+    q.query(
+      `UPDATE partners SET category = $2, name = $3, show_name = $4, show_logo = $5,
+         logo_src = CASE WHEN $6 THEN logo_src ELSE $7 END,
+         logo_public_id = CASE WHEN $6 THEN logo_public_id ELSE $8 END
+       WHERE id = $1 RETURNING ${PARTNER_COLS}`,
+      [id, p.category, p.name, p.showName, p.showLogo, keep, logo?.src ?? null, logo?.publicId ?? null]
+    )
   );
   return rows[0] ?? null;
 }

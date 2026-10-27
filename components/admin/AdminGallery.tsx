@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { GALLERY_ACTIVITIES } from "@/data/content/gallery";
 import { ImagePlus, Pencil, Trash2 } from "lucide-react";
 import type { GalleryRow } from "@/lib/db";
 import { Modal, PreviewFrame, ViewTabs, dangerBtn, field, label, outlineBtn, primaryBtn, request, type View } from "./parts";
@@ -79,6 +80,15 @@ function ItemForm({
           <select name="categories" defaultValue={item?.categories[0] ?? defaultProject ?? projectNames[0]} className={field}>
             {projectNames.map((n) => (
               <option key={n}>{n}</option>
+            ))}
+          </select>
+        </label>
+        <label className={`${label} mt-3`}>
+          Activity
+          <select name="activity" defaultValue={item?.categories[1] ?? ""} className={field}>
+            <option value="">None (shown under &ldquo;More from site&rdquo;)</option>
+            {GALLERY_ACTIVITIES.map((a) => (
+              <option key={a}>{a}</option>
             ))}
           </select>
         </label>

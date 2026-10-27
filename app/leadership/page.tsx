@@ -2,17 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown } from "lucide-react";
-import Container from "@/components/ui/Container";
 import JellyFrame from "@/components/ui/JellyFrame";
-import DirectorCards from "@/components/leadership/DirectorCards";
-import TeamMarquee from "@/components/leadership/TeamMarquee";
+import { DirectorProfiles, TeamStrip, type Leader } from "@/components/leadership/LeaderCards";
 import { IMAGES } from "@/data/images";
-import {
-  TEAM,
-  DIRECTORS,
-  PROJECT_ORG_CHART,
-  MANPOWER_STATS,
-} from "@/data/content/leadership";
+import { MANPOWER_STATS, roleRank } from "@/data/content/leadership";
+import { loadHome } from "@/lib/homeContent";
 
 export const metadata: Metadata = {
   title: "Leadership — Vinara Infra LLP",
@@ -20,11 +14,35 @@ export const metadata: Metadata = {
 };
 
 const eyebrow = "text-label uppercase tracking-[0.14em]";
-const REST = TEAM.slice(DIRECTORS.length);
+
+// Everyone on this page is edited in Admin → Leadership.
+async function loadLeaders() {
+  const rows = await loadHome("leader");
+  const people = rows
+    .map((d) => ({
+      leader: {
+        name: d.name ?? "",
+        role: d.role ?? "",
+        bio: d.bio ?? "",
+        image: d.image ?? "",
+        experience: d.experience ?? "",
+        vinaraYears: d.vinaraYears ?? "",
+        qualification: d.qualification ?? "",
+        projects: (d.projects ?? "").split(/\r?\n/).map((x) => x.trim()).filter(Boolean),
+      } satisfies Leader,
+      director: (d.group ?? (/director/i.test(d.role ?? "") ? "Directors" : "")) === "Directors",
+    }))
+    .sort((a, b) => roleRank(a.leader.role) - roleRank(b.leader.role));
+  return {
+    directors: people.filter((p) => p.director).map((p) => p.leader),
+    team: people.filter((p) => !p.director).map((p) => p.leader),
+  };
+}
 
 const fmt = (v: number | string) => (typeof v === "number" ? v.toLocaleString("en-IN") : v);
 
-export default function LeadershipPage() {
+export default async function LeadershipPage() {
+  const { directors, team } = await loadLeaders();
   return (
     <>
       {/* Hero */}
@@ -87,71 +105,33 @@ export default function LeadershipPage() {
       </section>
 
       {/* Directors */}
-      <section id="directors" className="bg-white py-6">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <p className={`${eyebrow} text-[#3e86d0]`}>Directors</p>
-          <div className="mt-8">
-            <DirectorCards directors={DIRECTORS} />
+      {directors.length ? (
+        <section id="directors" className="bg-white py-6">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <p className={`${eyebrow} text-[#3e86d0]`}>Directors</p>
+            <div className="mt-8">
+              <DirectorProfiles people={directors} />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
-      {/* Team */}
-      <section className="overflow-hidden bg-[#f2f7fc] py-6">
-        <Container>
-          <p className={`${eyebrow} text-[#3e86d0]`}>Management &amp; site team</p>
-        </Container>
-        <div className="mt-8">
-          <TeamMarquee members={REST} />
-        </div>
-      </section>
-
-      {/* Project organisation */}
-      <section className="bg-white py-6">
-        <div className="grid w-full grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-          <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
-            <p className={`${eyebrow} text-[#3e86d0]`}>Project organisation</p>
-            <h2 className="mt-3 font-display text-4xl font-bold text-[#0f2b57] md:text-5xl">
-              Clear roles.
-              <span className="block join-shine pb-[0.08em]">Clear reporting.</span>
+      {/* Leadership team: a slow strip of black-and-white portraits that colour on hover */}
+      {team.length ? (
+        <section className="overflow-hidden bg-white py-12 md:py-16">
+          <div className="px-4 text-center sm:px-6 lg:px-8">
+            <h2 className="font-display text-5xl font-bold text-[#0f2b57] md:text-6xl">
+              Meet the <span className="join-shine">team.</span>
             </h2>
-            <p className="mt-5 max-w-[40ch] text-body text-[#5a6b84]">
-              Five levels, one chain of accountability from the project head to every execution team on site.
-            </p>
-            <p className="tabular mt-8 font-display text-6xl font-bold text-[#0f2b57]/10">
-              {String(PROJECT_ORG_CHART.length).padStart(2, "0")}
-              <span className="ml-2 text-body font-normal text-[#5a6b84]">levels</span>
+            <p className="mx-auto mt-4 max-w-[52ch] text-body-l text-[#5a6b84]">
+              The people behind every plan, pour and handover at Vinara.
             </p>
           </div>
-          <ol className="relative lg:col-span-7">
-            <span className="absolute bottom-8 left-[27px] top-8 w-px bg-gradient-to-b from-[#0f2b57] to-[#3e86d0]/20" />
-            {PROJECT_ORG_CHART.map((role, i) => {
-              const top = i === 0;
-              return (
-                <li key={role} className="relative flex gap-6 pb-5 last:pb-0">
-                  <span
-                    className={`relative z-10 grid h-14 w-14 shrink-0 place-items-center rounded-full border-4 border-white font-display text-body font-bold ${
-                      top ? "bg-[#0f2b57] text-white" : "bg-[#dceaf9] text-[#0f2b57]"
-                    }`}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div
-                    className={`flex-1 rounded-2xl px-6 py-4 transition-shadow hover:shadow-lg ${
-                      top ? "bg-[#0f2b57] text-white" : "border border-[#0f2b57]/15 bg-[#f2f7fc] text-[#0f2b57]"
-                    }`}
-                  >
-                    <p className={`${eyebrow} ${top ? "text-[#7fb6e8]" : "text-[#3e86d0]"}`}>
-                      {top ? "Top of the chain" : `Reports to ${PROJECT_ORG_CHART[i - 1]}`}
-                    </p>
-                    <p className="mt-1 font-display text-body-l font-bold">{role}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </section>
+          <div className="mt-10">
+            <TeamStrip people={team} />
+          </div>
+        </section>
+      ) : null}
     </>
   );
 }

@@ -14,7 +14,7 @@ export default function LegalDocument({
   doc: LegalDoc;
   related: { href: string; label: string };
 }) {
-  const email = CONTACT.departments[1].contact;
+  const email = CONTACT.email;
 
   return (
     <>

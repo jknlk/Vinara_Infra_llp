@@ -9,6 +9,8 @@ import { roleRank } from "@/data/content/leadership";
 export default async function LeadershipReel() {
   const team = (await loadHome("leader")) as { name: string; role: string; bio: string; image: string }[];
   const people = team
+    // people still waiting for a photo stay off the home reel
+    .filter((p) => p.image)
     .map((p) => ({ src: p.image, alt: `${p.name} — ${p.role}`, name: p.name, role: p.role }))
     .sort((a, b) => roleRank(a.role) - roleRank(b.role));
 

@@ -1,14 +1,12 @@
-import Image from "next/image";
 import WaveMarquee from "@/components/ui/WaveMarquee";
-import { partnerLogo } from "@/lib/partnerLogos";
-import { loadPartnerGroups } from "@/lib/partners";
+import { loadPartnerEntries } from "@/lib/partners";
 
 export default async function TrustedByMarquee() {
-  const NAMES = (await loadPartnerGroups()).flatMap((g) => g.names);
-  const half = Math.ceil(NAMES.length / 2);
-  const ROWS = [NAMES.slice(0, half), NAMES.slice(half)].filter((row) => row.length > 0);
+  const ENTRIES = await loadPartnerEntries();
+  const half = Math.ceil(ENTRIES.length / 2);
+  const ROWS = [ENTRIES.slice(0, half), ENTRIES.slice(half)].filter((row) => row.length > 0);
   return (
-    <section className="bg-white pb-5 pt-4">
+    <section id="trusted-by" className="bg-white pb-5 pt-4">
       <div className="mx-auto w-full max-w-[1680px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-2 text-label uppercase tracking-[0.08em] text-grey-500">
@@ -29,24 +27,27 @@ export default async function TrustedByMarquee() {
           <WaveMarquee
             className="h-[132px] sm:h-[186px]"
             rows={ROWS.map((row) =>
-              row.map((name) => {
-                const logo = partnerLogo(name);
-                return logo ? (
-                  <Image
-                    key={name}
-                    src={logo.src}
-                    alt={name}
-                    width={logo.width}
-                    height={logo.height}
-                    unoptimized
-                    className="h-auto max-h-7 w-auto max-w-[92px] object-contain sm:h-10 sm:max-h-none sm:max-w-[220px]"
-                  />
-                ) : (
-                  <span
-                    key={name}
-                    className="text-center font-display text-xs font-bold leading-tight tracking-tight text-ink sm:whitespace-nowrap sm:text-xl sm:leading-normal"
-                  >
-                    {name}
+              row.map(({ name, logo, showName, showLogo }) => {
+                const withLogo = showLogo && logo;
+                return (
+                  <span key={name} className="flex flex-col items-center gap-1.5">
+                    {withLogo ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- uploaded logos have unknown sizes
+                      <img
+                        src={logo}
+                        alt={showName ? "" : name}
+                        className="h-7 w-auto max-w-[92px] object-contain sm:h-10 sm:max-w-[220px]"
+                      />
+                    ) : null}
+                    {showName ? (
+                      <span
+                        className={`text-center font-display font-bold leading-tight tracking-tight text-ink sm:whitespace-nowrap ${
+                          withLogo ? "text-[10px] sm:text-sm" : "text-xs sm:text-xl sm:leading-normal"
+                        }`}
+                      >
+                        {name}
+                      </span>
+                    ) : null}
                   </span>
                 );
               })

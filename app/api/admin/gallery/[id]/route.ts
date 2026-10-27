@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { withRevalidate } from "@/lib/revalidate";
 import { isAdmin } from "@/lib/auth";
 import { deleteGalleryItem, getGalleryItem, updateGalleryItem } from "@/lib/db";
 import { destroyImage, uploadImage } from "@/lib/cloudinary";
@@ -6,7 +7,7 @@ import { parseFields } from "../fields";
 
 type Ctx = { params: Promise<{ id: string }> };
 
-export async function PATCH(req: Request, { params }: Ctx) {
+async function patchHandler(req: Request, { params }: Ctx) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const id = Number((await params).id);
   try {
@@ -27,7 +28,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
   }
 }
 
-export async function DELETE(_req: Request, { params }: Ctx) {
+async function deleteHandler(_req: Request, { params }: Ctx) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const id = Number((await params).id);
   const existing = await getGalleryItem(id);
@@ -36,3 +37,7 @@ export async function DELETE(_req: Request, { params }: Ctx) {
   await deleteGalleryItem(id);
   return NextResponse.json({ ok: true });
 }
+
+export const PATCH = withRevalidate(patchHandler);
+
+export const DELETE = withRevalidate(deleteHandler);

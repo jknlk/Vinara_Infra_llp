@@ -10,11 +10,12 @@ import ProjectIndexGrid from "@/components/projects/ProjectIndexGrid";
 import ClientsPartners from "@/components/projects/ClientsPartners";
 import { IMAGES } from "@/data/images";
 import { PROJECTS, PORTFOLIO_TOTALS } from "@/data/buildings";
-import { listProjects } from "@/lib/db";
+import { listGallery, listProjects } from "@/lib/db";
 import { loadPartnerGroups } from "@/lib/partners";
 import { loadBuildingPhotos, photoKey } from "@/lib/buildingPhotos";
 
-export const dynamic = "force-dynamic";
+// cached; admin saves purge it (lib/revalidate.ts), and it refreshes every 5 minutes regardless
+export const revalidate = 300;
 
 type ProjectCardData = {
   slug: string;
@@ -66,7 +67,12 @@ const PROJECT_IMAGE: Record<string, string> = {
 };
 
 export default async function ProjectsPage() {
-  const [cards, clientGroups, photos] = await Promise.all([loadCards(), loadPartnerGroups(), loadBuildingPhotos()]);
+  const [cards, clientGroups, photos, gallery] = await Promise.all([
+    loadCards(),
+    loadPartnerGroups(),
+    loadBuildingPhotos(),
+    listGallery().catch(() => []),
+  ]);
   const detailSlugs = new Set<string>(PROJECTS.map((p) => p.slug));
   const heroStats = [
     { value: num(PORTFOLIO_TOTALS.plotAcres), label: "acres" },
@@ -165,7 +171,15 @@ export default async function ProjectsPage() {
                   <ProjectPlanViewer slug={project.slug} className="lg:h-auto lg:min-h-[400px] lg:flex-1" />
                 </div>
                 <div className="lg:col-span-7">
-                  <BuildingCards buildings={project.buildings} totalSqft={project.builtUpSqft} />
+                  <BuildingCards
+                    buildings={project.buildings}
+                    totalSqft={project.builtUpSqft}
+                    projectName={project.shortName}
+                    photos={Object.fromEntries(project.buildings.map((b) => [b.id, photos[photoKey(project.slug, b.id)]]))}
+                    sitePhotos={gallery
+                      .filter((g) => g.categories.includes(project.shortName))
+                      .map((g) => ({ src: g.src, caption: g.title }))}
+                  />
                 </div>
               </Container>
 

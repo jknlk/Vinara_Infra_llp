@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { CONTACT } from "@/data/content/site";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowLeft,
@@ -70,7 +71,7 @@ const STEPS = [
   { title: "Where do we send the quote?", sub: "A senior team member replies personally." },
 ];
 
-const QUOTE_EMAIL = "agm@vinara.co.in";
+const QUOTE_EMAIL = CONTACT.departments[1].contact;
 const QUOTE_PHONE = "8971500945";
 
 const REQUIRED: (keyof Brief)[] = ["services", "area", "timeline", "location", "name", "company", "email", "phone"];

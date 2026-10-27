@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { withRevalidate } from "@/lib/revalidate";
 import { isAdmin } from "@/lib/auth";
 import { insertGalleryItem, listGallery } from "@/lib/db";
 import { uploadImage } from "@/lib/cloudinary";
@@ -9,7 +10,7 @@ export async function GET() {
   return NextResponse.json({ items: await listGallery() });
 }
 
-export async function POST(req: Request) {
+async function postHandler(req: Request) {
   if (!(await isAdmin())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const form = await req.formData();
@@ -29,3 +30,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: e instanceof Error ? e.message : "Upload failed" }, { status: 500 });
   }
 }
+
+export const POST = withRevalidate(postHandler);

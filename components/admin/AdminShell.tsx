@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BarChart3, Briefcase, Building2, Camera, Handshake, Home, Images, LayoutGrid, LogOut, Star, Users } from "lucide-react";
+import { BarChart3, Briefcase, Building2, Camera, Handshake, Home, Images, LayoutGrid, LogOut, Star, Users, Wrench } from "lucide-react";
 import type { BuildingPhotoRow, GalleryRow, HomeRow, JobRow, PartnerRow, ProjectRow } from "@/lib/db";
 import type { HomeKind } from "@/data/content/homeAdmin";
 import AdminHome from "./AdminHome";
@@ -11,13 +11,13 @@ import AdminProjects from "./AdminProjects";
 import AdminCareers from "./AdminCareers";
 import AdminPartners from "./AdminPartners";
 import AdminBuildingPhotos from "./AdminBuildingPhotos";
+import ChangePassword from "./ChangePassword";
 
-type Section = "gallery" | "projects" | "photos" | "partners" | "careers" | "home";
+type Section = "gallery" | "projects" | "photos" | "partners" | "careers" | "home" | "leader" | "service";
 
 const HOME_TABS = [
   { id: "hero_stat", text: "Stats", Icon: BarChart3 },
   { id: "featured", text: "Featured projects", Icon: Star },
-  { id: "leader", text: "Leadership", Icon: Users },
   { id: "work", text: "Our work", Icon: LayoutGrid },
 ] as const;
 
@@ -26,6 +26,8 @@ const SECTIONS = [
   { id: "projects", text: "Projects", Icon: Building2 },
   { id: "photos", text: "Building photos", Icon: Camera },
   { id: "partners", text: "Clients & partners", Icon: Handshake },
+  { id: "leader", text: "Leadership", Icon: Users },
+  { id: "service", text: "Services", Icon: Wrench },
   { id: "careers", text: "Careers", Icon: Briefcase },
   { id: "home", text: "Home", Icon: Home },
 ] as const;
@@ -61,7 +63,9 @@ export default function AdminShell({
       <header className="flex flex-wrap items-center gap-3">
         <h1 className="font-display text-3xl font-bold">Admin</h1>
         <span className="text-caption text-[#5a6b84]">Vinara Infra LLP</span>
-        <button onClick={logout} className="ml-auto flex items-center gap-2 rounded-lg px-3 py-2 text-caption hover:bg-white">
+        <div className="ml-auto" />
+        <ChangePassword />
+        <button onClick={logout} className="flex items-center gap-2 rounded-lg px-3 py-2 text-caption hover:bg-white">
           <LogOut size={16} /> Log out
         </button>
       </header>
@@ -93,6 +97,13 @@ export default function AdminShell({
         <div hidden={section !== "partners"}>
           <AdminPartners initialItems={partners} />
         </div>
+        {/* Leadership and Services use the same editor as the home blocks; they get their own tabs */}
+        <div hidden={section !== "leader"}>
+          <AdminHome kind="leader" initialItems={home.leader} />
+        </div>
+        <div hidden={section !== "service"}>
+          <AdminHome kind="service" initialItems={home.service} />
+        </div>
         <div hidden={section !== "careers"}>
           <AdminCareers initialItems={jobs} />
         </div>
@@ -111,7 +122,7 @@ export default function AdminShell({
             ))}
           </div>
           <div className="mt-6">
-            {(Object.keys(home) as HomeKind[]).map((k) => (
+            {HOME_TABS.map(({ id: k }) => (
               <div key={k} hidden={homeTab !== k}>
                 <AdminHome kind={k} initialItems={home[k]} />
               </div>
